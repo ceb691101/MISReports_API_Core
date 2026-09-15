@@ -1,0 +1,48 @@
+using System;
+using Oracle.ManagedDataAccess.Client;
+
+namespace MISReports_Api.DAL.AreaEngineerDashboard
+{
+    public class AreaEngineerStockValueDAL
+    {
+        private static readonly string ConnectionString = System.Configuration.ConfigurationManager
+            .ConnectionStrings["HQOracle"].ConnectionString;
+
+        public double Fetch(string companyId)
+        {
+            double total = 0;
+
+            using (OracleConnection conn = new OracleConnection(ConnectionString))
+            {
+                conn.Open();
+                string query = @"
+                    select sum(c.qty_on_hand * c.unit_price) as Stock_value
+                    from inwrhmtm c   
+                    where c.status = 2 
+                    and c.grade_cd = 'NEW'
+                    and c.dept_id in (
+                        select dept_id 
+                        from gldeptm  
+                        where status = 2 
+                        and comp_id = :companyId
+                    )";
+
+                using (OracleCommand cmd = new OracleCommand(query, conn))
+                {
+                    cmd.BindByName = true;
+                    cmd.Parameters.Add(new OracleParameter("companyId", companyId));
+
+                    using (OracleDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read() && !reader.IsDBNull(0))
+                        {
+                            total = Convert.ToDouble(reader.GetValue(0));
+                        }
+                    }
+                }
+            }
+
+            return total;
+        }
+    }
+}

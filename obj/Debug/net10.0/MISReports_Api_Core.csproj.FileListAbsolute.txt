@@ -1,0 +1,148 @@
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.csproj.AssemblyReference.cache
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\rpswa.dswa.cache.json
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.GeneratedMSBuildEditorConfig.editorconfig
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.AssemblyInfoInputs.cache
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.AssemblyInfo.cs
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.csproj.CoreCompileInputs.cache
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.MvcApplicationPartsAssemblyInfo.cs
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.MvcApplicationPartsAssemblyInfo.cache
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\App.config
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\appsettings.json
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.staticwebassets.endpoints.json
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.exe
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.dll.config
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.deps.json
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.runtimeconfig.json
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.pdb
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\ClosedXML.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\ClosedXML.Parser.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\DocumentFormat.OpenXml.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\DocumentFormat.OpenXml.Framework.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\EPPlus.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\EPPlus.Interfaces.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\ExcelNumberFormat.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\Microsoft.AspNetCore.JsonPatch.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\Microsoft.IO.RecyclableMemoryStream.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\Microsoft.OpenApi.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\Newtonsoft.Json.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\Newtonsoft.Json.Bson.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\NLog.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\NLog.Extensions.Logging.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\NLog.Web.AspNetCore.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\Oracle.ManagedDataAccess.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.BarCodes.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.Charting.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.Cryptography.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.Quality.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.Shared.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.Snippets.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.System.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.WPFonts.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\RBush.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\SixLabors.Fonts.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\System.Configuration.ConfigurationManager.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\System.Data.OleDb.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\System.Diagnostics.PerformanceCounter.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\System.DirectoryServices.Protocols.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\System.IO.Packaging.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\System.Security.Cryptography.ProtectedData.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\runtimes\win\lib\net10.0\System.Data.OleDb.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\runtimes\win\lib\net10.0\System.Diagnostics.PerformanceCounter.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\runtimes\linux\lib\net8.0\System.DirectoryServices.Protocols.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\runtimes\osx\lib\net8.0\System.DirectoryServices.Protocols.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\bin\Debug\net10.0\runtimes\win\lib\net8.0\System.DirectoryServices.Protocols.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\rjimswa.dswa.cache.json
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\scopedcss\bundle\MISReports_Api_Core.styles.css
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\staticwebassets.build.json
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\staticwebassets.build.json.cache
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\staticwebassets.development.json
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\swae.build.ex.cache
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\MISRepor.EAE723CB.Up2Date
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\refint\MISReports_Api_Core.dll
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.pdb
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.genruntimeconfig.cache
+E:\ceb_project 2\project\gimini.net_core\MISReports_Api_Core\obj\Debug\net10.0\ref\MISReports_Api_Core.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\App.config
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\appsettings.json
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.staticwebassets.endpoints.json
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.exe
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.dll.config
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.deps.json
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.runtimeconfig.json
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\MISReports_Api_Core.pdb
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\ClosedXML.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\ClosedXML.Parser.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\DocumentFormat.OpenXml.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\EPPlus.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\EPPlus.Interfaces.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\ExcelNumberFormat.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\Microsoft.OpenApi.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\Newtonsoft.Json.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\Newtonsoft.Json.Bson.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\NLog.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\NLog.Extensions.Logging.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\NLog.Web.AspNetCore.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\Oracle.ManagedDataAccess.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.BarCodes.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.Charting.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.Cryptography.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.Quality.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.Shared.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.Snippets.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.System.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.WPFonts.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\PdfSharp.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\RBush.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\SixLabors.Fonts.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\System.Configuration.ConfigurationManager.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\System.Data.OleDb.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\System.Diagnostics.PerformanceCounter.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\System.DirectoryServices.Protocols.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\System.IO.Packaging.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\runtimes\win\lib\net10.0\System.Data.OleDb.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\runtimes\win\lib\net10.0\System.Diagnostics.PerformanceCounter.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\runtimes\linux\lib\net8.0\System.DirectoryServices.Protocols.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\runtimes\osx\lib\net8.0\System.DirectoryServices.Protocols.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\bin\Debug\net10.0\runtimes\win\lib\net8.0\System.DirectoryServices.Protocols.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.csproj.AssemblyReference.cache
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.AssemblyInfoInputs.cache
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.AssemblyInfo.cs
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.csproj.CoreCompileInputs.cache
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\rjimswa.dswa.cache.json
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\scopedcss\bundle\MISReports_Api_Core.styles.css
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\staticwebassets.build.json
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\staticwebassets.build.json.cache
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\staticwebassets.development.json
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\swae.build.ex.cache
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\MISRepor.EAE723CB.Up2Date
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\refint\MISReports_Api_Core.dll
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.pdb
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\MISReports_Api_Core.genruntimeconfig.cache
+C:\Users\USER\Desktop\MISReports_Api_Core\obj\Debug\net10.0\ref\MISReports_Api_Core.dll
