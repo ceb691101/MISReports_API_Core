@@ -1,10 +1,11 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Helpers;
 using MISReports_Api.Models.PUCSLReports.PUCSLSolarConnection;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
 {
@@ -144,7 +145,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     conn.Open();
                     string sql = "SELECT tariff_cat FROM tariff_category ORDER BY seq";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -186,7 +187,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     string sql = "SELECT c.tariff_code FROM cat_tariff_table c, tariff_category t " +
                                  "WHERE c.tariff_cat=t.tariff_cat AND t.tariff_cat=? AND cus_cat=?";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("?", category);
                         cmd.Parameters.AddWithValue("?", cusCategory);
@@ -232,7 +233,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                 {
                     conn.Open();
                     string sql;
-                    OleDbCommand cmd = new OleDbCommand { Connection = conn };
+                    DbCommand cmd = Informix.CreateCommand().With(__o => { __o.Connection = conn; });
 
                     switch (rt)
                     {
@@ -306,15 +307,18 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
 
             try
             {
-                string bulkTypeCode = (rt == SolarReportType.Province)
+                /* string bulkTypeCode = (rt == SolarReportType.Province) - By Dinuli 2026-09-23
                     ? typeCode.PadLeft(2, '0')  // "3" → "03"
+                    : typeCode;*/
+                string bulkTypeCode = (rt == SolarReportType.Province && char.IsDigit(typeCode[0]))
+                    ? typeCode.PadLeft(2, '0')
                     : typeCode;
 
                 using (var conn = _dbConnection.GetConnection(true)) // Bulk connection
                 {
                     conn.Open();
                     string sql;
-                    OleDbCommand cmd = new OleDbCommand { Connection = conn };
+                    DbCommand cmd = Informix.CreateCommand().With(__o => { __o.Connection = conn; });
 
                     switch (rt)
                     {

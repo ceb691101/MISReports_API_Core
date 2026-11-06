@@ -1,6 +1,7 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 
 namespace MISReports_Api.Controllers
@@ -8,6 +9,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/materialmaster")]
     public class MaterialMasterController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly MaterialMasterDAL _dal = new MaterialMasterDAL();
 
         // PATH:
@@ -15,7 +18,7 @@ namespace MISReports_Api.Controllers
         // /api/materialmaster/report/RM-1001?status=2
         [HttpGet]
         [Route("report/{matCode}")]
-        public IHttpActionResult GetReport(string matCode, [FromUri] int? status = null)
+        public IActionResult GetReport(string matCode, [FromUri] int? status = null)
         {
             return ExecuteQuery(matCode, status);
         }
@@ -27,12 +30,12 @@ namespace MISReports_Api.Controllers
         // /api/materialmaster/report?matCode=RM-1001&status=2
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string matCode = null, [FromUri] int? status = null)
+        public IActionResult GetQuery([FromUri] string matCode = null, [FromUri] int? status = null)
         {
             return ExecuteQuery(matCode, status);
         }
 
-        private IHttpActionResult ExecuteQuery(string matCode, int? status)
+        private IActionResult ExecuteQuery(string matCode, int? status)
         {
             try
             {
@@ -69,6 +72,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. matCode={matCode}, status={status}", matCode, status);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
 
                 return InternalServerError(

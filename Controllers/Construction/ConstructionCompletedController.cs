@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 
@@ -12,12 +13,14 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/constructioncompleted")]
     public class ConstructionCompletedController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ConstructionCompletedDAL _dal = new ConstructionCompletedDAL();
 
         // PATH: /api/constructioncompleted/report/ALL/COLOMBO/510.00
         [HttpGet]
         [Route("report/{fundId}/{district}/{costCtr}")]
-        public IHttpActionResult GetReport(string fundId, string district, string costCtr)
+        public IActionResult GetReport(string fundId, string district, string costCtr)
         {
             return ExecuteQuery(costCtr, fundId, district, string.Empty);
         }
@@ -25,12 +28,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/constructioncompleted/report?fundId=ALL&district=COLOMBO&costCtr=510.00&csc=
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string fundId, [FromUri] string district, [FromUri] string costCtr, [FromUri] string csc = "")
+        public IActionResult GetQuery([FromUri] string fundId, [FromUri] string district, [FromUri] string costCtr, [FromUri] string csc = "")
         {
             return ExecuteQuery(costCtr, fundId, district, csc);
         }
 
-        private IHttpActionResult ExecuteQuery(string costCtr, string fundId, string district, string csc)
+        private IActionResult ExecuteQuery(string costCtr, string fundId, string district, string csc)
         {
             try
             {
@@ -84,6 +87,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. costCtr={costCtr}, fundId={fundId}, district={district}, csc={csc}", costCtr, fundId, district, csc);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

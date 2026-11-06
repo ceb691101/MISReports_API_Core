@@ -1,9 +1,10 @@
+using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL.Admin.Report_Parameters;
 using MISReports_Api.Models.Admin.Report_Parameters;
 using Newtonsoft.Json.Linq;
@@ -13,13 +14,15 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
     [RoutePrefix("api/reppara")]
     public class RepParaController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly RepParaRepository _repository = new RepParaRepository();
 
         [HttpGet]
         [Route("")]
         [Route("parameters")]
         [Route("GET_REPORTPARAMS")]
-        public IHttpActionResult GetAllReportParams()
+        public IActionResult GetAllReportParams()
         {
             try
             {
@@ -33,6 +36,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAllReportParams failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -44,7 +48,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
 
         [HttpGet]
         [Route("GET_POPEDREPPARAMS")]
-        public IHttpActionResult GetPopedRepParams()
+        public IActionResult GetPopedRepParams()
         {
             try
             {
@@ -58,6 +62,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetPopedRepParams failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -70,7 +75,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
         [HttpGet]
         [Route("reports")]
         [Route("GET_REPORTS")]
-        public IHttpActionResult GetAllReports()
+        public IActionResult GetAllReports()
         {
             try
             {
@@ -84,6 +89,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAllReports failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -97,7 +103,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
         [Route("parameters")]
         [Route("save-reportparams")]
         [Route("SAVE_REPORTPARAMS")]
-        public IHttpActionResult SaveReportParams([FromBody] RepParaModel request)
+        public IActionResult SaveReportParams([FromBody] RepParaModel request)
         {
             try
             {
@@ -129,6 +135,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "SaveReportParams failed. request={@request}", request);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -140,8 +147,8 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
 
         [HttpPost]
         [Route("populate")]
-        [Route("populateparamts")]
-        public IHttpActionResult PopulateParamTs([FromBody] PopulateParamTsModel request)
+        [Route("populateparamts")] // routing ignores letter case, so "POPULATEPARAMTS" still works
+        public IActionResult PopulateParamTs([FromBody] PopulateParamTsModel request)
         {
             try
             {
@@ -163,6 +170,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "PopulateParamTs failed. request={@request}", request);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -180,7 +188,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
         /// </summary>
         [HttpGet]
         [Route("debug-pending")]
-        public IHttpActionResult DebugPendingParams()
+        public IActionResult DebugPendingParams()
         {
             try
             {
@@ -193,6 +201,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "DebugPendingParams failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -205,7 +214,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
         [HttpPost]
         [Route("delete-reportparams")]
         [Route("DELETE_REPORTPARAMS")]
-        public IHttpActionResult DeleteReportParam([FromBody] RepParaModel request)
+        public IActionResult DeleteReportParam([FromBody] RepParaModel request)
         {
             try
             {
@@ -241,6 +250,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "DeleteReportParam failed. request={@request}", request);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,

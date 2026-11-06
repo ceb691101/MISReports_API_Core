@@ -1,15 +1,17 @@
-﻿using MISReports_Api.Models.SolarInformation;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.SolarInformation;
 using MISReports_Api.DBAccess;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
 {
     public class OrdinarySummaryDao
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DBConnection _dbConnection = new DBConnection();
 
         public bool TestConnection(out string errorMessage)
@@ -48,16 +50,17 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
                     return true;
                 }
             }
-            catch (OleDbException ex)
+            catch (DbException ex)
             {
+                logger.Error(ex, "TestConnection failed");
                 System.Diagnostics.Debug.WriteLine($"OLE DB Error: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"Error Code: {ex.ErrorCode}");
 
-                if (ex.Errors != null && ex.Errors.Count > 0)
+                if (ex.ProviderErrors() != null && ex.ProviderErrors().Count > 0)
                 {
-                    for (int i = 0; i < ex.Errors.Count; i++)
+                    for (int i = 0; i < ex.ProviderErrors().Count; i++)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Error {i}: SQLState={ex.Errors[i].SQLState}, NativeError={ex.Errors[i].NativeError}");
+                        System.Diagnostics.Debug.WriteLine($"Error {i}: SQLState={ex.ProviderErrors()[i].SQLState}, NativeError={ex.ProviderErrors()[i].NativeError}");
                     }
                 }
 
@@ -66,6 +69,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "TestConnection failed");
                 System.Diagnostics.Debug.WriteLine($"General Error: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"Exception Type: {ex.GetType().FullName}");
                 System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
@@ -93,7 +97,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
                     conn.Open();
                     System.Diagnostics.Debug.WriteLine("Connection opened successfully.");
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         // Add parameters in order
                         System.Diagnostics.Debug.WriteLine("Adding parameter 1: BillCycle");
@@ -132,23 +136,25 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
                 System.Diagnostics.Debug.WriteLine("=== END GetDetailedReport (Success) ===");
                 return results;
             }
-            catch (OleDbException ex)
+            catch (DbException ex)
             {
+                logger.Error(ex, "GetSummaryReport failed (exception rethrown)");
                 System.Diagnostics.Debug.WriteLine($"=== OLE DB ERROR ===");
                 System.Diagnostics.Debug.WriteLine($"Message: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"Error Code: {ex.ErrorCode}");
 
-                if (ex.Errors != null && ex.Errors.Count > 0)
+                if (ex.ProviderErrors() != null && ex.ProviderErrors().Count > 0)
                 {
-                    for (int i = 0; i < ex.Errors.Count; i++)
+                    for (int i = 0; i < ex.ProviderErrors().Count; i++)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Error {i}: SQLState={ex.Errors[i].SQLState}, NativeError={ex.Errors[i].NativeError}");
+                        System.Diagnostics.Debug.WriteLine($"Error {i}: SQLState={ex.ProviderErrors()[i].SQLState}, NativeError={ex.ProviderErrors()[i].NativeError}");
                     }
                 }
                 throw;
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetSummaryReport failed (exception rethrown)");
                 System.Diagnostics.Debug.WriteLine($"=== GENERAL ERROR ===");
                 System.Diagnostics.Debug.WriteLine($"Message: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
@@ -200,7 +206,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
         }
 
 
-        private SolarProgressSummaryModel MapSolarProgressFromReader(OleDbDataReader reader)
+        private SolarProgressSummaryModel MapSolarProgressFromReader(DbDataReader reader)
         {
             // DEBUG: Log all available columns
             var availableColumns = new List<string>();
@@ -229,7 +235,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
         }
 
         // Helper methods to safely get column values
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -243,7 +249,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -284,7 +290,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, string columnName)
+        private int GetIntValue(DbDataReader reader, string columnName)
         {
             try
             {

@@ -1,9 +1,10 @@
+﻿using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 namespace MISReports_Api.Controllers
@@ -11,12 +12,14 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/phvobsoletebos")]
     public class PHVObsoleteBOSController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly PHVObsoleteBOSDAL _dal = new PHVObsoleteBOSDAL();
 
         // PATH: /api/phvobsoletebos/report/2025/WH_CELIFT
         [HttpGet]
         [Route("report/{repYear:regex(^\\d{{4}}$)}/{whCode}")]
-        public IHttpActionResult GetReport(string repYear, string whCode)
+        public IActionResult GetReport(string repYear, string whCode)
         {
             return ExecuteQuery(repYear, whCode);
         }
@@ -24,12 +27,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/phvobsoletebos/report?repYear=2025&whCode=WH_CELIFT
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string repYear, [FromUri] string whCode)
+        public IActionResult GetQuery([FromUri] string repYear, [FromUri] string whCode)
         {
             return ExecuteQuery(repYear, whCode);
         }
 
-        private IHttpActionResult ExecuteQuery(string repYear, string whCode)
+        private IActionResult ExecuteQuery(string repYear, string whCode)
         {
             try
             {
@@ -71,6 +74,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. repYear={repYear}, whCode={whCode}", repYear, whCode);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

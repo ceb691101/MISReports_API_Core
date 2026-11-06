@@ -1,14 +1,16 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 
 namespace MISReports_Api.DAL
 {
     public class IssuesRaisedForJobsDAL
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string _connectionString =
             ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
@@ -85,10 +87,12 @@ ORDER BY
                 }
                 catch (OracleException oex)
                 {
+                    logger.Error(oex, "GetIssuesRaisedForJobs failed (exception rethrown). fromDate={fromDate}, toDate={toDate}, matCode={matCode}", fromDate, toDate, matCode);
                     throw new Exception($"Oracle error {oex.Number}: {oex.Message}", oex);
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetIssuesRaisedForJobs failed (exception rethrown). fromDate={fromDate}, toDate={toDate}, matCode={matCode}", fromDate, toDate, matCode);
                     throw new Exception("Error fetching issues-raised-for-jobs data from database", ex);
                 }
             }

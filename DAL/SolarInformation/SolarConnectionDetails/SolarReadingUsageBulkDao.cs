@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.SolarInformation;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
@@ -136,7 +137,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         /// <summary>
         /// Gets export readings data (mtr_seq=2) with customer info based on report type
         /// </summary>
-        private List<ExportReadingData> GetExportReadingsData(OleDbConnection conn, BulkUsageRequest request)
+        private List<ExportReadingData> GetExportReadingsData(DbConnection conn, BulkUsageRequest request)
         {
             var results = new List<ExportReadingData>();
 
@@ -144,7 +145,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
             {
                 string sql = BuildMainQuerySql(request.ReportType);
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     // Add parameters based on report type
                     cmd.Parameters.AddWithValue("@added_blcy", request.AddedBillCycle);
@@ -157,7 +158,16 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
                             cmd.Parameters.AddWithValue("@net_type", request.NetType);
                             break;
                         case SolarReportType.Province:
-                            cmd.Parameters.AddWithValue("@prov_code", request.ProvCode);
+                            string provTrim = request.ProvCode?.Trim() ?? "";
+                            string provPad = provTrim;
+                            string provNoPad = provTrim;
+                            if (int.TryParse(provTrim, out int prInt))
+                            {
+                                provPad = prInt.ToString("D2");
+                                provNoPad = prInt.ToString();
+                            }
+                            cmd.Parameters.AddWithValue("@prov_code1", provPad);
+                            cmd.Parameters.AddWithValue("@prov_code2", provNoPad);
                             cmd.Parameters.AddWithValue("@net_type", request.NetType);
                             break;
                         case SolarReportType.Region:
@@ -233,7 +243,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
                                       AND r.mtr_seq='2' 
                                       AND m.bill_cycle=? 
                                       AND c.area_cd = a.area_code 
-                                      AND a.prov_code=? 
+                                      AND (a.prov_code=? OR a.prov_code=?) 
                                       AND m.net_type=? 
                                       AND c.acc_nbr = m.acc_nbr 
                                       ORDER BY c.acc_nbr, r.mtr_seq";
@@ -271,7 +281,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         /// <summary>
         /// Gets import readings (mtr_seq=1) for multiple accounts in batch
         /// </summary>
-        private Dictionary<string, ImportReadingData> GetImportReadingsBatch(OleDbConnection conn,
+        private Dictionary<string, ImportReadingData> GetImportReadingsBatch(DbConnection conn,
             string addedBillCycle, List<string> accountNumbers)
         {
             var result = new Dictionary<string, ImportReadingData>();
@@ -295,7 +305,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
                                    AND mtr_type='KWD' 
                                    AND mtr_seq='1'";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         foreach (var acctNum in batch)
                         {
@@ -335,7 +345,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         /// <summary>
         /// Gets unit cost data from netmtcons for multiple accounts in batch
         /// </summary>
-        private Dictionary<string, UnitCostData> GetUnitCostDataBatch(OleDbConnection conn,
+        private Dictionary<string, UnitCostData> GetUnitCostDataBatch(DbConnection conn,
             string billCycle, List<string> accountNumbers)
         {
             var result = new Dictionary<string, UnitCostData>();
@@ -357,7 +367,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
                                    WHERE acc_nbr IN ({parameters}) 
                                    AND bill_cycle=?";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         foreach (var acctNum in batch)
                         {
@@ -396,7 +406,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         /// <summary>
         /// Gets area information (province, region) for multiple areas in batch
         /// </summary>
-        private Dictionary<string, AreaInformation> GetAreaInformationBatch(OleDbConnection conn,
+        private Dictionary<string, AreaInformation> GetAreaInformationBatch(DbConnection conn,
             List<string> areaCodes)
         {
             var result = new Dictionary<string, AreaInformation>();
@@ -413,7 +423,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
                                WHERE a.prov_code = p.prov_code 
                                AND a.area_code IN ({parameters})";
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     foreach (var areaCode in areaCodes)
                     {
@@ -451,7 +461,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         /// <summary>
         /// Gets agreement dates from netmeter table for multiple accounts in batch
         /// </summary>
-        private Dictionary<string, string> GetAgreementDatesBatch(OleDbConnection conn,
+        private Dictionary<string, string> GetAgreementDatesBatch(DbConnection conn,
             List<string> accountNumbers)
         {
             var result = new Dictionary<string, string>();
@@ -472,7 +482,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
                                    FROM netmeter 
                                    WHERE acc_nbr IN ({parameters})";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         foreach (var acctNum in batch)
                         {
@@ -506,7 +516,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         }
 
         // Helper methods
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -520,7 +530,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {

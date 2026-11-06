@@ -1,8 +1,8 @@
+using MISReports_Api.Compat;
 using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -10,6 +10,8 @@ namespace MISReports_Api.DAL
 {
     public class JobSearchRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
         public async Task<List<JobSearchModel>> GetJobSearchResultsAsync(
@@ -281,6 +283,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetJobSearchResultsAsync failed (exception rethrown). applicationId={applicationId}, applicationNo={applicationNo}, projectNo={projectNo}, idNo={idNo}, accountNo={accountNo}, telephone={telephone}", applicationId, applicationNo, projectNo, idNo, accountNo, telephone);
                 Debug.WriteLine($"GetJobSearchResultsAsync error: {ex.Message}");
                 throw;
             }
@@ -343,6 +346,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetApplicationStatusAsync failed (exception rethrown). applicationId={applicationId}", applicationId);
                 Debug.WriteLine($"GetApplicationStatusAsync error: {ex.Message}");
                 throw;
             }
@@ -420,6 +424,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetApplicationInfoAsync failed (exception rethrown). applicationId={applicationId}", applicationId);
                 Debug.WriteLine($"GetApplicationInfoAsync error: {ex.Message}");
                 throw;
             }
@@ -470,6 +475,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetContractorInfoAsync failed (exception rethrown). projectNo={projectNo}", projectNo);
                 Debug.WriteLine($"GetContractorInfoAsync error: {ex.Message}");
                 throw;
             }
@@ -528,6 +534,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetLabourDetailsAsync failed (exception rethrown). estimateNo={estimateNo}", estimateNo);
                 Debug.WriteLine($"GetLabourDetailsAsync error: {ex.Message}");
                 throw;
             }
@@ -577,6 +584,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetEnergizingBasicAsync failed (exception rethrown). projectNo={projectNo}", projectNo);
                 Debug.WriteLine($"GetEnergizingBasicAsync error: {ex.Message}");
                 throw;
             }
@@ -646,6 +654,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetStandardEstimateAsync failed (exception rethrown). estimateNo={estimateNo}", estimateNo);
                 Debug.WriteLine($"GetStandardEstimateAsync error: {ex.Message}");
                 throw;
             }
@@ -716,6 +725,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetJobStatusHistoryAsync failed (exception rethrown). projectNo={projectNo}", projectNo);
                 Debug.WriteLine($"GetJobStatusHistoryAsync error: {ex.Message}");
                 throw;
             }
@@ -764,6 +774,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetEnergizedInfoAsync failed (exception rethrown). projectNo={projectNo}", projectNo);
                 Debug.WriteLine($"GetEnergizedInfoAsync error: {ex.Message}");
                 throw;
             }
@@ -816,6 +827,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetResourceCostSummaryAsync failed (exception rethrown). estimateNo={estimateNo}", estimateNo);
                 Debug.WriteLine($"GetResourceCostSummaryAsync error: {ex.Message}");
                 throw;
             }
@@ -869,6 +881,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaterialTransactionsAsync failed (exception rethrown). estimateNo={estimateNo}", estimateNo);
                 Debug.WriteLine($"GetMaterialTransactionsAsync error: {ex.Message}");
                 throw;
             }
@@ -921,6 +934,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetResourceCostAsync failed (exception rethrown). estimateNo={estimateNo}", estimateNo);
                 Debug.WriteLine($"GetResourceCostSummaryAsync error: {ex.Message}");
                 throw;
             }
@@ -974,6 +988,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaterialsforjobsAsync failed (exception rethrown). estimateNo={estimateNo}", estimateNo);
                 Debug.WriteLine($"GetMaterialTransactionsAsync error: {ex.Message}");
                 throw;
             }
@@ -1029,6 +1044,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetEstimateApprovalsAsync failed (exception rethrown). estimateNo={estimateNo}", estimateNo);
                 Debug.WriteLine($"GetEstimateApprovalsAsync error: {ex.Message}");
                 throw;
             }
@@ -1084,6 +1100,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetRevisedEstimateApprovalsAsync failed (exception rethrown). projectNO={projectNO}", projectNO);
                 Debug.WriteLine($"GetEstimateApprovalsAsync error: {ex.Message}");
                 throw;
             }
@@ -1129,6 +1146,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetJobFinalizedAsync failed (exception rethrown). projectNo={projectNo}", projectNo);
                 Debug.WriteLine($"GetJobFinalizedAsync error: {ex.Message}");
                 throw;
             }
@@ -1176,6 +1194,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetContractorBillsAsync failed (exception rethrown). projectNo={projectNo}", projectNo);
                 Debug.WriteLine($"GetContractorBillsAsync error: {ex.Message}");
                 throw;
             }
@@ -1238,6 +1257,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetPivDetailsAsync failed (exception rethrown). referenceNo={referenceNo}", referenceNo);
                 Debug.WriteLine($"GetPivDetailsAsync error: {ex.Message}");
                 throw;
             }
@@ -1284,6 +1304,7 @@ ORDER BY sl.submit_date DESC";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAppointmentInfoAsync failed (exception rethrown). referenceNo={referenceNo}", referenceNo);
                 Debug.WriteLine($"GetAppointmentInfoAsync error: {ex.Message}");
                 throw;
             }

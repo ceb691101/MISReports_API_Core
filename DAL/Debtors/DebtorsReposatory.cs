@@ -1,29 +1,33 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
+using MISReports_Api.DBAccess;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL
 {
     public class DebtorsRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["InformixConnection"].ConnectionString;
 
         public List<DebtorsModel> GetDebtorsData(string opt, string cycle, string areaCode)
         {
             var debtorsList = new List<DebtorsModel>();
 
-            using (var conn = new OleDbConnection(connectionString))
+            using (var conn = Informix.CreateConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
 
-                    string sql = BuildSqlQuery(opt, cycle, areaCode);
+                    var parameters = new List<object>();
+                    string sql = BuildSqlQuery(opt, cycle, areaCode, parameters);
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = DbCommandHelper.CreateOleDbCommand(sql, conn, parameters.ToArray()))
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -43,8 +47,9 @@ namespace MISReports_Api.DAL
                         }
                     }
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
+                    logger.Error(ex, "GetDebtorsData failed. opt={opt}, cycle={cycle}, areaCode={areaCode}", opt, cycle, areaCode);
                     Console.WriteLine($"Error retrieving debtors data: {ex.Message}", ex);
                 }
             }
@@ -52,7 +57,8 @@ namespace MISReports_Api.DAL
             return debtorsList;
         }
 
-        private string BuildSqlQuery(string opt, string cycle, string areaCode)
+        // Builds the SQL with ? placeholders and adds the matching values, in order, to 'parameters'.
+        private string BuildSqlQuery(string opt, string cycle, string areaCode, List<object> parameters)
         {
             string baseSelect = @"SELECT cust_type, 
                 sum(m00+m01+m02+m03+m04+m05+m06+m07+m08+m09+m10+m11+m12+m13+m14+m15+m16+m17+m18+m19+m20+m21+m22+m23+m24+m25+m26+m27+m28+m29+m30+m31+m32+m33+m34+m35+m36+m37+m38+m39+m40+m41+m42+m43+m44+m45+m46+m47+m48+m49+m50+m51+m52+m53+m54+m55+m56+m57+m58+m59+m60+m61),
@@ -64,31 +70,38 @@ namespace MISReports_Api.DAL
             switch (opt?.ToUpper())
             {
                 case "A":
+                    parameters.Add(cycle ?? string.Empty);
+                    parameters.Add(areaCode ?? string.Empty);
                     return $@"{baseSelect}
                         FROM agesmry 
-                        WHERE bill_cycle = '{cycle}' AND area_code = '{areaCode}' 
+                        WHERE bill_cycle = ? AND area_code = ? 
                         GROUP BY cust_type";
 
                 case "P":
+                    parameters.Add(cycle ?? string.Empty);
+                    parameters.Add(areaCode ?? string.Empty);
                     return $@"{baseSelect}
                         FROM agesmry a1, areas a2 
-                        WHERE a1.bill_cycle = '{cycle}' 
+                        WHERE a1.bill_cycle = ? 
                         AND a1.area_code = a2.area_code 
-                        AND a2.prov_code = '{areaCode}' 
+                        AND a2.prov_code = ? 
                         GROUP BY a1.cust_type";
 
                 case "D":
+                    parameters.Add(cycle ?? string.Empty);
+                    parameters.Add(areaCode ?? string.Empty);
                     return $@"{baseSelect}
                         FROM agesmry a1, areas a2 
-                        WHERE a1.bill_cycle = '{cycle}' 
+                        WHERE a1.bill_cycle = ? 
                         AND a1.area_code = a2.area_code 
-                        AND a2.region = '{areaCode}' 
+                        AND a2.region = ? 
                         GROUP BY a1.cust_type";
 
                 case "E":
+                    parameters.Add(cycle ?? string.Empty);
                     return $@"{baseSelect}
                         FROM agesmry 
-                        WHERE bill_cycle = '{cycle}' 
+                        WHERE bill_cycle = ? 
                         GROUP BY cust_type";
 
                 default:

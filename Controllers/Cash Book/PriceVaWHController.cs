@@ -1,9 +1,10 @@
+﻿using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 namespace MISReports_Api.Controllers
@@ -11,12 +12,14 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/pricevawh")]
     public class PriceVaWHController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly PriceVaWHDAL _dal = new PriceVaWHDAL();
 
         // PATH: /api/pricevawh/report/2026/02/510.11/WRH-A
         [HttpGet]
         [Route("report/{repYear:regex(^\\d{{4}}$)}/{repMonth:regex(^\\d{{1,2}}$)}/{costCtr}/{whCode}")]
-        public IHttpActionResult GetReport(string repYear, string repMonth, string costCtr, string whCode)
+        public IActionResult GetReport(string repYear, string repMonth, string costCtr, string whCode)
         {
             return ExecuteQuery(repYear, repMonth, costCtr, whCode);
         }
@@ -24,12 +27,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/pricevawh/report?repYear=2026&repMonth=02&costCtr=510.11&whCode=WRH-A
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string repYear, [FromUri] string repMonth, [FromUri] string costCtr, [FromUri] string whCode)
+        public IActionResult GetQuery([FromUri] string repYear, [FromUri] string repMonth, [FromUri] string costCtr, [FromUri] string whCode)
         {
             return ExecuteQuery(repYear, repMonth, costCtr, whCode);
         }
 
-        private IHttpActionResult ExecuteQuery(string repYear, string repMonth, string costCtr, string whCode)
+        private IActionResult ExecuteQuery(string repYear, string repMonth, string costCtr, string whCode)
         {
             try
             {
@@ -81,6 +84,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. repYear={repYear}, repMonth={repMonth}, costCtr={costCtr}, whCode={whCode}", repYear, repMonth, costCtr, whCode);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

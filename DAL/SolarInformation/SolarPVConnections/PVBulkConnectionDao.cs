@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.SolarInformation;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
@@ -34,7 +35,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
                 {
                     conn.Open();
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         // Set command timeout for large queries
                         cmd.CommandTimeout = 300; // 5 minutes
@@ -131,7 +132,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
             return baseQuery;
         }
 
-        private void AddParameters(OleDbCommand cmd, SolarPVBulkConnectionRequest request)
+        private void AddParameters(DbCommand cmd, SolarPVBulkConnectionRequest request)
         {
             string cycleValue = request.CycleType == "A" ? request.BillCycle : request.CalcCycle;
 
@@ -220,7 +221,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
                 {
                     conn.Open();
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         // Add all account numbers as parameters
                         for (int i = 0; i < accountNumbers.Count; i++)
@@ -312,7 +313,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
                 {
                     conn.Open();
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         for (int i = 0; i < accountNumbers.Count; i++)
                         {
@@ -360,7 +361,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
                 {
                     conn.Open();
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         for (int i = 0; i < areaCodes.Count; i++)
                         {
@@ -393,7 +394,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
             return results;
         }
 
-        private SolarPVBulkConnectionModel MapPVConnectionFromReader(OleDbDataReader reader)
+        private SolarPVBulkConnectionModel MapPVConnectionFromReader(DbDataReader reader)
         {
             var model = new SolarPVBulkConnectionModel();
 
@@ -467,7 +468,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
         }
 
         // Helper methods
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -481,7 +482,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, string columnName)
+        private int GetIntValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -500,7 +501,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {

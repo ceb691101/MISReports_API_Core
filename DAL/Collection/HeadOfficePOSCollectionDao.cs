@@ -1,9 +1,9 @@
+using MISReports_Api.Compat;
 using MISReports_Api.Models.Collection;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.Collection
 {
@@ -25,7 +25,7 @@ namespace MISReports_Api.DAL.Collection
                     throw new Exception("InformixPosPayment connection string is missing from configuration.");
                 }
 
-                using (var conn = new OleDbConnection(connString))
+                using (var conn = Informix.CreateConnection(connString))
                 {
                     conn.Open();
 
@@ -41,7 +41,7 @@ namespace MISReports_Api.DAL.Collection
                         GROUP BY 1,4 
                         ORDER BY 1";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         DateTime fromDate = DateTime.Parse(request.FromDate);
                         DateTime toDate = DateTime.Parse(request.ToDate);

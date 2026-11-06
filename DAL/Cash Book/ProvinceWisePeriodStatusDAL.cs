@@ -1,15 +1,17 @@
 ﻿// DAL/ProvinceWisePeriodStatusDAL.cs
+using MISReports_Api.Compat;
 using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 
 namespace MISReports_Api.DAL
 {
     public class ProvinceWisePeriodStatusDAL
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string _connectionString =
             ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
@@ -75,10 +77,12 @@ namespace MISReports_Api.DAL
                 }
                 catch (OracleException oex)
                 {
+                    logger.Error(oex, "GetProvinceWisePeriodStatus failed (exception rethrown). repYear={repYear}, repMonth={repMonth}, compId={compId}", repYear, repMonth, compId);
                     throw new Exception($"Oracle error {oex.Number}: {oex.Message}", oex);
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetProvinceWisePeriodStatus failed (exception rethrown). repYear={repYear}, repMonth={repMonth}, compId={compId}", repYear, repMonth, compId);
                     throw new Exception("Error fetching province-wise period status data from database", ex);
                 }
             }

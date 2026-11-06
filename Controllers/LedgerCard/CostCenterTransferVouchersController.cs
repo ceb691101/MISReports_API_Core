@@ -1,12 +1,15 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DAL;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/ledgercard/costcenter-transfer-vouchers")]
     public class CostCenterTransferVouchersController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly CostCenterTransferVouchersRepository _repository;
 
         public CostCenterTransferVouchersController()
@@ -16,19 +19,19 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetReport(
-            [FromUri] string costctr, 
-            [FromUri] int repyear, 
-            [FromUri] int startmonth, 
-            [FromUri] int endmonth, 
-            [FromUri] string subac,
+        public IActionResult GetReport(
+            [FromUri] string costctr,
+            [FromUri] int repyear,
+            [FromUri] int startmonth,
+            [FromUri] int endmonth,
+            [FromUri] string subac = null,
             [FromUri] string docpf = null)
         {
             try
             {
-                if (string.IsNullOrEmpty(costctr) || string.IsNullOrEmpty(subac))
+                if (string.IsNullOrEmpty(costctr))
                 {
-                    return BadRequest("Parameters 'costctr' and 'subac' are required.");
+                    return BadRequest("Parameter 'costctr' is required.");
                 }
 
                 var data = _repository.GetCostCenterTransferVouchersData(costctr, repyear, startmonth, endmonth, subac, docpf);
@@ -36,13 +39,14 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReport failed. costctr={costctr}, repyear={repyear}, startmonth={startmonth}, endmonth={endmonth}, subac={subac}, docpf={docpf}", costctr, repyear, startmonth, endmonth, subac, docpf);
                 return InternalServerError(ex);
             }
         }
 
         [HttpGet]
         [Route("doc-profiles")]
-        public IHttpActionResult GetDocProfiles([FromUri] string costctr)
+        public IActionResult GetDocProfiles([FromUri] string costctr)
         {
             try
             {
@@ -56,6 +60,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetDocProfiles failed. costctr={costctr}", costctr);
                 return InternalServerError(ex);
             }
         }

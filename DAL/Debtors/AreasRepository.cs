@@ -1,14 +1,16 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL
 {
     public class AreasRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["InformixConnection"].ConnectionString;
 
         // regionCode / provCode are optional. When provided, results are scoped
@@ -19,7 +21,7 @@ namespace MISReports_Api.DAL
         {
             var areasList = new List<AreaModel>();
 
-            using (var conn = new OleDbConnection(connectionString))
+            using (var conn = Informix.CreateConnection(connectionString))
             {
                 try
                 {
@@ -34,7 +36,7 @@ namespace MISReports_Api.DAL
 
                     sql += " ORDER BY area_name";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         if (!string.IsNullOrWhiteSpace(regionCode))
                             cmd.Parameters.AddWithValue("?", regionCode);
@@ -58,8 +60,9 @@ namespace MISReports_Api.DAL
                         }
                     }
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
+                    logger.Error(ex, "GetAreas failed (exception rethrown). regionCode={regionCode}, provCode={provCode}", regionCode, provCode);
                     Console.WriteLine($"Error retrieving areas data: {ex.Message}", ex);
                     throw;
                 }

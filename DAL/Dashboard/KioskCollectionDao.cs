@@ -1,9 +1,9 @@
+using MISReports_Api.Compat;
 using MISReports_Api.Models.Dashboard;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.Dashboard
 {
@@ -30,13 +30,13 @@ namespace MISReports_Api.DAL.Dashboard
 
             try
             {
-                using (var conn = new OleDbConnection(_connectionString))
+                using (var conn = Informix.CreateConnection(_connectionString))
                 {
                     conn.Open();
                     return true;
                 }
             }
-            catch (OleDbException ex)
+            catch (DbException ex)
             {
                 var message = string.IsNullOrWhiteSpace(ex.Message)
                     ? "OLE DB connection failed with no message."
@@ -123,11 +123,11 @@ namespace MISReports_Api.DAL.Dashboard
                                 GROUP BY 1
                                 ORDER BY 1";
 
-            using (var conn = new OleDbConnection(_connectionString))
+            using (var conn = Informix.CreateConnection(_connectionString))
             {
                 conn.Open();
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("?", userId);
                     if (hasFilter)
@@ -153,7 +153,7 @@ namespace MISReports_Api.DAL.Dashboard
             return rows;
         }
 
-        private string GetDateStringValue(OleDbDataReader reader, string column)
+        private string GetDateStringValue(DbDataReader reader, string column)
         {
             try
             {
@@ -176,7 +176,7 @@ namespace MISReports_Api.DAL.Dashboard
             }
         }
 
-        private long GetLongValue(OleDbDataReader reader, string column)
+        private long GetLongValue(DbDataReader reader, string column)
         {
             try
             {

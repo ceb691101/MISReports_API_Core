@@ -1,21 +1,24 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/projectageanalysis")]
     public class ProjectAgeAnalysisController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ProjectAgeAnalysisRepository _repository = new ProjectAgeAnalysisRepository();
 
         [HttpGet]
         [Route("{deptId}")]
-        public async Task<IHttpActionResult> GetProjectAgeAnalysis(string deptId)
+        public async Task<IActionResult> GetProjectAgeAnalysis(string deptId)
         {
             Debug.WriteLine($"API Request received for ProjectAgeAnalysis deptId: {deptId}");
 
@@ -33,6 +36,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetProjectAgeAnalysis failed. deptId={deptId}", deptId);
                 var errorResponse = new
                 {
                     data = (object)null,

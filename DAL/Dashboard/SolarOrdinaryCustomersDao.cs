@@ -1,9 +1,10 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Models.Dashboard;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.Dashboard
@@ -222,18 +223,18 @@ namespace MISReports_Api.DAL.Dashboard
             }
         }
 
-        private string GetMaxBillCycle(OleDbConnection conn)
+        private string GetMaxBillCycle(DbConnection conn)
         {
             const string sql = "SELECT MAX(bill_cycle) FROM netprogrs";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 object result = cmd.ExecuteScalar();
                 return result == null || result == DBNull.Value ? string.Empty : result.ToString().Trim();
             }
         }
 
-        private string ResolveTargetBillCycle(OleDbConnection conn, string billCycle)
+        private string ResolveTargetBillCycle(DbConnection conn, string billCycle)
         {
             if (!string.IsNullOrWhiteSpace(billCycle))
             {
@@ -250,7 +251,7 @@ namespace MISReports_Api.DAL.Dashboard
             return targetCycle <= 0 ? string.Empty : targetCycle.ToString();
         }
 
-        private Dictionary<string, int> GetGroupedCountsFromNetprogrs(OleDbConnection conn, string billCycle, string region, string province, string area)
+        private Dictionary<string, int> GetGroupedCountsFromNetprogrs(DbConnection conn, string billCycle, string region, string province, string area)
         {
             var groupedCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
@@ -272,7 +273,7 @@ namespace MISReports_Api.DAL.Dashboard
                 ? $"SELECT n.bill_cycle, n.net_type, SUM(n.cnt), SUM(n.tot_gen_cap) FROM netprogrs n, areas a WHERE n.bill_cycle = ? AND n.area_code = a.area_code AND a.{filterColumn} = ? GROUP BY 1,2 ORDER BY 2,1"
                 : "SELECT bill_cycle, net_type, SUM(cnt), SUM(tot_gen_cap) FROM netprogrs WHERE bill_cycle = ? GROUP BY 1,2 ORDER BY 2,1";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("?", billCycle);
                 if (hasFilter)
@@ -305,7 +306,7 @@ namespace MISReports_Api.DAL.Dashboard
             return groupedCounts.TryGetValue(netType, out int count) ? count : 0;
         }
 
-        private List<int> GetAvailableBillCyclesFromNetprogrs(OleDbConnection conn, int maxAllowedCycle, int takeCount, string region, string province, string area)
+        private List<int> GetAvailableBillCyclesFromNetprogrs(DbConnection conn, int maxAllowedCycle, int takeCount, string region, string province, string area)
         {
             var billCycles = new List<int>();
 
@@ -327,7 +328,7 @@ namespace MISReports_Api.DAL.Dashboard
                 ? $"SELECT DISTINCT n.bill_cycle FROM netprogrs n, areas a WHERE n.bill_cycle <= ? AND n.area_code = a.area_code AND a.{filterColumn} = ? ORDER BY n.bill_cycle DESC"
                 : "SELECT DISTINCT bill_cycle FROM netprogrs WHERE bill_cycle <= ? ORDER BY bill_cycle DESC";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("?", maxAllowedCycle.ToString());
                 if (hasFilter)
@@ -356,7 +357,7 @@ namespace MISReports_Api.DAL.Dashboard
             return billCycles;
         }
 
-        private List<SolarOrdinaryGenerationCapacityPoint> GetGenerationCapacityByCycleFromNetprogrs(OleDbConnection conn, string billCycle, string region, string province, string area)
+        private List<SolarOrdinaryGenerationCapacityPoint> GetGenerationCapacityByCycleFromNetprogrs(DbConnection conn, string billCycle, string region, string province, string area)
         {
             var groupedByDisplayType = new Dictionary<string, SolarOrdinaryGenerationCapacityPoint>(StringComparer.OrdinalIgnoreCase);
 
@@ -378,7 +379,7 @@ namespace MISReports_Api.DAL.Dashboard
                 ? $"SELECT n.bill_cycle, n.net_type, SUM(n.cnt), SUM(n.tot_gen_cap) FROM netprogrs n, areas a WHERE n.bill_cycle = ? AND n.area_code = a.area_code AND a.{filterColumn} = ? GROUP BY 1,2 ORDER BY 2,1"
                 : "SELECT bill_cycle, net_type, SUM(cnt), SUM(tot_gen_cap) FROM netprogrs WHERE bill_cycle = ? GROUP BY 1,2 ORDER BY 2,1";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("?", billCycle);
                 if (hasFilter)

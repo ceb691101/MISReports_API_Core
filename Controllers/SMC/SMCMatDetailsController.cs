@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 
@@ -13,6 +14,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/smcmatdetails")]
     public class SMCMatDetailsController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly SMCMatDetailsDAL _dal = new SMCMatDetailsDAL();
 
         private static readonly string[] DateFormats = { "yyyy/MM/dd", "yyyy-MM-dd" };
@@ -20,7 +23,7 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/smcmatdetails/report?fromDate=2026/01/01&toDate=2026/01/31&compId=DISCO1
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery(
+        public IActionResult GetQuery(
             [FromUri] string fromDate,
             [FromUri] string toDate,
             [FromUri] string compId)
@@ -28,7 +31,7 @@ namespace MISReports_Api.Controllers
             return ExecuteQuery(fromDate, toDate, compId);
         }
 
-        private IHttpActionResult ExecuteQuery(string fromDate, string toDate, string compId)
+        private IActionResult ExecuteQuery(string fromDate, string toDate, string compId)
         {
             try
             {
@@ -79,6 +82,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. fromDate={fromDate}, toDate={toDate}, compId={compId}", fromDate, toDate, compId);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

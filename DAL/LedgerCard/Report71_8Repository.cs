@@ -1,13 +1,15 @@
+using MISReports_Api.Compat;
 using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace MISReports_Api.DAL
 {
     public class Report71_8Repository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString =
             ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
@@ -94,10 +96,12 @@ ORDER BY
                 }
                 catch (OracleException oex)
                 {
+                    logger.Error(oex, "GetReport71_8Data failed (exception rethrown). compId={compId}, repyear={repyear}, repmonth={repmonth}", compId, repyear, repmonth);
                     throw new Exception($"Oracle error in Report71_8Repository: Code {oex.Number} - {oex.Message}", oex);
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetReport71_8Data failed (exception rethrown). compId={compId}, repyear={repyear}, repmonth={repmonth}", compId, repyear, repmonth);
                     throw new Exception($"Error fetching 71/8 Report data: {ex.Message}", ex);
                 }
             }

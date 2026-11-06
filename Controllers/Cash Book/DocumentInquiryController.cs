@@ -1,20 +1,23 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using MISReports_Api.Repositories;
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/documentinquiry")]
     public class DocumentInquiryController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DocumentInquiryRepository _repository = new DocumentInquiryRepository();
 
         // GET api/documentinquiry/cashbook?costCtr=001&fromDate=20220101&toDate=20220131
         [HttpGet]
         [Route("cashbook")]
-        public async Task<IHttpActionResult> GetCashBookReport(
+        public async Task<IActionResult> GetCashBookReport(
             [FromUri] string costCtr,
             [FromUri] string fromDate,
             [FromUri] string toDate)
@@ -48,6 +51,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCashBookReport failed. costCtr={costCtr}, fromDate={fromDate}, toDate={toDate}", costCtr, fromDate, toDate);
                 System.Diagnostics.Trace.WriteLine($"ERROR in DocumentInquiryController: {ex}");
                 return Ok(new
                 {

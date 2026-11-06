@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL.AreaEngineerDashboard;
 using MISReports_Api.Models.AreaEngineerDashboard;
 using MISReports_Api.Models.DgmDashboard;
@@ -13,6 +14,8 @@ namespace MISReports_Api.Controllers.AreaEngineerDashboard
     [RoutePrefix("api/areaengineer")]
     public class AreaEngineerDashboardController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private static readonly AreaEngineerPivTotalDAL AreaEngineerPivTotalDAL = new AreaEngineerPivTotalDAL();
         private static readonly AreaEngineerPivPeriodSummaryDAL AreaEngineerPivPeriodSummaryDAL = new AreaEngineerPivPeriodSummaryDAL();
         private static readonly AreaEngineerStockValueDAL AreaEngineerStockValueDAL = new AreaEngineerStockValueDAL();
@@ -70,6 +73,7 @@ namespace MISReports_Api.Controllers.AreaEngineerDashboard
                     }
                     catch (Exception ex)
                     {
+                        logger.Error(ex, "GetOrReturnStaleAndRefreshWithMetadata failed");
                         Trace.TraceError($"{key}-refresh failed: {ex.Message}");
                     }
                 });
@@ -89,7 +93,7 @@ namespace MISReports_Api.Controllers.AreaEngineerDashboard
 
         [HttpGet]
         [Route("piv-total")]
-        public IHttpActionResult GetPivTotal(string companyId = "WPN", bool refresh = false)
+        public IActionResult GetPivTotal(string companyId = "WPN", bool refresh = false)
         {
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();
             string cacheKey = $"areaengineer-piv-total-{targetCompany}";
@@ -105,7 +109,7 @@ namespace MISReports_Api.Controllers.AreaEngineerDashboard
 
         [HttpGet]
         [Route("piv-period-summary")]
-        public IHttpActionResult GetPivPeriodSummary(string companyId = "WPN", string startDate = null, string endDate = null, bool refresh = false)
+        public IActionResult GetPivPeriodSummary(string companyId = "WPN", string startDate = null, string endDate = null, bool refresh = false)
         {
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();
             string cacheKey = $"areaengineer-piv-period-summary-{targetCompany}-{startDate ?? ""}-{endDate ?? ""}";
@@ -124,7 +128,7 @@ namespace MISReports_Api.Controllers.AreaEngineerDashboard
 
         [HttpGet]
         [Route("stock-value")]
-        public IHttpActionResult GetStockValue(string companyId = "WPN", bool refresh = false)
+        public IActionResult GetStockValue(string companyId = "WPN", bool refresh = false)
         {
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();
             string cacheKey = $"areaengineer-stock-value-{targetCompany}";
@@ -143,7 +147,7 @@ namespace MISReports_Api.Controllers.AreaEngineerDashboard
 
         [HttpGet]
         [Route("application-count")]
-        public IHttpActionResult GetApplicationCount(string companyId = "WPN", int? year = null, bool refresh = false)
+        public IActionResult GetApplicationCount(string companyId = "WPN", int? year = null, bool refresh = false)
         {
             int targetYear = year ?? DateTime.Today.Year;
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();
@@ -160,7 +164,7 @@ namespace MISReports_Api.Controllers.AreaEngineerDashboard
 
         [HttpGet]
         [Route("connections-given")]
-        public IHttpActionResult GetConnectionsGiven(string companyId = "WPN", int? year = null, bool refresh = false)
+        public IActionResult GetConnectionsGiven(string companyId = "WPN", int? year = null, bool refresh = false)
         {
             int targetYear = year ?? DateTime.Today.Year;
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();
@@ -177,7 +181,7 @@ namespace MISReports_Api.Controllers.AreaEngineerDashboard
 
         [HttpGet]
         [Route("pending-applications")]
-        public IHttpActionResult GetPendingApplications(string companyId = "WPN", int? year = null, bool refresh = false)
+        public IActionResult GetPendingApplications(string companyId = "WPN", int? year = null, bool refresh = false)
         {
             int targetYear = year ?? DateTime.Today.Year;
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();
@@ -194,7 +198,7 @@ namespace MISReports_Api.Controllers.AreaEngineerDashboard
 
         [HttpGet]
         [Route("material-master")]
-        public IHttpActionResult GetMaterialMaster(string companyId = "WPN", bool refresh = false)
+        public IActionResult GetMaterialMaster(string companyId = "WPN", bool refresh = false)
         {
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();
             string cacheKey = $"areaengineer-material-master-{targetCompany}";

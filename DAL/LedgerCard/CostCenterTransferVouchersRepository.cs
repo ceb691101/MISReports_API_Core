@@ -1,8 +1,8 @@
+using MISReports_Api.Compat;
 using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 
 namespace MISReports_Api.DAL
@@ -39,8 +39,12 @@ where       T1.doc_no=T2.doc_no and
             T2.status = 6 and
             T2.log_yr = :REPYEAR and
             T2.log_mth >= :STARTMONTH and
-            T2.log_mth <= :ENDMONTH and
-            t2.trf_dept= :SUBAC";
+            T2.log_mth <= :ENDMONTH";
+
+            if (!string.IsNullOrWhiteSpace(subac))
+            {
+                sql += " and trim(t2.trf_dept) like trim(:SUBAC) || '%'";
+            }
 
             if (!string.IsNullOrEmpty(docpf))
             {
@@ -60,7 +64,10 @@ ORDER BY    T1.doc_pf, T2.Trf_type, T1.doc_no, substr(T1.gl_cd,8,5), T1.sub_ac, 
                     cmd.Parameters.Add(new OracleParameter("REPYEAR", OracleDbType.Int32)).Value = repyear;
                     cmd.Parameters.Add(new OracleParameter("STARTMONTH", OracleDbType.Int32)).Value = startmonth;
                     cmd.Parameters.Add(new OracleParameter("ENDMONTH", OracleDbType.Int32)).Value = endmonth;
-                    cmd.Parameters.Add(new OracleParameter("SUBAC", OracleDbType.Varchar2)).Value = subac;
+                    if (!string.IsNullOrWhiteSpace(subac))
+                    {
+                        cmd.Parameters.Add(new OracleParameter("SUBAC", OracleDbType.Varchar2)).Value = subac.Trim();
+                    }
                     if (!string.IsNullOrEmpty(docpf))
                     {
                         cmd.Parameters.Add(new OracleParameter("DOCPF", OracleDbType.Varchar2)).Value = docpf;

@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -10,6 +10,8 @@ namespace MISReports_Api.DAL
 {
     public class WorkInProgressCompletedCostCenterwiseRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public async Task<List<WorkInProgressCompletedCostCenterwiseModel>> GetWorkInProgressCompletedCostCenterwise(string costctr, string fromDate, string toDate)
         {
             var resultList = new List<WorkInProgressCompletedCostCenterwiseModel>();
@@ -126,6 +128,7 @@ ORDER BY
                 }
                 catch (Exception ex)
                 {
+                    logger.Warn(ex, "GetWorkInProgressCompletedCostCenterwise attempt failed; retrying / trying next option. costctr={costctr}, fromDate={fromDate}, toDate={toDate}", costctr, fromDate, toDate);
                     lastException = ex;
                     continue;
                 }

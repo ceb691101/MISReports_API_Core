@@ -1,19 +1,22 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/trialbalance")]
     public class CompanyTrialBalanceController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly CompanyTrialBalanceRepository _repository = new CompanyTrialBalanceRepository();
 
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetTrialBalance([FromUri] string companyId, [FromUri] string month, [FromUri] string year)
+        public IActionResult GetTrialBalance([FromUri] string companyId, [FromUri] string month, [FromUri] string year)
         {
             try
             {
@@ -47,6 +50,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetTrialBalance failed. companyId={companyId}, month={month}, year={year}", companyId, month, year);
                 //  error details
                 System.Diagnostics.Trace.WriteLine($"ERROR: {ex.ToString()}");
 

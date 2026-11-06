@@ -1,5 +1,6 @@
-//06. Branch wise PIV Tabulation ( Both Bank and POS) Report
+﻿//06. Branch wise PIV Tabulation ( Both Bank and POS) Report
 
+using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Linq;

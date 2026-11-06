@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.General;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.General.ActiveCustomersAndSalesTariff
 {
@@ -42,7 +43,7 @@ namespace MISReports_Api.DAL.General.ActiveCustomersAndSalesTariff
 
                     string sql = BuildOrdinarySql(request.ReportType);
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@fromCycle", request.FromCycle);
                         cmd.Parameters.AddWithValue("@toCycle", request.ToCycle);
@@ -186,7 +187,7 @@ namespace MISReports_Api.DAL.General.ActiveCustomersAndSalesTariff
         }
 
         // ── Helpers ──────────────────────────────────────────────────────────────
-        private string GetStringValue(OleDbDataReader reader, int ordinal)
+        private string GetStringValue(DbDataReader reader, int ordinal)
         {
             try
             {
@@ -199,7 +200,7 @@ namespace MISReports_Api.DAL.General.ActiveCustomersAndSalesTariff
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, int ordinal)
+        private decimal GetDecimalValue(DbDataReader reader, int ordinal)
         {
             try
             {
@@ -250,7 +251,7 @@ namespace MISReports_Api.DAL.General.ActiveCustomersAndSalesTariff
 
                     string sql = BuildBulkSql(request.ReportType);
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@fromCycle", request.FromCycle);
                         cmd.Parameters.AddWithValue("@toCycle", request.ToCycle);
@@ -377,7 +378,7 @@ namespace MISReports_Api.DAL.General.ActiveCustomersAndSalesTariff
         }
 
         // ── Helpers ──────────────────────────────────────────────────────────────
-        private string GetStringValue(OleDbDataReader reader, int ordinal)
+        private string GetStringValue(DbDataReader reader, int ordinal)
         {
             try
             {
@@ -390,7 +391,7 @@ namespace MISReports_Api.DAL.General.ActiveCustomersAndSalesTariff
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, int ordinal)
+        private decimal GetDecimalValue(DbDataReader reader, int ordinal)
         {
             try
             {

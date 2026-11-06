@@ -1,15 +1,17 @@
 ﻿// DAL/GrnRaisedForPurchasingDAL.cs
+using MISReports_Api.Compat;
 using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 
 namespace MISReports_Api.DAL
 {
     public class GrnRaisedForPurchasingDAL
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string _connectionString =
             ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
@@ -81,10 +83,12 @@ SELECT * FROM (
                 }
                 catch (OracleException oex)
                 {
+                    logger.Error(oex, "GetGrnRaisedForPurchasing failed (exception rethrown). fromDate={fromDate}, toDate={toDate}, matCode={matCode}", fromDate, toDate, matCode);
                     throw new Exception($"Oracle error {oex.Number}: {oex.Message}", oex);
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetGrnRaisedForPurchasing failed (exception rethrown). fromDate={fromDate}, toDate={toDate}, matCode={matCode}", fromDate, toDate, matCode);
                     throw new Exception("Error fetching GRN-raised-for-purchasing data from database", ex);
                 }
             }
@@ -142,10 +146,12 @@ FROM DUAL";
                 }
                 catch (OracleException oex)
                 {
+                    logger.Error(oex, "GetPeriodSummary failed (exception rethrown). fromDate={fromDate}, toDate={toDate}", fromDate, toDate);
                     throw new Exception($"Oracle error {oex.Number}: {oex.Message}", oex);
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetPeriodSummary failed (exception rethrown). fromDate={fromDate}, toDate={toDate}", fromDate, toDate);
                     throw new Exception("Error fetching GRN period summary from database", ex);
                 }
             }

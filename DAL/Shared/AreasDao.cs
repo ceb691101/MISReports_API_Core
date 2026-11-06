@@ -1,13 +1,16 @@
-﻿using MISReports_Api.Models.SolarInformation;
+using MISReports_Api.Compat;
+using MISReports_Api.Models.SolarInformation;
 using MISReports_Api.DBAccess;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.Shared
 {
     public class AreasDao
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DBConnection _dbConnection = new DBConnection();
 
         public bool TestConnection(out string errorMessage)
@@ -31,19 +34,49 @@ namespace MISReports_Api.DAL.Shared
 
                     string sql = "SELECT area_code, area_name, prov_code, region FROM areas";
 
+                    string pPad = null;
+                    string pNoPad = null;
+
                     if (!string.IsNullOrWhiteSpace(regionCode))
+                    {
                         sql += " WHERE region = ?";
+                    }
                     else if (!string.IsNullOrWhiteSpace(provCode))
-                        sql += " WHERE prov_code = ?";
+                    {
+                        string pTrim = provCode.Trim();
+                        if (int.TryParse(pTrim, out int pInt))
+                        {
+                            pPad = pInt.ToString("D2");
+                            pNoPad = pInt.ToString();
+                            sql += " WHERE (prov_code = ? OR prov_code = ?)";
+                        }
+                        else
+                        {
+                            pPad = pTrim;
+                            sql += " WHERE prov_code = ?";
+                        }
+                    }
 
                     sql += " ORDER BY area_name";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         if (!string.IsNullOrWhiteSpace(regionCode))
+                        {
                             cmd.Parameters.AddWithValue("?", regionCode);
+                        }
                         else if (!string.IsNullOrWhiteSpace(provCode))
-                            cmd.Parameters.AddWithValue("?", provCode);
+                        {
+                            if (pNoPad != null)
+                            {
+                                cmd.Parameters.AddWithValue("?", pPad);
+                                cmd.Parameters.AddWithValue("?", pNoPad);
+                            }
+                            else
+                            {
+                                cmd.Parameters.AddWithValue("?", pPad);
+                            }
+                        }
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -62,8 +95,9 @@ namespace MISReports_Api.DAL.Shared
                         }
                     }
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
+                    logger.Error(ex, "GetAreas failed (exception rethrown). regionCode={regionCode}, provCode={provCode}", regionCode, provCode);
                     throw new Exception("Error retrieving areas data: " + ex.Message, ex);
                 }
             }

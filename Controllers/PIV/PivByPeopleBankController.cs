@@ -1,22 +1,25 @@
 ﻿//07.1 PIV Collections by Peoples Banks
 
 // File: Controllers/PivByPeopleBankController.cs
+using MISReports_Api.Compat;
 using MISReports_Api.Repositories;
 using System;
 using System.Globalization;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/pivbypeoplebank")]
     public class PivByPeopleBankController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly PivByPeopleBankRepository _repo = new PivByPeopleBankRepository();
 
         // GET: api/pivbypeoplebank/get?fromDate=20250401&toDate=20250430
         [HttpGet]
         [Route("get")]
-        public IHttpActionResult Get(string fromDate, string toDate)
+        public IActionResult Get(string fromDate, string toDate)
         {
             if (string.IsNullOrWhiteSpace(fromDate) || string.IsNullOrWhiteSpace(toDate))
             {
@@ -41,6 +44,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "Get failed. fromDate={fromDate}, toDate={toDate}", fromDate, toDate);
                 return InternalServerError(new Exception("Error while fetching PIV by People (Bank) report: " + ex.Message));
             }
         }

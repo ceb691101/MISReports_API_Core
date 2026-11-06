@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -10,6 +10,8 @@ namespace MISReports_Api.DAL
 {
     public class JobCardMaterialsRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
         public async Task<List<JobCardMaterialsModel>> GetMaterialConsumptionAsync(string projectNo, string costCenter)
@@ -97,6 +99,7 @@ ORDER BY
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaterialConsumptionAsync failed (exception rethrown). projectNo={projectNo}, costCenter={costCenter}", projectNo, costCenter);
                 Debug.WriteLine($"Error in GetMaterialConsumption: {ex.Message}\n{ex.StackTrace}");
                 throw;
             }

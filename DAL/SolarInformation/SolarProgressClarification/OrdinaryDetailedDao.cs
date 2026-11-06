@@ -1,10 +1,10 @@
-﻿using MISReports_Api.Models.SolarInformation;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.SolarInformation;
 using MISReports_Api.DBAccess;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.Common;
 using NLog;
 
 namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
@@ -49,15 +49,15 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
                     return true;
                 }
             }
-            catch (OleDbException ex)
+            catch (DbException ex)
             {
                 logger.Error(ex, "OLE DB Error occurred during connection test");
 
-                if (ex.Errors != null && ex.Errors.Count > 0)
+                if (ex.ProviderErrors() != null && ex.ProviderErrors().Count > 0)
                 {
-                    for (int i = 0; i < ex.Errors.Count; i++)
+                    for (int i = 0; i < ex.ProviderErrors().Count; i++)
                     {
-                        logger.Error($"Error {i}: SQLState={ex.Errors[i].SQLState}, NativeError={ex.Errors[i].NativeError}");
+                        logger.Error($"Error {i}: SQLState={ex.ProviderErrors()[i].SQLState}, NativeError={ex.ProviderErrors()[i].NativeError}");
                     }
                 }
 
@@ -94,7 +94,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
                     var areaMapping = GetAreaNameMapping(conn);
                     logger.Info($"Loaded {areaMapping.Count} area mappings");
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         logger.Debug("Adding parameter: BillCycle = {BillCycle}", request.BillCycle);
                         cmd.Parameters.AddWithValue("", request.BillCycle);
@@ -141,7 +141,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
                 logger.Info($"Returning {results.Count} results");
                 return results;
             }
-            catch (OleDbException ex)
+            catch (DbException ex)
             {
                 logger.Error(ex, "Database error occurred while fetching detailed report");
                 logger.Error($"SQL: {BuildSqlQuery(request)}");
@@ -184,7 +184,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
             return baseQuery;
         }
 
-        private SolarProgressDetailedModel MapSolarProgressFromReader(OleDbDataReader reader)
+        private SolarProgressDetailedModel MapSolarProgressFromReader(DbDataReader reader)
         {
             try
             {
@@ -229,7 +229,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
             }
         }
 
-        private Dictionary<string, string> GetAreaNameMapping(OleDbConnection conn)
+        private Dictionary<string, string> GetAreaNameMapping(DbConnection conn)
         {
             var areaMapping = new Dictionary<string, string>();
 
@@ -238,7 +238,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
                 string areaQuery = "SELECT area_code, area_name FROM areas";
                 logger.Debug($"Loading area mapping with query: {areaQuery}");
 
-                using (var cmd = new OleDbCommand(areaQuery, conn))
+                using (var cmd = Informix.CreateCommand(areaQuery, conn))
                 using (var reader = cmd.ExecuteReader())
                 {
                     int mappingCount = 0;
@@ -300,7 +300,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
         }
 
         // Helper methods to safely get column values
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -314,7 +314,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {

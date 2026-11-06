@@ -1,14 +1,17 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.SolarInformation;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
 {
     public class SolarCustomerInforOrdinaryDao
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DBConnection _dbConnection;
 
         public SolarCustomerInforOrdinaryDao()
@@ -79,6 +82,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCustomerInformation failed. accountNumber={accountNumber}", accountNumber);
                 response.ErrorMessage = $"Error retrieving customer information: {ex.Message}";
                 System.Diagnostics.Trace.WriteLine($"Error in GetCustomerInformation: {ex.Message}");
                 System.Diagnostics.Trace.WriteLine($"Stack Trace: {ex.StackTrace}");
@@ -100,7 +104,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
 
                     string query = "SELECT MAX(bill_cycle) FROM netmtcons WHERE acct_number = ?";
 
-                    using (var cmd = new OleDbCommand(query, conn))
+                    using (var cmd = Informix.CreateCommand(query, conn))
                     {
                         cmd.Parameters.Add("@acct_number", OleDbType.VarChar).Value = accountNumber;
 
@@ -115,6 +119,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetLatestBillCycle failed (exception rethrown). accountNumber={accountNumber}", accountNumber);
                 System.Diagnostics.Trace.WriteLine($"Error in GetLatestBillCycle: {ex.Message}");
                 throw;
             }
@@ -139,7 +144,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
                                    WHERE acct_number = ? 
                                    AND bill_cycle <= ?";
 
-                    using (var cmd = new OleDbCommand(query, conn))
+                    using (var cmd = Informix.CreateCommand(query, conn))
                     {
                         cmd.Parameters.Add("@acct_number", OleDbType.VarChar).Value = accountNumber;
                         cmd.Parameters.Add("@bill_cycle", OleDbType.Integer).Value = int.Parse(targetCycle);
@@ -167,6 +172,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetClosestAvailableCycleInPrnDat failed (exception rethrown). accountNumber={accountNumber}, targetCycle={targetCycle}", accountNumber, targetCycle);
                 System.Diagnostics.Trace.WriteLine($"Error in GetClosestAvailableCycleInPrnDat: {ex.Message}");
                 throw;
             }
@@ -191,7 +197,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
                                      FROM prn_dat_1 
                                      WHERE bill_cycle = ? AND acct_number = ?";
 
-                    using (var cmd = new OleDbCommand(query1, conn))
+                    using (var cmd = Informix.CreateCommand(query1, conn))
                     {
                         cmd.Parameters.Add("@bill_cycle", OleDbType.Integer).Value = int.Parse(billCycle);
                         cmd.Parameters.Add("@acct_number", OleDbType.VarChar).Value = accountNumber;
@@ -244,7 +250,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
                                      FROM netmtcons 
                                      WHERE calc_cycle = ? AND acct_number = ?";
 
-                    using (var cmd = new OleDbCommand(query2, conn))
+                    using (var cmd = Informix.CreateCommand(query2, conn))
                     {
                         cmd.Parameters.Add("@calc_cycle", OleDbType.Integer).Value = int.Parse(billCycle);
                         cmd.Parameters.Add("@acct_number", OleDbType.VarChar).Value = accountNumber;
@@ -286,6 +292,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCustomerBasicInfo failed (exception rethrown). accountNumber={accountNumber}, billCycle={billCycle}", accountNumber, billCycle);
                 System.Diagnostics.Trace.WriteLine($"Error in GetCustomerBasicInfo: {ex.Message}");
                 throw;
             }
@@ -309,7 +316,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
                                    WHERE a.prov_code = p.prov_code 
                                    AND a.area_code = ?";
 
-                    using (var cmd = new OleDbCommand(query, conn))
+                    using (var cmd = Informix.CreateCommand(query, conn))
                     {
                         cmd.Parameters.Add("@area_code", OleDbType.VarChar).Value = areaCode;
 
@@ -333,6 +340,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAreaInformation failed. areaCode={areaCode}", areaCode);
                 System.Diagnostics.Trace.WriteLine($"Error in GetAreaInformation: {ex.Message}");
                 // Don't throw - area info is supplementary
             }
@@ -359,7 +367,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
                                    WHERE calc_cycle BETWEEN ? AND ? AND acct_number = ? 
                                    ORDER BY calc_cycle";
 
-                    using (var cmd = new OleDbCommand(query, conn))
+                    using (var cmd = Informix.CreateCommand(query, conn))
                     {
                         cmd.Parameters.Add("@start_cycle", OleDbType.Integer).Value = int.Parse(startCycle);
                         cmd.Parameters.Add("@end_cycle", OleDbType.Integer).Value = int.Parse(latestBillCycle);
@@ -418,6 +426,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetEnergyHistory failed (exception rethrown). accountNumber={accountNumber}, latestBillCycle={latestBillCycle}, customerInfo={@customerInfo}", accountNumber, latestBillCycle, customerInfo);
                 System.Diagnostics.Trace.WriteLine($"Error in GetEnergyHistory: {ex.Message}");
                 throw;
             }
@@ -441,6 +450,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "CalculateStartCycle failed. latestCycle={latestCycle}, monthsBack={monthsBack}", latestCycle, monthsBack);
                 System.Diagnostics.Trace.WriteLine($"Error in CalculateStartCycle: {ex.Message}");
                 return latestCycle;
             }
@@ -457,7 +467,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
 
                     string query = "SELECT COUNT(*) FROM netmtcons WHERE acct_number = ?";
 
-                    using (var cmd = new OleDbCommand(query, conn))
+                    using (var cmd = Informix.CreateCommand(query, conn))
                     {
                         cmd.Parameters.Add("@acct_number", OleDbType.VarChar).Value = accountNumber;
 
@@ -471,6 +481,7 @@ namespace MISReports_Api.DAO.SolarInformation.SolarCustomerInformation
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "AccountExists failed. accountNumber={accountNumber}", accountNumber);
                 System.Diagnostics.Trace.WriteLine($"Error in AccountExists: {ex.Message}");
                 return false;
             }

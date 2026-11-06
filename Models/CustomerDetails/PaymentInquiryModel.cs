@@ -64,7 +64,16 @@ namespace MISReports_Api.Models.CustomerDetails
         public string ProvName { get; set; }
         public string ProvCode { get; set; }
         public string ProvSvrName { get; set; }
+        // SECURITY: database credentials must never be sent to API callers.
+        // They are excluded from both JSON and XML responses.
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Runtime.Serialization.IgnoreDataMember]
+        [System.Xml.Serialization.XmlIgnore]
         public string Username { get; set; }
+
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Runtime.Serialization.IgnoreDataMember]
+        [System.Xml.Serialization.XmlIgnore]
         public string Password { get; set; }
     }
 

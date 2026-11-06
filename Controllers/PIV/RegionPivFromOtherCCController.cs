@@ -1,14 +1,17 @@
 ﻿//23.Region wise PIV Collections by Provincial POS relevant to Other Cost Centers
+using MISReports_Api.Compat;
 using MISReports_Api.Repositories;
 using System;
 using System.Globalization;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/Regional-POS-relevant-to-OtherCC")]
     public class RegionPivFromOtherCCController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly RegionPivFromOtherCCRepository _repo = new RegionPivFromOtherCCRepository();
 
         /// <summary>
@@ -18,7 +21,7 @@ namespace MISReports_Api.Controllers
         /// </summary>
         [HttpGet]
         [Route("get")]
-        public IHttpActionResult Get(string compId, string fromDate, string toDate)
+        public IActionResult Get(string compId, string fromDate, string toDate)
         {
             if (string.IsNullOrWhiteSpace(compId) ||
                 string.IsNullOrWhiteSpace(fromDate) ||
@@ -40,6 +43,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "Get failed. compId={compId}, fromDate={fromDate}, toDate={toDate}", compId, fromDate, toDate);
                 return InternalServerError(new Exception("Error fetching Region PIV from Other CC report: " + ex.Message));
             }
         }

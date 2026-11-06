@@ -1,19 +1,22 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/ledgercardtotal")]
     public class LedgerCardTotalController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly LedgerCardTotalRepository _repo = new LedgerCardTotalRepository();
 
         // ---------- MAIN ROUTE (used by front-end) ----------
         [HttpGet]
         [Route("report/{glcode}/{repyear:int}/{repmonth:int}")]
-        public IHttpActionResult GetReport(string glcode, int repyear, int repmonth)
+        public IActionResult GetReport(string glcode, int repyear, int repmonth)
         {
             return GetLedgerCardTotalData(glcode, repyear, repmonth);
         }
@@ -21,7 +24,7 @@ namespace MISReports_Api.Controllers
         // ---------- LEGACY query-string support ----------
         [HttpGet]
         [Route("")]
-        public IHttpActionResult Get(
+        public IActionResult Get(
             [FromUri] string glcode,
             [FromUri] int repyear,
             [FromUri] int repmonth)
@@ -29,7 +32,7 @@ namespace MISReports_Api.Controllers
             return GetLedgerCardTotalData(glcode, repyear, repmonth);
         }
 
-        private IHttpActionResult GetLedgerCardTotalData(string glcode, int repyear, int repmonth)
+        private IActionResult GetLedgerCardTotalData(string glcode, int repyear, int repmonth)
         {
             try
             {
@@ -79,6 +82,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetLedgerCardTotalData failed. glcode={glcode}, repyear={repyear}, repmonth={repmonth}", glcode, repyear, repmonth);
                 System.Diagnostics.Debug.WriteLine(
                     $"Error in LedgerCardTotalController: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(

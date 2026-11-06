@@ -1,19 +1,22 @@
-﻿using MISReports_Api.DAL.Inventory;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.Inventory;
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers.Inventory
 {
     [RoutePrefix("api/qty-on-hand-all-region")]
     public class QtyonHandAllRegionController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly QtyonHandAllRegionRepository _repository = new QtyonHandAllRegionRepository();
 
         // GET api/qty-on-all-region?compId=XXX&matcode=YYY
         [HttpGet]
         [Route("")]
-        public async Task<IHttpActionResult> GetQtyonHandAllRegion(
+        public async Task<IActionResult> GetQtyonHandAllRegion(
             [FromUri] string compId,
             [FromUri] string matcode)
         {
@@ -38,6 +41,7 @@ namespace MISReports_Api.Controllers.Inventory
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetQtyonHandAllRegion failed. compId={compId}, matcode={matcode}", compId, matcode);
                 System.Diagnostics.Trace.WriteLine($"ERROR: {ex}");
 
                 return Ok(new

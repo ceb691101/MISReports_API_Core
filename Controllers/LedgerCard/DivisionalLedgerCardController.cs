@@ -1,19 +1,22 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/divisionalledgercard")]
     public class DivisionalLedgerCardController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DivisionalLedgerCardRepository _repo = new DivisionalLedgerCardRepository();
 
         // ---------- MAIN ROUTE ----------
         [HttpGet]
         [Route("report/{year:int}/{month:int}/{glcode}/{company}")]
-        public IHttpActionResult GetReport(int year, int month, string glcode, string company)
+        public IActionResult GetReport(int year, int month, string glcode, string company)
         {
             return GetData(year, month, glcode, company);
         }
@@ -21,7 +24,7 @@ namespace MISReports_Api.Controllers
         // ---------- LEGACY Query String ----------
         [HttpGet]
         [Route("")]
-        public IHttpActionResult Get(
+        public IActionResult Get(
             [FromUri] int year,
             [FromUri] int month,
             [FromUri] string glcode,
@@ -30,7 +33,7 @@ namespace MISReports_Api.Controllers
             return GetData(year, month, glcode, company);
         }
 
-        private IHttpActionResult GetData(int year, int month, string glcode, string company)
+        private IActionResult GetData(int year, int month, string glcode, string company)
         {
             try
             {
@@ -79,6 +82,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetData failed. year={year}, month={month}, glcode={glcode}, company={company}", year, month, glcode, company);
                 System.Diagnostics.Debug.WriteLine(
                     $"Error in DivisionalLedgerCardController: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(

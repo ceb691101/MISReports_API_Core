@@ -1,7 +1,8 @@
 ﻿// Controllers/ProvinceWisePeriodStatusController.cs
+using MISReports_Api.Compat;
 using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 
 namespace MISReports_Api.Controllers
@@ -9,12 +10,14 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/provincewiseperiodstatus")]
     public class ProvinceWisePeriodStatusController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ProvinceWisePeriodStatusDAL _dal = new ProvinceWisePeriodStatusDAL();
 
         // PATH: /api/provincewiseperiodstatus/report/2026/7/CC
         [HttpGet]
         [Route("report/{repYear:int}/{repMonth:int}/{compId}")]
-        public IHttpActionResult GetReport(int repYear, int repMonth, string compId)
+        public IActionResult GetReport(int repYear, int repMonth, string compId)
         {
             return ExecuteQuery(repYear, repMonth, compId);
         }
@@ -22,12 +25,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/provincewiseperiodstatus/report?repYear=2026&repMonth=7&compId=CC
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] int repYear, [FromUri] int repMonth, [FromUri] string compId)
+        public IActionResult GetQuery([FromUri] int repYear, [FromUri] int repMonth, [FromUri] string compId)
         {
             return ExecuteQuery(repYear, repMonth, compId);
         }
 
-        private IHttpActionResult ExecuteQuery(int repYear, int repMonth, string compId)
+        private IActionResult ExecuteQuery(int repYear, int repMonth, string compId)
         {
             try
             {
@@ -74,6 +77,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. repYear={repYear}, repMonth={repMonth}, compId={compId}", repYear, repMonth, compId);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

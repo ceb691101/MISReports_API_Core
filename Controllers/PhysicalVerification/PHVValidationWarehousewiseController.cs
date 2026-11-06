@@ -1,13 +1,16 @@
-﻿using MISReports_Api.DAL.PhysicalVerification;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.PhysicalVerification;
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/phv-validation-warehousewise")]
     public class PHVValidationWarehousewiseController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly PHVValidationWarehousewiseRepository _repository;
 
         public PHVValidationWarehousewiseController()
@@ -17,7 +20,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("list")]
-        public async Task<IHttpActionResult> GetWarehousewiseValidation(
+        public async Task<IActionResult> GetWarehousewiseValidation(
             string deptId,
             string warehouseCode,
             int repYear,   
@@ -35,6 +38,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetWarehousewiseValidation failed. deptId={deptId}, warehouseCode={warehouseCode}, repYear={repYear}, repMonth={repMonth}", deptId, warehouseCode, repYear, repMonth);
                 return InternalServerError(ex);
             }
         }

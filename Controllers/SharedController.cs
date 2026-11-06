@@ -1,4 +1,5 @@
-﻿using MISReports_Api.DAL.SolarInformation.SolarProgressClarification;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.SolarInformation.SolarProgressClarification;
 using MISReports_Api.DAL.SolarInformation.SolarPVConnections;
 using MISReports_Api.DAL.SolarInformation.SolarPaymentRetail;
 using MISReports_Api.DAL.SolarInformation.SolarPVCapacity;
@@ -8,13 +9,15 @@ using MISReports_Api.DAL.Shared;
 using MISReports_Api.DAL;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api")]
     public class SharedController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly AreasDao _areasDao = new AreasDao();
         private readonly ProvinceDao _provinceDao = new ProvinceDao();
         private readonly RegionDao _regionDao = new RegionDao();
@@ -37,7 +40,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("ordinary/areas")]
-        public IHttpActionResult GetAreas([FromUri] string regionCode = null, [FromUri] string provCode = null)
+        public IActionResult GetAreas([FromUri] string regionCode = null, [FromUri] string provCode = null)
         {
             try
             {
@@ -61,6 +64,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAreas failed. regionCode={regionCode}, provCode={provCode}", regionCode, provCode);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -72,7 +76,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("bulk/areas")]
-        public IHttpActionResult GetBulkAreas([FromUri] string regionCode = null, [FromUri] string provCode = null)
+        public IActionResult GetBulkAreas([FromUri] string regionCode = null, [FromUri] string provCode = null)
         {
             try
             {
@@ -96,6 +100,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetBulkAreas failed. regionCode={regionCode}, provCode={provCode}", regionCode, provCode);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -107,7 +112,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("bulk/province")]
-        public IHttpActionResult GetProvince([FromUri] string regionCode = null)
+        public IActionResult GetProvince([FromUri] string regionCode = null)
         {
             try
             {
@@ -131,6 +136,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetProvince failed. regionCode={regionCode}", regionCode);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -142,7 +148,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("ordinary/province")]
-        public IHttpActionResult GetOrdinaryProvince([FromUri] string regionCode = null)
+        public IActionResult GetOrdinaryProvince([FromUri] string regionCode = null)
         {
             try
             {
@@ -166,6 +172,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetOrdinaryProvince failed. regionCode={regionCode}", regionCode);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -177,7 +184,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("bulk/region")]
-        public IHttpActionResult GetRegion()
+        public IActionResult GetRegion()
         {
             try
             {
@@ -201,6 +208,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetRegion failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -212,7 +220,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("ordinary/region")]
-        public IHttpActionResult GetOrdinaryRegion()
+        public IActionResult GetOrdinaryRegion()
         {
             try
             {
@@ -236,6 +244,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetOrdinaryRegion failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -247,7 +256,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("bulk/netmtchg/billcycle/max")]
-        public IHttpActionResult GetMaxBillCycle()
+        public IActionResult GetMaxBillCycle()
         {
             try
             {
@@ -261,6 +270,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaxBillCycle failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -272,7 +282,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("bulk/netmtcons/billcycle/max")]
-        public IHttpActionResult GetPVBillCycle()
+        public IActionResult GetPVBillCycle()
         {
             try
             {
@@ -286,6 +296,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetPVBillCycle failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -297,7 +308,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("ordinary/netmtchg/billcycle/max")]
-        public IHttpActionResult GetOrdinaryBillCycle()
+        public IActionResult GetOrdinaryBillCycle()
         {
             try
             {
@@ -311,6 +322,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetOrdinaryBillCycle failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -322,7 +334,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("ordinary/netmtcons/billcycle/max")]
-        public IHttpActionResult GetRetailBillCycle()
+        public IActionResult GetRetailBillCycle()
         {
             try
             {
@@ -336,6 +348,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetRetailBillCycle failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -347,7 +360,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("ordinary/netprogrs/billcycle/max")]
-        public IHttpActionResult GetPVCapacityMaxBillCycle()
+        public IActionResult GetPVCapacityMaxBillCycle()
         {
             try
             {
@@ -361,6 +374,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetPVCapacityMaxBillCycle failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -372,7 +386,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("ordinary/areas/billcycle/min")]
-        public IHttpActionResult GetBillCycleFromArea()
+        public IActionResult GetBillCycleFromArea()
         {
             try
             {
@@ -386,6 +400,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetBillCycleFromArea failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -397,7 +412,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("bulk/mon_tot/billcycle/max")]
-        public IHttpActionResult GetContractDemandBillCycle()
+        public IActionResult GetContractDemandBillCycle()
         {
             try
             {
@@ -411,6 +426,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetContractDemandBillCycle failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -422,7 +438,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("ordinary/consmry/billcycle/max")]
-        public IHttpActionResult GetActiveCustomersSalesOrdBillCycle()
+        public IActionResult GetActiveCustomersSalesOrdBillCycle()
         {
             try
             {
@@ -436,6 +452,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetActiveCustomersSalesOrdBillCycle failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -447,7 +464,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("bulk/account_info/billcycle/max")]
-        public IHttpActionResult GetActiveCustomersSalesBulkBillCycle()
+        public IActionResult GetActiveCustomersSalesBulkBillCycle()
         {
             try
             {
@@ -461,6 +478,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetActiveCustomersSalesBulkBillCycle failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -472,7 +490,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("ordinary/areas/calccycle/max")]
-        public IHttpActionResult GetCalcCycleFromArea()
+        public IActionResult GetCalcCycleFromArea()
         {
             try
             {
@@ -486,6 +504,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCalcCycleFromArea failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -504,7 +523,7 @@ namespace MISReports_Api.Controllers
         // Response: { data: { maxBillCycle: "438" }, errorMessage: null }
         [HttpGet]
         [Route("billsmry/prn_dat_1/billcycle/max")]
-        public IHttpActionResult GetGovernmentAccountsBillCycle([FromUri] string areaCode = null)
+        public IActionResult GetGovernmentAccountsBillCycle([FromUri] string areaCode = null)
         {
             try
             {
@@ -532,6 +551,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetGovernmentAccountsBillCycle failed. areaCode={areaCode}", areaCode);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -550,7 +570,7 @@ namespace MISReports_Api.Controllers
         // Response: { data: { maxBillCycle: "454", billCycles: [...] }, errorMessage: null }
         [HttpGet]
         [Route("receivable-position/billcycle/max")]
-        public IHttpActionResult GetReceivablePositionBillCycle([FromUri] string billType = null)
+        public IActionResult GetReceivablePositionBillCycle([FromUri] string billType = null)
         {
             try
             {
@@ -566,6 +586,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReceivablePositionBillCycle failed. billType={billType}", billType);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -584,7 +605,7 @@ namespace MISReports_Api.Controllers
         // Response: { data: { maxBillCycle: "438", billCycles: [...] }, errorMessage: null }
         [HttpGet]
         [Route("billsmry/areas/arrears-position/billcycle/max")]
-        public IHttpActionResult GetArrearsPositionBillCycle([FromUri] string areaCode = null)
+        public IActionResult GetArrearsPositionBillCycle([FromUri] string areaCode = null)
         {
             try
             {
@@ -612,6 +633,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetArrearsPositionBillCycle failed. areaCode={areaCode}", areaCode);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,

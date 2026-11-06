@@ -1,11 +1,13 @@
-﻿using System;
-using System.Configuration;
-using System.Data.OleDb;
+﻿using MISReports_Api.Compat;
+using System;
+using System.Data.Common;
 
 namespace MISReports_Api.DBAccess
 {
     public class DBConnection
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string bulkConnectionString;
         private readonly string ordinaryConnectionString;
 
@@ -38,6 +40,7 @@ namespace MISReports_Api.DBAccess
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "DBConnection constructor failed (exception rethrown)");
                 System.Diagnostics.Trace.WriteLine($"DBConnection initialization error: {ex.Message}");
                 System.Diagnostics.Trace.WriteLine($"Stack Trace: {ex.StackTrace}");
                 throw;
@@ -59,7 +62,7 @@ namespace MISReports_Api.DBAccess
 
             try
             {
-                using (var conn = new OleDbConnection(connString))
+                using (var conn = Informix.CreateConnection(connString))
                 {
                     System.Diagnostics.Trace.WriteLine($"Attempting to open {(useBulkConnection ? "Bulk" : "Ordinary")} connection");
                     System.Diagnostics.Trace.WriteLine($"Connection string: {GetMaskedConnectionString(connString)}");
@@ -72,14 +75,16 @@ namespace MISReports_Api.DBAccess
                     return true;
                 }
             }
-            catch (OleDbException oleEx)
+            catch (DbException oleEx)
             {
+                logger.Error(oleEx, "TestConnection failed. useBulkConnection={useBulkConnection}", useBulkConnection);
                 errorMessage = $"OleDb Error: {oleEx.Message}, Error Code: {oleEx.ErrorCode}";
                 System.Diagnostics.Trace.WriteLine(errorMessage);
                 return false;
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "TestConnection failed. useBulkConnection={useBulkConnection}", useBulkConnection);
                 errorMessage = $"Connection failed: {ex.Message}";
                 System.Diagnostics.Trace.WriteLine(errorMessage);
                 System.Diagnostics.Trace.WriteLine($"Stack Trace: {ex.StackTrace}");
@@ -107,7 +112,7 @@ namespace MISReports_Api.DBAccess
         }
 
         // Get a specific connection type
-        public OleDbConnection GetConnection(bool useBulkConnection = true)
+        public DbConnection GetConnection(bool useBulkConnection = true)
         {
             string connString = useBulkConnection ? bulkConnectionString : ordinaryConnectionString;
 
@@ -120,7 +125,7 @@ namespace MISReports_Api.DBAccess
             }
 
             System.Diagnostics.Trace.WriteLine($"Creating {(useBulkConnection ? "Bulk" : "Ordinary")} connection");
-            return new OleDbConnection(connString);
+            return Informix.CreateConnection(connString);
         }
 
         // Get connection string for a specific type

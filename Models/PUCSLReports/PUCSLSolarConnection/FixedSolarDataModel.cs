@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace MISReports_Api.Models.PUCSLReports.PUCSLSolarConnection
 {
@@ -34,6 +34,7 @@ namespace MISReports_Api.Models.PUCSLReports.PUCSLSolarConnection
         public decimal BulkKwhAt37 { get; set; }
         public decimal BulkKwhAt2318 { get; set; }
         public decimal BulkKwhAt2706 { get; set; }
+        public decimal BulkKwhOthers { get; set; }
 
         // --- Combined kWh Purchased (Ordinary + Bulk) returned to frontend ---
         public decimal KwhAt1550 { get; set; }

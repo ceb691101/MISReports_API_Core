@@ -1,19 +1,22 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/debtors")]
     public class DebtorController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DebtorRepository _repository = new DebtorRepository();
 
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetDebtorDetails(
+        public IActionResult GetDebtorDetails(
             [FromUri] string custType,
             [FromUri] string billCycle,
             [FromUri] string areaCode,
@@ -66,6 +69,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetDebtorDetails failed. custType={custType}, billCycle={billCycle}, areaCode={areaCode}, ageRange={ageRange}", custType, billCycle, areaCode, ageRange);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,

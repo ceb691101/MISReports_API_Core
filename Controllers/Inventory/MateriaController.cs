@@ -1,22 +1,25 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/materials")]
     public class MaterialController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly MaterialRepository _materialRepository = new MaterialRepository();
 
         // Get name and mat_cd
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetMaterials()
+        public IActionResult GetMaterials()
         {
             try
             {
@@ -32,6 +35,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaterials failed");
                 var errorResponse = new
                 {
                     data = (object)null,
@@ -46,7 +50,7 @@ namespace MISReports_Api.Controllers
         // Get region-wise stock details
         [HttpGet]
         [Route("stocks")]
-        public IHttpActionResult GetMaterialStocks()
+        public IActionResult GetMaterialStocks()
         {
             try
             {
@@ -62,6 +66,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaterialStocks failed");
                 var errorResponse = new
                 {
                     data = (object)null,
@@ -76,7 +81,7 @@ namespace MISReports_Api.Controllers
         // ✅ Get all stock balances for a given material code (uses new SQL)
         [HttpGet]
         [Route("stock-balances")]
-        public IHttpActionResult GetMaterialStockBalances([FromUri] string matCd)
+        public IActionResult GetMaterialStockBalances([FromUri] string matCd)
         {
             if (string.IsNullOrWhiteSpace(matCd))
             {
@@ -103,6 +108,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaterialStockBalances failed. matCd={matCd}", matCd);
                 var errorResponse = new
                 {
                     data = (object)null,
@@ -117,7 +123,7 @@ namespace MISReports_Api.Controllers
         // Get region-wise stock by material code
         [HttpGet]
         [Route("stocks/by-matcd/{matCd}")]
-        public IHttpActionResult GetMaterialStocksByMatCd([FromUri] string matCd)
+        public IActionResult GetMaterialStocksByMatCd([FromUri] string matCd)
         {
             if (string.IsNullOrWhiteSpace(matCd))
             {
@@ -144,6 +150,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaterialStocksByMatCd failed. matCd={matCd}", matCd);
                 var errorResponse = new
                 {
                     data = (object)null,
@@ -158,7 +165,7 @@ namespace MISReports_Api.Controllers
         // Get province-wise stock by material code
         [HttpGet]
         [Route("stocks/by-matcd-province-wise/{matCd}")]
-        public IHttpActionResult GetMaterialStocksByMatCdProvinceWise([FromUri] string matCd)
+        public IActionResult GetMaterialStocksByMatCdProvinceWise([FromUri] string matCd)
         {
             if (string.IsNullOrWhiteSpace(matCd))
             {
@@ -185,6 +192,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaterialStocksByMatCdProvinceWise failed. matCd={matCd}", matCd);
                 var errorResponse = new
                 {
                     data = (object)null,

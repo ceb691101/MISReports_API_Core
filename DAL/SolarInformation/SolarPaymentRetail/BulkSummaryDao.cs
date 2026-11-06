@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.SolarInformation;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
 {
@@ -34,7 +35,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
                     string sql = BuildBulkSummaryQuery();
                     logger.Debug($"Bulk summary query SQL: {sql}");
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.CommandTimeout = 300; // 5 minutes
                         cmd.Parameters.AddWithValue("@billCycle", request.BillCycle);
@@ -100,7 +101,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
             return sql;
         }
 
-        private decimal CalculatePayableBalance(OleDbConnection conn, string billCycle, string netType)
+        private decimal CalculatePayableBalance(DbConnection conn, string billCycle, string netType)
         {
             try
             {
@@ -127,7 +128,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
 
                 logger.Debug($"Payable balance query for net_type {netType}: {sql}");
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.CommandTimeout = 300;
                     cmd.Parameters.AddWithValue("@billCycle", billCycle);
@@ -192,7 +193,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
         }
 
         // Helper methods
-        private string GetStringValue(OleDbDataReader reader, string columnName)
+        private string GetStringValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -206,7 +207,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, string columnName)
+        private int GetIntValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -225,7 +226,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {

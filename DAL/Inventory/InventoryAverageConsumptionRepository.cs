@@ -1,14 +1,16 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 
 namespace MISReports_Api.DAL
 {
     public class InventoryAverageConsumptionRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
         public List<InventoryAverageConsumption> GetAverageConsumption(string costCenter, string warehouseCode, DateTime parsedFromDate, DateTime parsedToDate)
@@ -114,6 +116,7 @@ ORDER BY
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAverageConsumption failed (exception rethrown). costCenter={costCenter}, warehouseCode={warehouseCode}, parsedFromDate={parsedFromDate}, parsedToDate={parsedToDate}", costCenter, warehouseCode, parsedFromDate, parsedToDate);
                 Debug.WriteLine($"Error in GetAverageConsumption: {ex.Message}\n{ex.StackTrace}");
                 throw;
             }
@@ -166,6 +169,7 @@ ORDER BY
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetWarehousesByEpfNoAndCostCenter failed (exception rethrown). epfNo={epfNo}, costCenterId={costCenterId}", epfNo, costCenterId);
                 Debug.WriteLine($"Error in GetWarehousesByEpfNoAndCostCenter: {ex.Message}");
                 throw;
             }

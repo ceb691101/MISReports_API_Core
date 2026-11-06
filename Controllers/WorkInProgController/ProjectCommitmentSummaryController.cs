@@ -1,22 +1,25 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/projectcommitmentsummary")]
     public class ProjectCommitmentSummaryController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ProjectCommitmentSummaryRepository _repository = new ProjectCommitmentSummaryRepository();
 
         [HttpGet]
         [Route("{deptId}")]
-        public async Task<IHttpActionResult> GetProjectCommitmentSummary(string deptId)
+        public async Task<IActionResult> GetProjectCommitmentSummary(string deptId)
         {
             try
             {
@@ -32,6 +35,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetProjectCommitmentSummary failed. deptId={deptId}", deptId);
                 var errorResponse = new
                 {
                     data = (object)null,
