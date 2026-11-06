@@ -1,14 +1,16 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 
 namespace MISReports_Api.DAL
 {
     public class CompanyTrialBalanceRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
         public List<CompanyTrialBalanceModel> GetTrialBalanceData(string companyId, string month, string year)
@@ -115,10 +117,12 @@ namespace MISReports_Api.DAL
             }
             catch (OracleException ex)
             {
+                logger.Error(ex, "GetTrialBalanceData failed (exception rethrown). companyId={companyId}, month={month}, year={year}", companyId, month, year);
                 throw new Exception($"Oracle Error {ex.Number}: {ex.Message}", ex);
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetTrialBalanceData failed (exception rethrown). companyId={companyId}, month={month}, year={year}", companyId, month, year);
                 throw new Exception($"Database operation failed: {ex.Message}", ex);
             }
         }

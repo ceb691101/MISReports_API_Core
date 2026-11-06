@@ -1,9 +1,10 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Models.Dashboard;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.Dashboard
@@ -76,18 +77,18 @@ namespace MISReports_Api.DAL.Dashboard
             }
         }
 
-        private string GetMaxBillCycle(OleDbConnection conn)
+        private string GetMaxBillCycle(DbConnection conn)
         {
             const string sql = "SELECT MAX(BILL_CYCLE) FROM MON_TOT";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 object result = cmd.ExecuteScalar();
                 return result == null || result == DBNull.Value ? string.Empty : result.ToString().Trim();
             }
         }
 
-        private string ResolveTargetBillCycle(OleDbConnection conn, string billCycle)
+        private string ResolveTargetBillCycle(DbConnection conn, string billCycle)
         {
             if (!string.IsNullOrWhiteSpace(billCycle))
             {
@@ -97,7 +98,7 @@ namespace MISReports_Api.DAL.Dashboard
             return GetMaxBillCycle(conn);
         }
 
-        private List<TopCustomerRecord> GetTopCustomersFromMonTot(OleDbConnection conn, string billCycle, string region, string province, string area)
+        private List<TopCustomerRecord> GetTopCustomersFromMonTot(DbConnection conn, string billCycle, string region, string province, string area)
         {
             var records = new List<TopCustomerRecord>();
             bool hasAreaFilter = !string.IsNullOrWhiteSpace(area);
@@ -150,7 +151,7 @@ namespace MISReports_Api.DAL.Dashboard
                     ORDER BY kwh DESC, m.acc_nbr";
             }
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("?", billCycle);
                 if (hasFilter)
@@ -179,13 +180,13 @@ namespace MISReports_Api.DAL.Dashboard
             return records;
         }
 
-        private static string GetColumnValue(OleDbDataReader reader, string columnName)
+        private static string GetColumnValue(DbDataReader reader, string columnName)
         {
             object value = reader[columnName];
             return value == null || value == DBNull.Value ? string.Empty : value.ToString().Trim();
         }
 
-        private static decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private static decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             object value = reader[columnName];
             return value == null || value == DBNull.Value ? 0m : Convert.ToDecimal(value);

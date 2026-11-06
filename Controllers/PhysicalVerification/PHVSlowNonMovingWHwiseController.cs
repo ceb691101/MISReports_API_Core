@@ -1,14 +1,17 @@
-﻿using MISReports_Api.DAL.PhysicalVerification;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.PhysicalVerification;
 using System;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/phv-slow-nonmoving-whwise")]
     public class PHVSlowNonMovingWHwiseController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly PHVSlowNonMovingWHwiseRepository _repository;
 
         public PHVSlowNonMovingWHwiseController()
@@ -19,7 +22,7 @@ namespace MISReports_Api.Controllers
       
         [HttpGet]
         [Route("list")]
-        public async Task<IHttpActionResult> GetSlowNonMovingWHwise(
+        public async Task<IActionResult> GetSlowNonMovingWHwise(
             string deptId,
             int repYear,
             int repMonth,
@@ -43,6 +46,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetSlowNonMovingWHwise failed. deptId={deptId}, repYear={repYear}, repMonth={repMonth}, warehouseCode={warehouseCode}", deptId, repYear, repMonth, warehouseCode);
                 return InternalServerError(ex);
             }
         }

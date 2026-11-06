@@ -1,10 +1,11 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.General;
 using NLog;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.General.ArrearsPosition
 {
@@ -77,7 +78,7 @@ namespace MISReports_Api.DAL.General.ArrearsPosition
 
                     logger.Info($"Executing reader SQL for BillCycle={request.BillCycle}, AreaCode={request.AreaCode}");
 
-                    using (var readerCmd = new OleDbCommand(readerSql, conn))
+                    using (var readerCmd = Informix.CreateCommand(readerSql, conn))
                     {
                         readerCmd.Parameters.AddWithValue("@bill_cycle", request.BillCycle);
                         readerCmd.Parameters.AddWithValue("@area_code", request.AreaCode);
@@ -94,7 +95,7 @@ namespace MISReports_Api.DAL.General.ArrearsPosition
 
                                 // ── Step 2: NR transaction amount for this reader
                                 decimal trnsAmount = 0m;
-                                using (var trnsCmd = new OleDbCommand(trnsAmtSql, conn))
+                                using (var trnsCmd = Informix.CreateCommand(trnsAmtSql, conn))
                                 {
                                     trnsCmd.Parameters.AddWithValue("@bill_cycle", request.BillCycle);
                                     trnsCmd.Parameters.AddWithValue("@area_code", request.AreaCode);

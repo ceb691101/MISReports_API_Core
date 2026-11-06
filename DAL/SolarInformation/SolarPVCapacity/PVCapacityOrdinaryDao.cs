@@ -1,8 +1,9 @@
-﻿using MISReports_Api.Models.SolarInformation;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.SolarInformation;
 using MISReports_Api.DBAccess;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using NLog;
 
 namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
@@ -47,15 +48,15 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
                     return true;
                 }
             }
-            catch (OleDbException ex)
+            catch (DbException ex)
             {
                 logger.Error(ex, "OLE DB Error occurred during connection test");
 
-                if (ex.Errors != null && ex.Errors.Count > 0)
+                if (ex.ProviderErrors() != null && ex.ProviderErrors().Count > 0)
                 {
-                    for (int i = 0; i < ex.Errors.Count; i++)
+                    for (int i = 0; i < ex.ProviderErrors().Count; i++)
                     {
-                        logger.Error($"Error {i}: SQLState={ex.Errors[i].SQLState}, NativeError={ex.Errors[i].NativeError}");
+                        logger.Error($"Error {i}: SQLState={ex.ProviderErrors()[i].SQLState}, NativeError={ex.ProviderErrors()[i].NativeError}");
                     }
                 }
 
@@ -92,7 +93,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
                     var areaMetadata = GetAreaMetadata(conn);
                     logger.Info($"Loaded {areaMetadata.Count} area metadata entries");
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         logger.Debug("Adding parameter: BillCycle = {BillCycle}", request.BillCycle);
                         cmd.Parameters.AddWithValue("", request.BillCycle);
@@ -135,7 +136,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
                 logger.Info($"Returning {results.Count} results");
                 return results;
             }
-            catch (OleDbException ex)
+            catch (DbException ex)
             {
                 logger.Error(ex, "Database error occurred while fetching PV capacity report");
                 logger.Error($"SQL: {BuildSqlQuery(request)}");
@@ -190,7 +191,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
             return baseQuery;
         }
 
-        private PVCapacityModel MapPVCapacityFromReader(OleDbDataReader reader, Dictionary<string, AreaMetadata> areaMetadata, SolarReportType reportType)
+        private PVCapacityModel MapPVCapacityFromReader(DbDataReader reader, Dictionary<string, AreaMetadata> areaMetadata, SolarReportType reportType)
         {
             try
             {
@@ -241,7 +242,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
             }
         }
 
-        private Dictionary<string, AreaMetadata> GetAreaMetadata(OleDbConnection conn)
+        private Dictionary<string, AreaMetadata> GetAreaMetadata(DbConnection conn)
         {
             var areaMetadata = new Dictionary<string, AreaMetadata>();
 
@@ -253,7 +254,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
 
                 logger.Debug($"Loading area metadata with query: {areaQuery}");
 
-                using (var cmd = new OleDbCommand(areaQuery, conn))
+                using (var cmd = Informix.CreateCommand(areaQuery, conn))
                 using (var reader = cmd.ExecuteReader())
                 {
                     int mappingCount = 0;
@@ -285,7 +286,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
         }
 
         // Helper methods to safely get column values
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -299,7 +300,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -318,7 +319,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, string columnName)
+        private int GetIntValue(DbDataReader reader, string columnName)
         {
             try
             {

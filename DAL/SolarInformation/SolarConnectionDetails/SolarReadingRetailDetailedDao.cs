@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.SolarInformation;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
@@ -130,7 +131,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         /// <summary>
         /// Validates if the cycle is completed based on the first 3 characters of bill cycle
         /// </summary>
-        private bool ValidateCycleCompletion(OleDbConnection conn, RetailDetailedRequest request, string billCycle)
+        private bool ValidateCycleCompletion(DbConnection conn, RetailDetailedRequest request, string billCycle)
         {
             try
             {
@@ -158,7 +159,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
                         break;
                 }
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     // Add parameters based on report type
                     switch (request.ReportType)
@@ -205,14 +206,14 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         /// Gets netmtcons data based on report type and cycle type
         /// Handles the special case where net_type='2' should also include net_type='5'
         /// </summary>
-        private List<NetMtConsRawData> GetNetMtConsData(OleDbConnection conn, RetailDetailedRequest request)
+        private List<NetMtConsRawData> GetNetMtConsData(DbConnection conn, RetailDetailedRequest request)
         {
             var results = new List<NetMtConsRawData>();
             string sql = BuildNetMtConsQuery(request);
 
             logger.Debug($"NetMtCons query SQL: {sql}");
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.CommandTimeout = 300; // 5 minutes
                 AddParameters(cmd, request);
@@ -327,7 +328,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
             }
         }
 
-        private void AddParameters(OleDbCommand cmd, RetailDetailedRequest request)
+        private void AddParameters(DbCommand cmd, RetailDetailedRequest request)
         {
             string cycleValue = request.CycleType == "A" ? request.BillCycle : request.CalcCycle;
 
@@ -372,7 +373,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         /// <summary>
         /// Gets area information (province, region) for multiple area codes in batch
         /// </summary>
-        private Dictionary<string, AreaInformation> GetAreaInformationBatch(OleDbConnection conn, List<string> areaCodes)
+        private Dictionary<string, AreaInformation> GetAreaInformationBatch(DbConnection conn, List<string> areaCodes)
         {
             var result = new Dictionary<string, AreaInformation>();
 
@@ -388,7 +389,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
                                WHERE a.prov_code = p.prov_code 
                                AND a.area_code IN ({parameters})";
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     foreach (var areaCode in areaCodes)
                     {
@@ -424,7 +425,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         /// <summary>
         /// Gets customer information from prn_dat_1 for multiple accounts in batch
         /// </summary>
-        private Dictionary<string, CustomerInformation> GetCustomerInformationBatch(OleDbConnection conn, string billCycle, List<string> accountNumbers)
+        private Dictionary<string, CustomerInformation> GetCustomerInformationBatch(DbConnection conn, string billCycle, List<string> accountNumbers)
         {
             var result = new Dictionary<string, CustomerInformation>();
 
@@ -445,7 +446,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
                                    FROM prn_dat_1 
                                    WHERE bill_cycle=? AND acct_number IN ({parameters})";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("?", billCycle);
                         foreach (var acctNum in batch)
@@ -493,7 +494,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         }
 
         // Helper methods
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -507,7 +508,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, string columnName)
+        private int GetIntValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -526,7 +527,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {

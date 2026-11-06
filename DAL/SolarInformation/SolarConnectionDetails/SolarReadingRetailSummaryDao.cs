@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.SolarInformation;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
 {
@@ -58,14 +59,14 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         /// <summary>
         /// Gets summary for regular tariffs (excluding 'GV1UV', 'GV1SH')
         /// </summary>
-        private List<SolarReadingSummaryModel> GetRegularTariffsSummary(OleDbConnection conn, RetailDetailedRequest request)
+        private List<SolarReadingSummaryModel> GetRegularTariffsSummary(DbConnection conn, RetailDetailedRequest request)
         {
             var results = new List<SolarReadingSummaryModel>();
             string sql = BuildRegularTariffQuery(request);
 
             logger.Debug($"Regular Tariff query SQL: {sql}");
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.CommandTimeout = 300; // 5 minutes
                 AddParameters(cmd, request);
@@ -97,14 +98,14 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         /// <summary>
         /// Gets summary for GP-3 and GP-4 tariffs
         /// </summary>
-        private List<SolarReadingSummaryModel> GetGPTariffsSummary(OleDbConnection conn, RetailDetailedRequest request)
+        private List<SolarReadingSummaryModel> GetGPTariffsSummary(DbConnection conn, RetailDetailedRequest request)
         {
             var results = new List<SolarReadingSummaryModel>();
             string sql = BuildGPTariffQuery(request);
 
             logger.Debug($"GP Tariff query SQL: {sql}");
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.CommandTimeout = 300; // 5 minutes
                 AddParameters(cmd, request);
@@ -287,7 +288,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
             }
         }
 
-        private void AddParameters(OleDbCommand cmd, RetailDetailedRequest request)
+        private void AddParameters(DbCommand cmd, RetailDetailedRequest request)
         {
             string cycleValue = request.CycleType == "A" ? request.BillCycle : request.CalcCycle;
 
@@ -330,7 +331,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
         }
 
         // Helper methods
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -344,7 +345,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
             }
         }
 
-        private string GetColumnValue(OleDbDataReader reader, int index)
+        private string GetColumnValue(DbDataReader reader, int index)
         {
             try
             {
@@ -358,7 +359,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, string columnName)
+        private int GetIntValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -377,7 +378,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, int index)
+        private int GetIntValue(DbDataReader reader, int index)
         {
             try
             {
@@ -396,7 +397,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -415,7 +416,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarConnectionDetails
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, int index)
+        private decimal GetDecimalValue(DbDataReader reader, int index)
         {
             try
             {

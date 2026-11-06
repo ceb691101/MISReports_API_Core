@@ -1,8 +1,9 @@
-﻿using MISReports_Api.Models.SolarInformation;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.SolarInformation;
 using MISReports_Api.DBAccess;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 using NLog;
 
@@ -106,7 +107,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
                 logger.Info($"Returning {results.Count} results");
                 return results;
             }
-            catch (OleDbException ex)
+            catch (DbException ex)
             {
                 logger.Error(ex, "Database error occurred while fetching PV capacity summary report");
                 throw new ApplicationException("Database error occurred while fetching report", ex);
@@ -118,14 +119,14 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
             }
         }
 
-        private bool HasNullGenerationCapacity(OleDbConnection bulkConn, string billCycle)
+        private bool HasNullGenerationCapacity(DbConnection bulkConn, string billCycle)
         {
             try
             {
                 string nullCheckSql = "SELECT COUNT(*) FROM netmtcons WHERE bill_cycle = ? AND gen_cap IS NULL";
                 logger.Debug($"Checking for null generation capacity records: {nullCheckSql}");
 
-                using (var cmd = new OleDbCommand(nullCheckSql, bulkConn))
+                using (var cmd = Informix.CreateCommand(nullCheckSql, bulkConn))
                 {
                     cmd.Parameters.AddWithValue("", billCycle);
 
@@ -157,7 +158,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
                     string sql = BuildAreaQuery(request);
                     logger.Debug($"Area query: {sql}");
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         AddAreaQueryParameters(cmd, request);
 
@@ -220,7 +221,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
             }
         }
 
-        private void AddAreaQueryParameters(OleDbCommand cmd, SolarProgressRequest request)
+        private void AddAreaQueryParameters(DbCommand cmd, SolarProgressRequest request)
         {
             switch (request.ReportType)
             {
@@ -245,7 +246,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
             }
         }
 
-        private Dictionary<string, string> GetProvinceNames(OleDbConnection conn, List<AreaInfo> areas)
+        private Dictionary<string, string> GetProvinceNames(DbConnection conn, List<AreaInfo> areas)
         {
             var provinceNames = new Dictionary<string, string>();
 
@@ -259,7 +260,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
                 string sql = "SELECT prov_code, prov_name FROM provinces";
                 logger.Debug($"Loading province names: {sql}");
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -297,7 +298,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
                     string sql = "SELECT DISTINCT net_type FROM netmtcons WHERE bill_cycle = ? ORDER BY net_type";
                     logger.Debug($"Getting distinct net types: {sql}");
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("", billCycle);
 
@@ -327,8 +328,8 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
         }
 
         private PVCapacityModel GetCombinedSummary(
-            OleDbConnection ordinaryConn,
-            OleDbConnection bulkConn,
+            DbConnection ordinaryConn,
+            DbConnection bulkConn,
             string billCycle,
             AreaInfo area,
             string netType)
@@ -367,7 +368,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
         }
 
         private (int Consumers, decimal Capacity) GetOrdinaryData(
-            OleDbConnection conn,
+            DbConnection conn,
             string billCycle,
             string areaCode,
             string netType)
@@ -381,7 +382,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
 
                 logger.Trace($"Ordinary query: {sql} [billCycle={billCycle}, areaCode={areaCode}, netType={netType}]");
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("", billCycle);
                     cmd.Parameters.AddWithValue("", areaCode);
@@ -409,7 +410,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
         }
 
         private (int Consumers, decimal Capacity) GetBulkData(
-            OleDbConnection conn,
+            DbConnection conn,
             string billCycle,
             string areaCode,
             string netType)
@@ -422,7 +423,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
 
                 logger.Trace($"Bulk query: {sql} [billCycle={billCycle}, areaCode={areaCode}, netType={netType}]");
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("", billCycle);
                     cmd.Parameters.AddWithValue("", areaCode);
@@ -450,7 +451,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
         }
 
         // Helper methods
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -464,7 +465,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -483,7 +484,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVCapacity
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, string columnName)
+        private int GetIntValue(DbDataReader reader, string columnName)
         {
             try
             {

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 
@@ -12,13 +13,15 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/quantitymatfifo")]
     public class QuantityMatFIFOController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly QuantityMatFIFODAL _dal = new QuantityMatFIFODAL();
 
         // PATH: /api/quantitymatfifo/report/980.90/WRH-TCP-MAIN/RM
         // matCode is optional
         [HttpGet]
         [Route("report/{costCtr}/{whCode}")]
-        public IHttpActionResult GetReport(string costCtr, string whCode)
+        public IActionResult GetReport(string costCtr, string whCode)
         {
             return ExecuteQuery(costCtr, whCode, null);
         }
@@ -26,7 +29,7 @@ namespace MISReports_Api.Controllers
         // PATH: /api/quantitymatfifo/report/980.90/WRH-TCP-MAIN/
         [HttpGet]
         [Route("report/{costCtr}/{whCode}/{matCode}")]
-        public IHttpActionResult GetReport(string costCtr, string whCode, string matCode)
+        public IActionResult GetReport(string costCtr, string whCode, string matCode)
         {
             return ExecuteQuery(costCtr, whCode, matCode);
         }
@@ -35,12 +38,12 @@ namespace MISReports_Api.Controllers
         // matCode is optional
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string costCtr, [FromUri] string whCode, [FromUri] string matCode = null)
+        public IActionResult GetQuery([FromUri] string costCtr, [FromUri] string whCode, [FromUri] string matCode = null)
         {
             return ExecuteQuery(costCtr, whCode, matCode);
         }
 
-        private IHttpActionResult ExecuteQuery(string costCtr, string whCode, string matCode)
+        private IActionResult ExecuteQuery(string costCtr, string whCode, string matCode)
         {
             try
             {
@@ -89,6 +92,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. costCtr={costCtr}, whCode={whCode}, matCode={matCode}", costCtr, whCode, matCode);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

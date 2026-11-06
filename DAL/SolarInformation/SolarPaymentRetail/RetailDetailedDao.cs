@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.SolarInformation;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
@@ -117,14 +118,14 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
             }
         }
 
-        private List<RetailRawData> GetRetailData(OleDbConnection conn, RetailDetailedRequest request)
+        private List<RetailRawData> GetRetailData(DbConnection conn, RetailDetailedRequest request)
         {
             var results = new List<RetailRawData>();
             string sql = BuildRetailQuery(request);
 
             logger.Debug($"Main query SQL: {sql}");
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.CommandTimeout = 300; // 5 minutes
                 AddParameters(cmd, request);
@@ -184,7 +185,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
             return results;
         }
 
-        private Dictionary<string, AreaInformation> GetAreaInformationBatch(OleDbConnection conn, List<string> areaCodes)
+        private Dictionary<string, AreaInformation> GetAreaInformationBatch(DbConnection conn, List<string> areaCodes)
         {
             var results = new Dictionary<string, AreaInformation>();
 
@@ -201,7 +202,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
 
             logger.Debug($"Area batch query SQL: {sql}");
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.CommandTimeout = 300;
 
@@ -226,7 +227,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
             return results;
         }
 
-        private Dictionary<string, CustomerInformation> GetCustomerInformationBatch(OleDbConnection conn, string billCycle, List<string> accountNumbers)
+        private Dictionary<string, CustomerInformation> GetCustomerInformationBatch(DbConnection conn, string billCycle, List<string> accountNumbers)
         {
             var results = new Dictionary<string, CustomerInformation>();
 
@@ -250,7 +251,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
             return results;
         }
 
-        private Dictionary<string, CustomerInformation> GetCustomerInformationSingleBatch(OleDbConnection conn, string billCycle, List<string> accountNumbers)
+        private Dictionary<string, CustomerInformation> GetCustomerInformationSingleBatch(DbConnection conn, string billCycle, List<string> accountNumbers)
         {
             var results = new Dictionary<string, CustomerInformation>();
 
@@ -264,7 +265,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
 
             logger.Debug($"Customer batch query SQL: {sql}");
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.CommandTimeout = 300;
                 cmd.Parameters.AddWithValue("@billCycle", billCycle);
@@ -341,7 +342,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
             return baseQuery;
         }
 
-        private void AddParameters(OleDbCommand cmd, RetailDetailedRequest request)
+        private void AddParameters(DbCommand cmd, RetailDetailedRequest request)
         {
             string cycleValue = request.CycleType == "A" ? request.BillCycle : request.CalcCycle;
 
@@ -393,7 +394,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
         }
 
         // Helper methods
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -407,7 +408,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, string columnName)
+        private int GetIntValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -426,7 +427,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPaymentRetail
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {

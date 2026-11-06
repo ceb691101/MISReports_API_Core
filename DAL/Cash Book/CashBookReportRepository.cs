@@ -1,16 +1,18 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace MISReports_Api.DAL
 {
     public class CashBookReportRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string _connStr = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
-        public List<CashBookReportModel> GetCashBookData(string fromDate, string toDate, string payee)
+        public List<CashBookReportModel> GetCashBookData(string fromDate, string toDate, string payee, string costCtr = null)
         {
             string oracleFrom = FormatDateForOracle(fromDate);
             string oracleTo = FormatDateForOracle(toDate);
@@ -25,13 +27,14 @@ SELECT * FROM (
         T1.PYMT_DOCNO,
         T1.CHQ_AMT,
         T1.CHQ_NO,
-        'CEYLON ELECTRICITY BOARD' AS CCT_NAME
+        NVL((SELECT dept_nm FROM gldeptm WHERE dept_id = :CostCtr), 'CEYLON ELECTRICITY BOARD') AS CCT_NAME
     FROM
         CBCHQDMT T1
     WHERE
         T1.CHQ_DT >= TO_DATE(:fromDate, 'YYYY/MM/DD')
         AND T1.CHQ_DT <= TO_DATE(:toDate, 'YYYY/MM/DD')
         AND (:Payee IS NULL OR UPPER(T1.PAYEE) LIKE '%' || UPPER(TRIM(:Payee)) || '%')
+        AND (:CostCtr IS NULL OR T1.DEPT_ID = :CostCtr)
     GROUP BY
         T1.PAYEE, T1.CHQ_DT, T1.CHQ_NO, T1.CHQ_RUN, T1.PYMT_DOCNO, T1.CHQ_AMT
     ORDER BY
@@ -46,6 +49,8 @@ SELECT * FROM (
                 cmd.Parameters.Add("toDate", OracleDbType.Varchar2).Value = oracleTo;
                 cmd.Parameters.Add("Payee", OracleDbType.Varchar2).Value =
                     string.IsNullOrWhiteSpace(payee) ? (object)DBNull.Value : payee.Trim();
+                cmd.Parameters.Add("CostCtr", OracleDbType.Varchar2).Value =
+                    string.IsNullOrWhiteSpace(costCtr) ? (object)DBNull.Value : costCtr.Trim();
 
                 try
                 {
@@ -69,10 +74,12 @@ SELECT * FROM (
                 }
                 catch (OracleException oex)
                 {
+                    logger.Error(oex, "GetCashBookData failed (exception rethrown). fromDate={fromDate}, toDate={toDate}, payee={payee}, costCtr={costCtr}", fromDate, toDate, payee, costCtr);
                     throw new Exception($"Oracle error {oex.Number}: {oex.Message}", oex);
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetCashBookData failed (exception rethrown). fromDate={fromDate}, toDate={toDate}, payee={payee}, costCtr={costCtr}", fromDate, toDate, payee, costCtr);
                     throw new Exception("Error fetching cash-book data from database", ex);
                 }
             }

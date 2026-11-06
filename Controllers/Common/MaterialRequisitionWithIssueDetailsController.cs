@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 
@@ -13,6 +14,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/materialrequisitionwithissuedetails")]
     public class MaterialRequisitionWithIssueDetailsController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly MaterialRequisitionWithIssueDetailsDAL _dal = new MaterialRequisitionWithIssueDetailsDAL();
 
         private const string DateFormat = "yyyy-MM-dd"; // e.g. 2026-08-01 (dashes so it's URL/route safe)
@@ -20,7 +23,7 @@ namespace MISReports_Api.Controllers
         // PATH: /api/materialrequisitionwithissuedetails/report/2026-08-01/2026-08-15/510.00/EBG12
         [HttpGet]
         [Route("report/{fromDate}/{toDate}/{costCtr}/{matCode}")]
-        public IHttpActionResult GetReport(string fromDate, string toDate, string costCtr, string matCode)
+        public IActionResult GetReport(string fromDate, string toDate, string costCtr, string matCode)
         {
             return ExecuteQuery(fromDate, toDate, costCtr, matCode);
         }
@@ -28,7 +31,7 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/materialrequisitionwithissuedetails/report?fromDate=2026-08-01&toDate=2026-08-15&costCtr=510.00&matCode=EBG12
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery(
+        public IActionResult GetQuery(
             [FromUri] string fromDate,
             [FromUri] string toDate,
             [FromUri] string costCtr,
@@ -37,7 +40,7 @@ namespace MISReports_Api.Controllers
             return ExecuteQuery(fromDate, toDate, costCtr, matCode);
         }
 
-        private IHttpActionResult ExecuteQuery(string fromDate, string toDate, string costCtr, string matCode)
+        private IActionResult ExecuteQuery(string fromDate, string toDate, string costCtr, string matCode)
         {
             try
             {
@@ -96,6 +99,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. fromDate={fromDate}, toDate={toDate}, costCtr={costCtr}, matCode={matCode}", fromDate, toDate, costCtr, matCode);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

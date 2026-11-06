@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 namespace MISReports_Api.Controllers
@@ -11,12 +12,14 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/ccgrnnotgen")]
     public class CcGrnNotGenController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly CcGrnNotGenDAL _dal = new CcGrnNotGenDAL();
 
         // PATH: /api/ccgrnnotgen/report/2026-01-01/2026-07-31/510.00
         [HttpGet]
         [Route("report/{fromDate}/{toDate}/{costCtr}")]
-        public IHttpActionResult GetReport(string fromDate, string toDate, string costCtr)
+        public IActionResult GetReport(string fromDate, string toDate, string costCtr)
         {
             return ExecuteQuery(fromDate, toDate, costCtr);
         }
@@ -24,12 +27,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/ccgrnnotgen/report?fromDate=2026-01-01&toDate=2026-07-31&costCtr=510.00
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string costCtr)
+        public IActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string costCtr)
         {
             return ExecuteQuery(fromDate, toDate, costCtr);
         }
 
-        private IHttpActionResult ExecuteQuery(string fromDate, string toDate, string costCtr)
+        private IActionResult ExecuteQuery(string fromDate, string toDate, string costCtr)
         {
             try
             {
@@ -80,6 +83,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. fromDate={fromDate}, toDate={toDate}, costCtr={costCtr}", fromDate, toDate, costCtr);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

@@ -1,9 +1,10 @@
+using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL.DgmDashboard;
 using MISReports_Api.Models.DgmDashboard;
 using MISReports_Api.Models.FinancialDashboard; // for CachedValue<T>
@@ -13,6 +14,8 @@ namespace MISReports_Api.Controllers.DgmDashboard
     [RoutePrefix("api/dgm")]
     public class DgmDashboardController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private static readonly DgmPivTotalDao DgmPivTotalDao = new DgmPivTotalDao();
         private static readonly DgmPivPeriodSummaryDao DgmPivPeriodSummaryDao = new DgmPivPeriodSummaryDao();
         private static readonly DgmStockValueDao DgmStockValueDao = new DgmStockValueDao();
@@ -68,6 +71,7 @@ namespace MISReports_Api.Controllers.DgmDashboard
                     }
                     catch (Exception ex)
                     {
+                        logger.Error(ex, "GetOrReturnStaleAndRefreshWithMetadata failed");
                         Trace.TraceError($"{key}-refresh failed: {ex.Message}");
                     }
                 });
@@ -87,7 +91,7 @@ namespace MISReports_Api.Controllers.DgmDashboard
 
         [HttpGet]
         [Route("piv-total")]
-        public IHttpActionResult GetPivTotal(string companyId = "WPN", bool refresh = false)
+        public IActionResult GetPivTotal(string companyId = "WPN", bool refresh = false)
         {
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();
             string cacheKey = $"dgm-piv-total-{targetCompany}";
@@ -103,7 +107,7 @@ namespace MISReports_Api.Controllers.DgmDashboard
 
         [HttpGet]
         [Route("piv-period-summary")]
-        public IHttpActionResult GetPivPeriodSummary(string companyId = "WPN", string startDate = null, string endDate = null, bool refresh = false)
+        public IActionResult GetPivPeriodSummary(string companyId = "WPN", string startDate = null, string endDate = null, bool refresh = false)
         {
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();
             string cacheKey = $"dgm-piv-period-summary-{targetCompany}-{startDate ?? ""}-{endDate ?? ""}";
@@ -122,7 +126,7 @@ namespace MISReports_Api.Controllers.DgmDashboard
 
         [HttpGet]
         [Route("stock-value")]
-        public IHttpActionResult GetStockValue(string companyId = "WPN", bool refresh = false)
+        public IActionResult GetStockValue(string companyId = "WPN", bool refresh = false)
         {
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();
             string cacheKey = $"dgm-stock-value-{targetCompany}";
@@ -141,7 +145,7 @@ namespace MISReports_Api.Controllers.DgmDashboard
 
         [HttpGet]
         [Route("application-count")]
-        public IHttpActionResult GetApplicationCount(string companyId = "WPN", int? year = null, bool refresh = false)
+        public IActionResult GetApplicationCount(string companyId = "WPN", int? year = null, bool refresh = false)
         {
             int targetYear = year ?? DateTime.Today.Year;
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();
@@ -158,7 +162,7 @@ namespace MISReports_Api.Controllers.DgmDashboard
 
         [HttpGet]
         [Route("connections-given")]
-        public IHttpActionResult GetConnectionsGiven(string companyId = "WPN", int? year = null, bool refresh = false)
+        public IActionResult GetConnectionsGiven(string companyId = "WPN", int? year = null, bool refresh = false)
         {
             int targetYear = year ?? DateTime.Today.Year;
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();
@@ -175,7 +179,7 @@ namespace MISReports_Api.Controllers.DgmDashboard
 
         [HttpGet]
         [Route("pending-applications")]
-        public IHttpActionResult GetPendingApplications(string companyId = "WPN", int? year = null, bool refresh = false)
+        public IActionResult GetPendingApplications(string companyId = "WPN", int? year = null, bool refresh = false)
         {
             int targetYear = year ?? DateTime.Today.Year;
             string targetCompany = string.IsNullOrWhiteSpace(companyId) ? "WPN" : companyId.Trim().ToUpper();

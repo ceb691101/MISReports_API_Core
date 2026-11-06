@@ -1,10 +1,11 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Helpers;
 using MISReports_Api.Models.PUCSLReports;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.PUCSLReports
 {
@@ -112,7 +113,7 @@ namespace MISReports_Api.DAL.PUCSLReports
                 {
                     conn.Open();
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.CommandTimeout = 300; // 5 minutes
 
@@ -175,7 +176,7 @@ namespace MISReports_Api.DAL.PUCSLReports
         }
 
         // Helper methods
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -189,7 +190,7 @@ namespace MISReports_Api.DAL.PUCSLReports
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, string columnName)
+        private int GetIntValue(DbDataReader reader, string columnName)
         {
             try
             {

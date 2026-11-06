@@ -1,22 +1,25 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/provinceincomeexpenditure")]
     public class ProvinceIncomeExpenditureController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ProvinceIncomeExpenditureRepository _repo = new ProvinceIncomeExpenditureRepository();
 
         [HttpGet]
         [Route("{compId}/{repYear}/{repMonth}")]
-        public IHttpActionResult GetProvinceIncomeExpenditure(string compId, string repYear, string repMonth)
+        public IActionResult GetProvinceIncomeExpenditure(string compId, string repYear, string repMonth)
         {
             try
             {
@@ -42,6 +45,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetProvinceIncomeExpenditure failed. compId={compId}, repYear={repYear}, repMonth={repMonth}", compId, repYear, repMonth);
                 Debug.WriteLine(ex);
                 return Content(HttpStatusCode.InternalServerError, new
                 {

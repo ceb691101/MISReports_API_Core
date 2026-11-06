@@ -1,8 +1,9 @@
+using MISReports_Api.Compat;
 using MISReports_Api.Models;
+using MISReports_Api.DBAccess;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Threading.Tasks;
 
 namespace MISReports_Api.DAL
@@ -75,15 +76,15 @@ WHERE A.dept_id IN (
       WHERE comp_id IN (
           SELECT comp_id
           FROM glcompm
-          WHERE comp_id = '{safeCompId}' OR parent_id = '{safeCompId}'
+          WHERE comp_id = :compid OR parent_id = :compid
       )
 )
-  AND A.mat_cd LIKE '%' || '{safeMatCode}' || '%'
+  AND A.mat_cd LIKE '%' || :matcode || '%'
   AND A.status = 2
 GROUP BY A.dept_id, A.wrh_cd, A.mat_cd, D.mat_nm, A.grade_cd, D.maj_uom, A.qty_on_hand, A.unit_price, A.mat_cost
 ORDER BY A.dept_id, A.wrh_cd, A.mat_cd";
 
-                using (var cmd = new OracleCommand(sql, conn))
+                using (var cmd = DbCommandHelper.CreateOracleCommand(sql, conn, ("compid", safeCompId), ("matcode", safeMatCode)))
                 using (var reader = await cmd.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())

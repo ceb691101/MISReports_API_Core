@@ -1,20 +1,23 @@
-﻿using MISReports_Api.DAL.PIV;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.PIV;
 using MISReports_Api.Models.PIV;
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/stampduty")]
     public class StampDutyDetailedController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly StampDutyDetailedRepository _repo = new StampDutyDetailedRepository();
 
         // GET: api/stampduty/detailed?compId=COMP001&fromDate=2025/01/01&toDate=2025/12/31
         [HttpGet]
         [Route("detailed")]
-        public IHttpActionResult GetDetailedReport(string compId, string fromDate, string toDate)
+        public IActionResult GetDetailedReport(string compId, string fromDate, string toDate)
         {
             if (string.IsNullOrWhiteSpace(compId))
                 return BadRequest("Company ID (compId) is required");
@@ -36,6 +39,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetDetailedReport failed. compId={compId}, fromDate={fromDate}, toDate={toDate}", compId, fromDate, toDate);
                 return InternalServerError(new Exception("Error generating Stamp Duty Detailed report: " + ex.Message));
             }
         }

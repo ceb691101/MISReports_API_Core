@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL
 {
@@ -19,7 +20,7 @@ namespace MISReports_Api.DAL
             {
                 conn.Open();
                 string sql = BuildRangeSql(request.ReportType);
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("?", request.FromBillCycle);
                     cmd.Parameters.AddWithValue("?", request.ToBillCycle);

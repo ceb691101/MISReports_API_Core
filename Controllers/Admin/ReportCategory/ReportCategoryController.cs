@@ -1,16 +1,19 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/reportcategory")]
     public class ReportCategoryController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ReportCategoryRepository _repository = new ReportCategoryRepository();
 
         private static string NormalizeCategoryCode(string catCode)
@@ -26,7 +29,7 @@ namespace MISReports_Api.Controllers
         /// <returns>List of all report categories</returns>
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetAllCategories()
+        public IActionResult GetAllCategories()
         {
             try
             {
@@ -40,6 +43,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAllCategories failed");
                 return Ok(JObject.Parse(JsonConvert.SerializeObject(new
                 {
                     data = (object)null,
@@ -56,7 +60,7 @@ namespace MISReports_Api.Controllers
         /// <returns>Report category details</returns>
         [HttpGet]
         [Route("{catCode}")]
-        public IHttpActionResult GetCategoryByCode(string catCode)
+        public IActionResult GetCategoryByCode(string catCode)
         {
             try
             {
@@ -88,6 +92,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCategoryByCode failed. catCode={catCode}", catCode);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -104,7 +109,7 @@ namespace MISReports_Api.Controllers
         /// <returns>Success/failure message</returns>
         [HttpPost]
         [Route("")]
-        public IHttpActionResult CreateCategory([FromBody] CreateReportCategoryRequest request)
+        public IActionResult CreateCategory([FromBody] CreateReportCategoryRequest request)
         {
             try
             {
@@ -150,6 +155,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "CreateCategory failed. request={@request}", request);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -167,7 +173,7 @@ namespace MISReports_Api.Controllers
         /// <returns>Success/failure message</returns>
         [HttpPut]
         [Route("{catCode}")]
-        public IHttpActionResult UpdateCategory(string catCode, [FromBody] CreateReportCategoryRequest request)
+        public IActionResult UpdateCategory(string catCode, [FromBody] CreateReportCategoryRequest request)
         {
             try
             {
@@ -228,6 +234,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "UpdateCategory failed. catCode={catCode}, request={@request}", catCode, request);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -244,7 +251,7 @@ namespace MISReports_Api.Controllers
         /// <returns>Success/failure message</returns>
         [HttpDelete]
         [Route("{catCode}")]
-        public IHttpActionResult DeleteCategory(string catCode)
+        public IActionResult DeleteCategory(string catCode)
         {
             try
             {
@@ -273,6 +280,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "DeleteCategory failed. catCode={catCode}", catCode);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,

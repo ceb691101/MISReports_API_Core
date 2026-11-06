@@ -1,8 +1,9 @@
+using MISReports_Api.Compat;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL.IntegratedDashboard;
 using MISReports_Api.Models.FinancialDashboard;
 using MISReports_Api.Models.IntegratedDashboard;
@@ -12,6 +13,8 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
     [RoutePrefix("api/integrated")]
     public class IntegratedDashboardController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private static readonly IntegratedFinancialDao Dao = new IntegratedFinancialDao();
         private static readonly ConcurrentDictionary<string, object> Cache = new ConcurrentDictionary<string, object>();
         private const double CacheMinutes = 5;
@@ -62,6 +65,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
                     }
                     catch (Exception ex)
                     {
+                        logger.Error(ex, "GetOrReturnStaleAndRefreshWithMetadata failed");
                         Trace.TraceError($"[IntegratedDashboard] {key}-refresh failed: {ex.Message}");
                     }
                 });
@@ -81,7 +85,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("financial/summary")]
-        public IHttpActionResult GetFinancialSummary(string division = "all", string province = "all", string area = "all", bool refresh = false)
+        public IActionResult GetFinancialSummary(string division = "all", string province = "all", string area = "all", bool refresh = false)
         {
             string cacheKey = $"integrated-fin-summary-{division ?? "all"}-{province ?? "all"}-{area ?? "all"}";
             if (refresh)
@@ -97,7 +101,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("financial/piv-total")]
-        public IHttpActionResult GetPivTotal(string division = "all", bool refresh = false)
+        public IActionResult GetPivTotal(string division = "all", bool refresh = false)
         {
             string cacheKey = $"integrated-piv-total-{division ?? "all"}";
             if (refresh)
@@ -113,7 +117,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("financial/piv-division")]
-        public IHttpActionResult GetPivDivision(string division = "all", bool refresh = false)
+        public IActionResult GetPivDivision(string division = "all", bool refresh = false)
         {
             string cacheKey = $"integrated-piv-division-{division ?? "all"}";
             if (refresh)
@@ -129,7 +133,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("financial/stock-total")]
-        public IHttpActionResult GetStockTotal(string division = "all", bool refresh = false)
+        public IActionResult GetStockTotal(string division = "all", bool refresh = false)
         {
             string cacheKey = $"integrated-stock-total-{division ?? "all"}";
             if (refresh)
@@ -145,7 +149,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("financial/stock-division")]
-        public IHttpActionResult GetStockDivision(string division = "all", bool refresh = false)
+        public IActionResult GetStockDivision(string division = "all", bool refresh = false)
         {
             string cacheKey = $"integrated-stock-division-{division ?? "all"}";
             if (refresh)
@@ -166,7 +170,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("construction/summary")]
-        public IHttpActionResult GetConstructionSummary(string province = "WPN", int year = 2026, string startDate = null, string endDate = null, string area = null, bool refresh = false)
+        public IActionResult GetConstructionSummary(string province = "WPN", int year = 2026, string startDate = null, string endDate = null, string area = null, bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim().ToUpper();
             string cacheKey = $"integrated-const-summary-{pCode}-{year}-{startDate ?? ""}-{endDate ?? ""}-{area ?? "all"}";
@@ -183,7 +187,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("construction/stock-value")]
-        public IHttpActionResult GetConstructionStockValue(string province = "WPN", bool refresh = false)
+        public IActionResult GetConstructionStockValue(string province = "WPN", bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim().ToUpper();
             string cacheKey = $"integrated-const-stock-{pCode}";
@@ -200,7 +204,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("construction/piv-total")]
-        public IHttpActionResult GetConstructionPivTotal(string province = "WPN", bool refresh = false)
+        public IActionResult GetConstructionPivTotal(string province = "WPN", bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim().ToUpper();
             string cacheKey = $"integrated-const-piv-{pCode}";
@@ -217,7 +221,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("construction/piv-period-summary")]
-        public IHttpActionResult GetConstructionPivPeriodSummary(string province = "WPN", string startDate = null, string endDate = null, bool refresh = false)
+        public IActionResult GetConstructionPivPeriodSummary(string province = "WPN", string startDate = null, string endDate = null, bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim().ToUpper();
             string cacheKey = $"integrated-const-piv-period-{pCode}-{startDate ?? ""}-{endDate ?? ""}";
@@ -234,7 +238,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("construction/application-count")]
-        public IHttpActionResult GetConstructionApplicationCount(string province = "WPN", int year = 2026, string area = null, bool refresh = false)
+        public IActionResult GetConstructionApplicationCount(string province = "WPN", int year = 2026, string area = null, bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim().ToUpper();
             string cacheKey = $"integrated-const-apps-{pCode}-{year}-{area ?? "all"}";
@@ -251,7 +255,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("construction/connections-given")]
-        public IHttpActionResult GetConstructionConnectionsGiven(string province = "WPN", int year = 2026, string area = null, bool refresh = false)
+        public IActionResult GetConstructionConnectionsGiven(string province = "WPN", int year = 2026, string area = null, bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim().ToUpper();
             string cacheKey = $"integrated-const-conns-{pCode}-{year}-{area ?? "all"}";
@@ -268,7 +272,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("construction/pending-applications")]
-        public IHttpActionResult GetConstructionPendingApplications(string province = "WPN", int year = 2026, string area = null, bool refresh = false)
+        public IActionResult GetConstructionPendingApplications(string province = "WPN", int year = 2026, string area = null, bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim().ToUpper();
             string cacheKey = $"integrated-const-pendings-{pCode}-{year}-{area ?? "all"}";
@@ -291,7 +295,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("areaengineer/summary")]
-        public IHttpActionResult GetAreaEngineerSummary(string province = "WPN", int year = 2026, string startDate = null, string endDate = null, string area = null, bool refresh = false)
+        public IActionResult GetAreaEngineerSummary(string province = "WPN", int year = 2026, string startDate = null, string endDate = null, string area = null, bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim();
             string cacheKey = $"integrated-ae-summary-{pCode}-{year}-{startDate ?? ""}-{endDate ?? ""}-{area ?? "all"}";
@@ -308,7 +312,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("areaengineer/stock-value")]
-        public IHttpActionResult GetAreaEngineerStockValue(string province = "WPN", bool refresh = false)
+        public IActionResult GetAreaEngineerStockValue(string province = "WPN", bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim();
             string cacheKey = $"integrated-ae-stock-value-{pCode}";
@@ -325,7 +329,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("areaengineer/piv-total")]
-        public IHttpActionResult GetAreaEngineerPivTotal(string province = "WPN", bool refresh = false)
+        public IActionResult GetAreaEngineerPivTotal(string province = "WPN", bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim();
             string cacheKey = $"integrated-ae-piv-total-{pCode}";
@@ -342,7 +346,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("areaengineer/piv-period-summary")]
-        public IHttpActionResult GetAreaEngineerPivPeriodSummary(string province = "WPN", string startDate = null, string endDate = null, bool refresh = false)
+        public IActionResult GetAreaEngineerPivPeriodSummary(string province = "WPN", string startDate = null, string endDate = null, bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim();
             string cacheKey = $"integrated-ae-piv-period-{pCode}-{startDate ?? ""}-{endDate ?? ""}";
@@ -359,7 +363,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("areaengineer/material-master")]
-        public IHttpActionResult GetAreaEngineerMaterialMaster(string province = "WPN", bool refresh = false)
+        public IActionResult GetAreaEngineerMaterialMaster(string province = "WPN", bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim();
             string cacheKey = $"integrated-ae-material-master-{pCode}";
@@ -376,7 +380,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("areaengineer/application-count")]
-        public IHttpActionResult GetAreaEngineerApplicationCount(string province = "WPN", int year = 2026, string area = null, bool refresh = false)
+        public IActionResult GetAreaEngineerApplicationCount(string province = "WPN", int year = 2026, string area = null, bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim();
             string cacheKey = $"integrated-ae-app-count-{pCode}-{year}-{area ?? "all"}";
@@ -393,7 +397,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("areaengineer/connections-given")]
-        public IHttpActionResult GetAreaEngineerConnectionsGiven(string province = "WPN", int year = 2026, string area = null, bool refresh = false)
+        public IActionResult GetAreaEngineerConnectionsGiven(string province = "WPN", int year = 2026, string area = null, bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim();
             string cacheKey = $"integrated-ae-conns-{pCode}-{year}-{area ?? "all"}";
@@ -410,7 +414,7 @@ namespace MISReports_Api.Controllers.IntegratedDashboard
 
         [HttpGet]
         [Route("areaengineer/pending-applications")]
-        public IHttpActionResult GetAreaEngineerPendingApplications(string province = "WPN", int year = 2026, string area = null, bool refresh = false)
+        public IActionResult GetAreaEngineerPendingApplications(string province = "WPN", int year = 2026, string area = null, bool refresh = false)
         {
             string pCode = string.IsNullOrWhiteSpace(province) ? "WPN" : province.Trim();
             string cacheKey = $"integrated-ae-pendings-{pCode}-{year}-{area ?? "all"}";

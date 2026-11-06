@@ -1,7 +1,8 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace MISReports_Api.Controllers
@@ -9,12 +10,14 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/jobcard")]
     public class JobcardController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly JobCardRepository _repository = new JobCardRepository();
 
         // GET api/jobcard?projectNo=XXX&costCtr=YYY
         [HttpGet]
         [Route("")]
-        public async Task<IHttpActionResult> GetJobCards([FromUri] string projectNo, [FromUri] string costCtr)
+        public async Task<IActionResult> GetJobCards([FromUri] string projectNo, [FromUri] string costCtr)
         {
             try
             {
@@ -41,6 +44,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetJobCards failed. projectNo={projectNo}, costCtr={costCtr}", projectNo, costCtr);
                 // Log error details
                 System.Diagnostics.Trace.WriteLine($"ERROR: {ex.ToString()}");
 

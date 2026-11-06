@@ -1,4 +1,5 @@
 ﻿// Controllers/OUMController.cs
+using MISReports_Api.Compat;
 using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json;
@@ -11,19 +12,20 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/oum")]
     public class OUMController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly OUMRepository _oumRepository = new OUMRepository();
 
         [HttpPost]
         [Route("upload")]
-        public IHttpActionResult UploadExcelFile(OUMRequestModel OUMModel)
+        public IActionResult UploadExcelFile(OUMRequestModel OUMModel)
         {
             try
             {
@@ -60,6 +62,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "UploadExcelFile failed");
                 return Ok(JObject.FromObject(new OUMUploadResponseModel
                 {
                     RecordsInserted = 0,
@@ -82,6 +85,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetRecords failed");
                 response.ErrorMessage = "error";
                 response.TotalRecords = 0;
             }
@@ -91,7 +95,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("approveload")]
-        public IHttpActionResult ApproveRecordsLoad()
+        public IActionResult ApproveRecordsLoad()
         {
             try
             {
@@ -116,6 +120,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ApproveRecordsLoad failed");
 
                 return Ok(JObject.FromObject(new
                 {
@@ -134,7 +139,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("approve")]
-        public IHttpActionResult ApproveRecords()
+        public IActionResult ApproveRecords()
         {
             try
             {
@@ -155,6 +160,7 @@ namespace MISReports_Api.Controllers
 
             catch (Exception ex)
             {
+                logger.Error(ex, "ApproveRecords failed");
                 var response = new OUMRecordsResponseModel
                 {
                     Success = false,
@@ -170,7 +176,7 @@ namespace MISReports_Api.Controllers
 
         [HttpPost]
         [Route("refresh")]
-        public IHttpActionResult RefreshCrdTemp()
+        public IActionResult RefreshCrdTemp()
         {
             try
             {
@@ -190,6 +196,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "RefreshCrdTemp failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,

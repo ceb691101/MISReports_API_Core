@@ -1,7 +1,7 @@
-﻿using MISReports_Api.Models.BillMap;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.BillMap;
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Threading.Tasks;
 
 namespace MISReports_Api.DAL.BillMap

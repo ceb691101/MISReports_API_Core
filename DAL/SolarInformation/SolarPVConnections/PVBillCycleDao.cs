@@ -1,15 +1,18 @@
-﻿using MISReports_Api.Models.Shared;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.Shared;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
 {
     public class PVBillCycleDao
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DBConnection _dbConnection = new DBConnection();
 
         public BillCycleModel GetLast24BillCycles()
@@ -33,7 +36,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
 
                     // Get max bill cycle as integer
                     string sql = "SELECT max(bill_cycle) FROM netmtcons";
-                    using (OleDbCommand cmd = new OleDbCommand(sql, conn))
+                    using (DbCommand cmd = Informix.CreateCommand(sql, conn))
                     {
                         object maxCycleObj = cmd.ExecuteScalar();
                         System.Diagnostics.Trace.WriteLine($"Query executed, result: {maxCycleObj}");
@@ -59,14 +62,16 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
                     }
                 }
             }
-            catch (OleDbException ex)
+            catch (DbException ex)
             {
+                logger.Error(ex, "GetLast24BillCycles failed");
                 string errorDetails = $"OleDb Error: {ex.Message}, Error Code: {ex.ErrorCode}";
                 System.Diagnostics.Trace.WriteLine(errorDetails);
                 model.ErrorMessage = $"Database error: {ex.Message}";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetLast24BillCycles failed");
                 string errorDetails = $"Unexpected error: {ex.Message}, Stack: {ex.StackTrace}";
                 System.Diagnostics.Trace.WriteLine(errorDetails);
                 model.ErrorMessage = $"Unexpected error: {ex.Message}";

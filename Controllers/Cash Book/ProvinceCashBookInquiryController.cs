@@ -1,18 +1,21 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/provincecashbookinquiry")]
     public class ProvinceCashBookInquiryController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ProvinceCashBookInquiryDAL _dal = new ProvinceCashBookInquiryDAL();
 
         // PATH: /api/provincecashbookinquiry/report/2026-01-01/100
         [HttpGet]
         [Route("report/{curDate}/{compId}")]
-        public IHttpActionResult GetReport(string curDate, string compId)
+        public IActionResult GetReport(string curDate, string compId)
         {
             return ExecuteQuery(curDate, compId);
         }
@@ -20,12 +23,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/provincecashbookinquiry/report?curDate=2026-01-01&compId=100
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string curDate, [FromUri] string compId)
+        public IActionResult GetQuery([FromUri] string curDate, [FromUri] string compId)
         {
             return ExecuteQuery(curDate, compId);
         }
 
-        private IHttpActionResult ExecuteQuery(string curDate, string compId)
+        private IActionResult ExecuteQuery(string curDate, string compId)
         {
             try
             {
@@ -70,6 +73,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. curDate={curDate}, compId={compId}", curDate, compId);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

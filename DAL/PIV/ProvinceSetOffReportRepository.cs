@@ -1,13 +1,15 @@
-﻿using MISReports_Api.Models.PIV;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.PIV;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace MISReports_Api.DAL.PIV
 {
     public class ProvinceSetOffReportRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string _connectionString =
             ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
@@ -88,6 +90,7 @@ order by c.dept_id ,c.piv_no";
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetProvinceSetOffReport failed (exception rethrown). fromDate={fromDate}, toDate={toDate}, compId={compId}", fromDate, toDate, compId);
                     throw new Exception("Error fetching Province Set-off Report: " + ex.Message, ex);
                 }
             }

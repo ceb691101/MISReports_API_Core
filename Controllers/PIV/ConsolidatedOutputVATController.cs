@@ -1,20 +1,23 @@
-﻿using MISReports_Api.DAL.PIV;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.PIV;
 using MISReports_Api.Models.PIV;
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/consolidatedvat")]
     public class ConsolidatedOutputVATController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ConsolidatedOutputVATRepository _repo = new ConsolidatedOutputVATRepository();
 
         // GET: api/consolidatedvat/report?fromDate=2025/01/01&toDate=2025/12/31
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetReport(string fromDate, string toDate)
+        public IActionResult GetReport(string fromDate, string toDate)
         {
             if (string.IsNullOrWhiteSpace(fromDate) || string.IsNullOrWhiteSpace(toDate))
             {
@@ -39,6 +42,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReport failed. fromDate={fromDate}, toDate={toDate}", fromDate, toDate);
                 return InternalServerError(new Exception("Error while generating Consolidated Output VAT report: " + ex.Message));
             }
         }

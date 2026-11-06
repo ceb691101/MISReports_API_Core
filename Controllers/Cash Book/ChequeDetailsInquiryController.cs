@@ -1,18 +1,21 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/chequedetailsinquiry")]
     public class ChequeDetailsInquiryController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ChequeDetailsInquiryDAL _dal = new ChequeDetailsInquiryDAL();
 
         // PATH: /api/chequedetailsinquiry/report/100/1/20
         [HttpGet]
         [Route("report/{costCtr}/{fromNo}/{toNo}")]
-        public IHttpActionResult GetReport(string costCtr, string fromNo, string toNo)
+        public IActionResult GetReport(string costCtr, string fromNo, string toNo)
         {
             return ExecuteQuery(costCtr, fromNo, toNo);
         }
@@ -20,12 +23,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/chequedetailsinquiry/report?costCtr=100&fromNo=1&toNo=20
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string costCtr, [FromUri] string fromNo, [FromUri] string toNo)
+        public IActionResult GetQuery([FromUri] string costCtr, [FromUri] string fromNo, [FromUri] string toNo)
         {
             return ExecuteQuery(costCtr, fromNo, toNo);
         }
 
-        private IHttpActionResult ExecuteQuery(string costCtr, string fromNo, string toNo)
+        private IActionResult ExecuteQuery(string costCtr, string fromNo, string toNo)
         {
             try
             {
@@ -70,6 +73,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. costCtr={costCtr}, fromNo={fromNo}, toNo={toNo}", costCtr, fromNo, toNo);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

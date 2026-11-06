@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 namespace MISReports_Api.Controllers
@@ -11,12 +12,14 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/materialflow")]
     public class MaterialFlowController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly MaterialFlowDAL _dal = new MaterialFlowDAL();
 
         // PATH: /api/materialflow/report/2026-05-09/2026-07-09/510.00/EBG120007G/A/WH_CEPP
         [HttpGet]
         [Route("report/{fromDate}/{toDate}/{costCtr}/{matCode}/{grCode}/{whCode}")]
-        public IHttpActionResult GetReport(string fromDate, string toDate, string costCtr, string matCode, string grCode, string whCode)
+        public IActionResult GetReport(string fromDate, string toDate, string costCtr, string matCode, string grCode, string whCode)
         {
             return ExecuteQuery(fromDate, toDate, costCtr, matCode, grCode, whCode);
         }
@@ -24,7 +27,7 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/materialflow/report?fromDate=2026-05-09&toDate=2026-07-09&costCtr=510.00&matCode=EBG120007G&grCode=A&whCode=WH_CEPP
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery(
+        public IActionResult GetQuery(
             [FromUri] string fromDate, [FromUri] string toDate, [FromUri] string costCtr,
             [FromUri] string matCode, [FromUri] string grCode, [FromUri] string whCode)
         {
@@ -34,7 +37,7 @@ namespace MISReports_Api.Controllers
         // GET: /api/materialflow/gradecodes
         [HttpGet]
         [Route("gradecodes")]
-        public IHttpActionResult GetGradeCodes()
+        public IActionResult GetGradeCodes()
         {
             try
             {
@@ -43,12 +46,13 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetGradeCodes failed");
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }
         }
 
-        private IHttpActionResult ExecuteQuery(string fromDate, string toDate, string costCtr, string matCode, string grCode, string whCode)
+        private IActionResult ExecuteQuery(string fromDate, string toDate, string costCtr, string matCode, string grCode, string whCode)
         {
             try
             {
@@ -123,6 +127,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. fromDate={fromDate}, toDate={toDate}, costCtr={costCtr}, matCode={matCode}, grCode={grCode}, whCode={whCode}", fromDate, toDate, costCtr, matCode, grCode, whCode);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

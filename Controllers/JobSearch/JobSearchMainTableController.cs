@@ -1,14 +1,17 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/jobsearchmaintable")]
     public class JobSearchMainTableController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly JobSearchMainTableRepository _repository = new JobSearchMainTableRepository();
 
         // GET: api/jobsearchmaintable
@@ -19,7 +22,7 @@ namespace MISReports_Api.Controllers
         // ?projectNo=PJ-45678
         [HttpGet]
         [Route("")]
-        public async Task<IHttpActionResult> Search(
+        public async Task<IActionResult> Search(
             [FromUri] string applicationId = null,
             [FromUri] string applicationNo = null,
             [FromUri] string projectNo = null,
@@ -55,6 +58,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "Search failed. applicationId={applicationId}, applicationNo={applicationNo}, projectNo={projectNo}, idNo={idNo}, accountNo={accountNo}, tele={tele}", applicationId, applicationNo, projectNo, idNo, accountNo, tele);
                 System.Diagnostics.Trace.WriteLine($"JobSearchMainTable error: {ex}");
                 return Ok(new
                 {

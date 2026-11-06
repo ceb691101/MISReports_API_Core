@@ -1,9 +1,10 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Models.Dashboard;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.Dashboard
@@ -197,18 +198,18 @@ namespace MISReports_Api.DAL.Dashboard
             }
         }
 
-        private string GetMaxBillCycle(OleDbConnection conn)
+        private string GetMaxBillCycle(DbConnection conn)
         {
             const string sql = "SELECT MAX(bill_cycle) FROM netmtcons";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 object result = cmd.ExecuteScalar();
                 return result == null || result == DBNull.Value ? string.Empty : result.ToString().Trim();
             }
         }
 
-        private Dictionary<string, int> GetGroupedCountsFromNetmtcons(OleDbConnection conn, string billCycle, string region, string province, string area)
+        private Dictionary<string, int> GetGroupedCountsFromNetmtcons(DbConnection conn, string billCycle, string region, string province, string area)
         {
             var groupedCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
@@ -230,7 +231,7 @@ namespace MISReports_Api.DAL.Dashboard
                 ? $"SELECT n.bill_cycle, n.net_type, COUNT(*), SUM(n.gen_cap) FROM netmtcons n, areas a WHERE n.bill_cycle = ? AND n.area_cd = a.area_code AND a.{filterColumn} = ? GROUP BY 1,2 ORDER BY 2,1"
                 : "SELECT bill_cycle, net_type, COUNT(*), SUM(gen_cap) FROM netmtcons WHERE bill_cycle = ? GROUP BY 1,2 ORDER BY 2,1";
 
-            using (var cmd = new OleDbCommand(groupedSql, conn))
+            using (var cmd = Informix.CreateCommand(groupedSql, conn))
             {
                 cmd.Parameters.AddWithValue("?", billCycle);
                 if (hasFilter)
@@ -262,7 +263,7 @@ namespace MISReports_Api.DAL.Dashboard
             return groupedCounts.TryGetValue(netType, out int count) ? count : 0;
         }
 
-        private List<int> GetAvailableBillCyclesFromNetmtcons(OleDbConnection conn, int maxAllowedCycle, int takeCount, string region, string province, string area)
+        private List<int> GetAvailableBillCyclesFromNetmtcons(DbConnection conn, int maxAllowedCycle, int takeCount, string region, string province, string area)
         {
             var billCycles = new List<int>();
 
@@ -284,7 +285,7 @@ namespace MISReports_Api.DAL.Dashboard
                 ? $"SELECT DISTINCT n.bill_cycle FROM netmtcons n, areas a WHERE n.bill_cycle <= ? AND n.area_cd = a.area_code AND a.{filterColumn} = ? ORDER BY n.bill_cycle DESC"
                 : "SELECT DISTINCT bill_cycle FROM netmtcons WHERE bill_cycle <= ? ORDER BY bill_cycle DESC";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("?", maxAllowedCycle.ToString());
                 if (hasFilter)
@@ -313,7 +314,7 @@ namespace MISReports_Api.DAL.Dashboard
             return billCycles;
         }
 
-        private List<SolarBulkGenerationCapacityPoint> GetGenerationCapacityByCycleFromNetmtcons(OleDbConnection conn, string billCycle, string region, string province, string area)
+        private List<SolarBulkGenerationCapacityPoint> GetGenerationCapacityByCycleFromNetmtcons(DbConnection conn, string billCycle, string region, string province, string area)
         {
             var groupedByDisplayType = new Dictionary<string, SolarBulkGenerationCapacityPoint>(StringComparer.OrdinalIgnoreCase);
 
@@ -335,7 +336,7 @@ namespace MISReports_Api.DAL.Dashboard
                 ? $"SELECT n.bill_cycle, n.net_type, COUNT(*), SUM(n.gen_cap) FROM netmtcons n, areas a WHERE n.bill_cycle = ? AND n.area_cd = a.area_code AND a.{filterColumn} = ? GROUP BY 1,2 ORDER BY 2,1"
                 : "SELECT bill_cycle, net_type, COUNT(*), SUM(gen_cap) FROM netmtcons WHERE bill_cycle = ? GROUP BY 1,2 ORDER BY 2,1";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("?", billCycle);
                 if (hasFilter)

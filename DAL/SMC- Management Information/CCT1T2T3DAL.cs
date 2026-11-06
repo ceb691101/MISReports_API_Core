@@ -1,9 +1,10 @@
+﻿using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Configuration;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 using MISReports_Api.Models.Accounts;
 
 namespace MISReports_Api.DAL
@@ -22,42 +23,44 @@ namespace MISReports_Api.DAL
                         b.application_id,
                         a.project_no,
                         a.ACC_CREATED_DATE,
-                        (SELECT submit_date
+                        (SELECT MAX(submit_date)
                            FROM applications
                           WHERE application_id = b.application_id) AS piv_1_date,
                         c.APPROVED_DATE AS approval_date,
                         d.TOTAL_COST AS estimate_cost,
-                        (SELECT CONFIRMED_DATE
+                        (SELECT MAX(CONFIRMED_DATE)
                            FROM PIV_DETAIL
                           WHERE reference_no = b.application_no
                             AND reference_type = 'EST'
                             AND status = 'P') AS piv2_date,
-                        (SELECT CONNECTED_DATE
+                        (SELECT MAX(CONNECTED_DATE)
                            FROM spodrcrd
                           WHERE PROJECT_NO = a.project_no) AS engized_date,
-                        (c.APPROVED_DATE - (SELECT submit_date
+                        (c.APPROVED_DATE - (SELECT MAX(submit_date)
                                                FROM applications
                                               WHERE application_id = b.application_id)) AS t1,
-                        ((SELECT CONNECTED_DATE
+                        ((SELECT MAX(CONNECTED_DATE)
                             FROM spodrcrd
                            WHERE PROJECT_NO = a.project_no) - c.APPROVED_DATE) AS t2_ln,
-                        ((SELECT CONNECTED_DATE
+                        ((SELECT MAX(CONNECTED_DATE)
                             FROM spodrcrd
                            WHERE PROJECT_NO = a.project_no) -
-                         (SELECT CONFIRMED_DATE
+                         (SELECT MAX(CONFIRMED_DATE)
                             FROM PIV_DETAIL
                            WHERE reference_no = b.application_no
                              AND reference_type = 'EST'
                              AND status = 'P')) AS t2_smc,
-                        (a.ACC_CREATED_DATE - (SELECT CONNECTED_DATE
+                        (a.ACC_CREATED_DATE - (SELECT MAX(CONNECTED_DATE)
                                                   FROM spodrcrd
                                                  WHERE PROJECT_NO = a.project_no)) AS t3,
-                        (SELECT 'Loan'
-                           FROM PIV_DETAIL
-                          WHERE reference_no = b.application_no
-                            AND reference_type = 'ELN'
-                            AND status = 'C') AS loan,
-                        (SELECT dept_nm
+                        (CASE WHEN EXISTS (
+                               SELECT 1
+                               FROM PIV_DETAIL
+                              WHERE reference_no = b.application_no
+                                AND reference_type = 'ELN'
+                                AND status = 'C'
+                           ) THEN 'Loan' END) AS loan,
+                        (SELECT MAX(dept_nm)
                            FROM gldeptm
                           WHERE TRIM(dept_id) = TRIM(:costctr)) AS cct_name
                 FROM      Spexpjob a, Application_Reference b, approval c, speststd d
@@ -100,13 +103,13 @@ namespace MISReports_Api.DAL
                             AccCreatedDate = reader["ACC_CREATED_DATE"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["ACC_CREATED_DATE"]),
                             Piv1Date = reader["piv_1_date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["piv_1_date"]),
                             ApprovalDate = reader["approval_date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["approval_date"]),
-                            EstimateCost = reader["estimate_cost"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["estimate_cost"]),
+                            EstimateCost = GetSafeDecimal(reader, "estimate_cost"),
                             Piv2Date = reader["piv2_date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["piv2_date"]),
                             EnergizedDate = reader["engized_date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["engized_date"]),
-                            T1 = reader["t1"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["t1"]),
-                            T2Ln = reader["t2_ln"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["t2_ln"]),
-                            T2Smc = reader["t2_smc"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["t2_smc"]),
-                            T3 = reader["t3"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["t3"]),
+                            T1 = GetSafeDecimal(reader, "t1"),
+                            T2Ln = GetSafeDecimal(reader, "t2_ln"),
+                            T2Smc = GetSafeDecimal(reader, "t2_smc"),
+                            T3 = GetSafeDecimal(reader, "t3"),
                             Loan = reader["loan"] == DBNull.Value ? null : reader["loan"].ToString(),
                             CctName = reader["cct_name"] == DBNull.Value ? null : reader["cct_name"].ToString()
                         });
@@ -115,6 +118,16 @@ namespace MISReports_Api.DAL
             }
 
             return result;
+        }
+
+        private static decimal? GetSafeDecimal(OracleDataReader reader, string columnName)
+        {
+            int ordinal = reader.GetOrdinal(columnName);
+            if (reader.IsDBNull(ordinal))
+                return null;
+
+            OracleDecimal value = OracleDecimal.SetPrecision(reader.GetOracleDecimal(ordinal), 28);
+            return value.Value;
         }
     }
 }

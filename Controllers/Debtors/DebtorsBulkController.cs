@@ -1,21 +1,24 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/debtorsbulk")]
     public class DebtorsBulkController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DebtorsBulkRepository _debtorsBulkRepository = new DebtorsBulkRepository();
 
         [HttpGet]
         [Route("summary")]
-        public IHttpActionResult GetDebtorsBulkSummary([FromUri] string opt, [FromUri] string cycle, [FromUri] string areaCode = null)
+        public IActionResult GetDebtorsBulkSummary([FromUri] string opt, [FromUri] string cycle, [FromUri] string areaCode = null)
 
         {
             if (string.IsNullOrWhiteSpace(opt))
@@ -66,6 +69,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetDebtorsBulkSummary failed. opt={opt}, cycle={cycle}, areaCode={areaCode}", opt, cycle, areaCode);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,

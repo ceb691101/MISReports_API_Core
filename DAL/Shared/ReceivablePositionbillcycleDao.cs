@@ -1,13 +1,16 @@
-﻿using MISReports_Api.Models.Shared;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.Shared;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Helpers;
 using System;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.Shared
 {
     public class ReceivablePositionBillCycleDao
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DBConnection _dbConnection = new DBConnection();
 
         // ── Primary method used by CollectionController ────────────────────
@@ -30,7 +33,7 @@ namespace MISReports_Api.DAL.Shared
                         ? "SELECT MAX(bill_cycle) FROM receive_position"
                         : "SELECT MAX(bill_cycle) FROM receive_position WHERE bill_type = ?";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         if (!string.IsNullOrWhiteSpace(billType))
                             cmd.Parameters.AddWithValue("@bill_type", billType.Trim().ToUpper());
@@ -48,14 +51,16 @@ namespace MISReports_Api.DAL.Shared
                         }
                     }
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
+                    logger.Error(ex, "GetLast24BillCycles failed. billType={billType}", billType);
                     System.Diagnostics.Trace.WriteLine(
                         $"Error retrieving max bill cycle from receive_position: {ex.Message}");
                     model.ErrorMessage = "Error retrieving max bill cycle";
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetLast24BillCycles failed. billType={billType}", billType);
                     System.Diagnostics.Trace.WriteLine($"Unexpected error: {ex.Message}");
                     model.ErrorMessage = "Unexpected error occurred";
                 }
@@ -98,7 +103,7 @@ namespace MISReports_Api.DAL.Shared
                         ? "SELECT MAX(bill_cycle) FROM receive_position"
                         : "SELECT MAX(bill_cycle) FROM receive_position WHERE bill_type = ?";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         if (!string.IsNullOrWhiteSpace(billType))
                             cmd.Parameters.AddWithValue("@bill_type", billType.Trim().ToUpper());
@@ -110,6 +115,7 @@ namespace MISReports_Api.DAL.Shared
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "QueryMaxBillCycle failed. useBulkConnection={useBulkConnection}, billType={billType}", useBulkConnection, billType);
                     System.Diagnostics.Trace.WriteLine(
                         $"Error in QueryMaxBillCycle: {ex.Message}");
                 }
@@ -129,7 +135,7 @@ namespace MISReports_Api.DAL.Shared
 
                     string sql = "SELECT MAX(bill_cycle) FROM mon_tot";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         object result = cmd.ExecuteScalar();
                         if (result != null && result != DBNull.Value)
@@ -138,6 +144,7 @@ namespace MISReports_Api.DAL.Shared
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "QueryMaxBillCycleFromMonTot failed. useBulkConnection={useBulkConnection}", useBulkConnection);
                     System.Diagnostics.Trace.WriteLine(
                         $"Error in QueryMaxBillCycleFromMonTot: {ex.Message}");
                 }

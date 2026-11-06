@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 
 namespace MISReports_Api.Controllers
@@ -11,12 +12,14 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/constructioncompleted/lookups")]
     public class ConstructionCompletedLookupController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ConstructionCompletedLookupDAL _dal = new ConstructionCompletedLookupDAL();
 
         // GET: /api/constructioncompleted/lookups/fundids
         [HttpGet]
         [Route("fundids")]
-        public IHttpActionResult GetFundIds()
+        public IActionResult GetFundIds()
         {
             try
             {
@@ -25,6 +28,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetFundIds failed");
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }
@@ -33,7 +37,7 @@ namespace MISReports_Api.Controllers
         // GET: /api/constructioncompleted/lookups/districts/{roleId}
         [HttpGet]
         [Route("districts/{roleId}")]
-        public IHttpActionResult GetDistricts(string roleId)
+        public IActionResult GetDistricts(string roleId)
         {
             try
             {
@@ -45,6 +49,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetDistricts failed. roleId={roleId}", roleId);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

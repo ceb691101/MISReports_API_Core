@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 
@@ -13,6 +14,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/pendingestimationcc")]
     public class PendingEstimationCCController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly PendingEstimationCCDAL _dal = new PendingEstimationCCDAL();
 
         private static readonly string[] DateFormats = { "yyyy/MM/dd", "yyyy-MM-dd" };
@@ -21,7 +24,7 @@ namespace MISReports_Api.Controllers
         // jobType is optional
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery(
+        public IActionResult GetQuery(
             [FromUri] string fromDate,
             [FromUri] string toDate,
             [FromUri] string costCtr,
@@ -30,7 +33,7 @@ namespace MISReports_Api.Controllers
             return ExecuteQuery(fromDate, toDate, costCtr, jobType);
         }
 
-        private IHttpActionResult ExecuteQuery(string fromDate, string toDate, string costCtr, string jobType)
+        private IActionResult ExecuteQuery(string fromDate, string toDate, string costCtr, string jobType)
         {
             try
             {
@@ -83,6 +86,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. fromDate={fromDate}, toDate={toDate}, costCtr={costCtr}, jobType={jobType}", fromDate, toDate, costCtr, jobType);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

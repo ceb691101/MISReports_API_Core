@@ -1,20 +1,23 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/incomeexpenditureregion")]
     public class IncomeExpenditureRegionController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly IncomeExpenditureRegionRepository _repository = new IncomeExpenditureRegionRepository();
 
         [HttpGet]
         [Route("{companyId}/{repyear:int}/{repmonth:int}")]
-        public IHttpActionResult GetIncomeExpenditureRegion(string companyId, int repyear, int repmonth)
+        public IActionResult GetIncomeExpenditureRegion(string companyId, int repyear, int repmonth)
         {
             try
             {
@@ -39,6 +42,7 @@ namespace MISReports_Api.Controllers
             }
             catch (ArgumentException aex)
             {
+                logger.Warn("GetIncomeExpenditureRegion rejected: {error}. companyId={companyId}, repyear={repyear}, repmonth={repmonth}", aex.Message, companyId, repyear, repmonth);
                 var error = new
                 {
                     data = (object)null,
@@ -49,6 +53,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetIncomeExpenditureRegion failed. companyId={companyId}, repyear={repyear}, repmonth={repmonth}", companyId, repyear, repmonth);
                 var error = new
                 {
                     data = (object)null,

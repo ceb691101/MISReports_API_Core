@@ -1,10 +1,11 @@
 ﻿// Optimized PVConnectionDao.cs - High Performance Version
+using MISReports_Api.Compat;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Models.SolarInformation;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
@@ -113,14 +114,14 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
             }
         }
 
-        private List<PVConnectionRawData> GetPVConnectionData(OleDbConnection conn, SolarPVConnectionRequest request)
+        private List<PVConnectionRawData> GetPVConnectionData(DbConnection conn, SolarPVConnectionRequest request)
         {
             var results = new List<PVConnectionRawData>();
             string sql = BuildPVConnectionQuery(request);
 
             logger.Debug($"Main query SQL: {sql}");
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.CommandTimeout = 300; // 5 minutes
                 AddParameters(cmd, request);
@@ -160,7 +161,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
             return results;
         }
 
-        private Dictionary<string, AreaInformation> GetAreaInformationBatch(OleDbConnection conn, List<string> areaCodes)
+        private Dictionary<string, AreaInformation> GetAreaInformationBatch(DbConnection conn, List<string> areaCodes)
         {
             var results = new Dictionary<string, AreaInformation>();
 
@@ -177,7 +178,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
 
             logger.Debug($"Area batch query SQL: {sql}");
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.CommandTimeout = 300;
 
@@ -202,7 +203,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
             return results;
         }
 
-        private Dictionary<string, CustomerInformation> GetCustomerInformationBatch(OleDbConnection conn, string billCycle, List<string> accountNumbers)
+        private Dictionary<string, CustomerInformation> GetCustomerInformationBatch(DbConnection conn, string billCycle, List<string> accountNumbers)
         {
             var results = new Dictionary<string, CustomerInformation>();
 
@@ -226,7 +227,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
             return results;
         }
 
-        private Dictionary<string, CustomerInformation> GetCustomerInformationSingleBatch(OleDbConnection conn, string billCycle, List<string> accountNumbers)
+        private Dictionary<string, CustomerInformation> GetCustomerInformationSingleBatch(DbConnection conn, string billCycle, List<string> accountNumbers)
         {
             var results = new Dictionary<string, CustomerInformation>();
 
@@ -240,7 +241,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
 
             logger.Debug($"Customer batch query SQL: {sql}");
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.CommandTimeout = 300;
                 cmd.Parameters.AddWithValue("@billCycle", billCycle);
@@ -314,7 +315,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
             return baseQuery;
         }
 
-        private void AddParameters(OleDbCommand cmd, SolarPVConnectionRequest request)
+        private void AddParameters(DbCommand cmd, SolarPVConnectionRequest request)
         {
             string cycleValue = request.CycleType == "A" ? request.BillCycle : request.CalcCycle;
 
@@ -406,7 +407,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
         }
 
         // Helper methods
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -420,7 +421,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, string columnName)
+        private int GetIntValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -439,7 +440,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarPVConnections
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {

@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Threading.Tasks;
 
 namespace MISReports_Api.DAL.PhysicalVerification
@@ -40,7 +40,7 @@ namespace MISReports_Api.DAL.PhysicalVerification
                     AND T1.MAT_CD   = T2.MAT_CD
                     AND T1.MAT_CD   = T4.MAT_CD
                     AND T1.GRADE_CD = T4.GRADE_CD
-                    AND T4.STATUS IN (7)
+                    AND T4.STATUS IN (2,7,3)
                     AND T3.STATUS IN (1)
                     AND TRIM(T1.DEPT_ID) = :dept_id
                     AND TRIM(T3.DOC_NO)  = :doc_no

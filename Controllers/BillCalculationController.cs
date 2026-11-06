@@ -1,5 +1,6 @@
-﻿using System;
-using System.Web.Http;
+﻿using MISReports_Api.Compat;
+using System;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL.General.BillCalculation;
 using MISReports_Api.Models.General;
 
@@ -8,6 +9,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/billcalculation")]
     public class BillCalculationController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly BillCalculationDao _dao;
 
         public BillCalculationController()
@@ -32,7 +35,7 @@ namespace MISReports_Api.Controllers
         /// </example>
         [HttpPost]
         [Route("calculate")]
-        public IHttpActionResult CalculateBill([FromBody] BillCalculationRequest request)
+        public IActionResult CalculateBill([FromBody] BillCalculationRequest request)
         {
             try
             {
@@ -57,6 +60,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "CalculateBill failed. request={@request}", request);
                 System.Diagnostics.Trace.WriteLine($"Error in CalculateBill: {ex.Message}");
                 System.Diagnostics.Trace.WriteLine($"Stack Trace: {ex.StackTrace}");
                 return InternalServerError(ex);

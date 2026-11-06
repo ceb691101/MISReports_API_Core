@@ -1,22 +1,25 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/reprolereports")]
     public class RepRoleReportController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly RepRoleReportRepository _repository =
             new RepRoleReportRepository();
 
         // GET api/reprolereports/get?roleId=niro
         [HttpGet]
         [Route("get")]
-        public async Task<IHttpActionResult> GetReports(string roleId)
+        public async Task<IActionResult> GetReports(string roleId)
         {
             if (string.IsNullOrWhiteSpace(roleId))
                 return BadRequest("roleId is required.");
@@ -35,6 +38,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReports failed. roleId={roleId}", roleId);
                 var errorResponse = new
                 {
                     data = (object)null,

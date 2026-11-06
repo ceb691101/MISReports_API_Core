@@ -1,9 +1,10 @@
+﻿using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 namespace MISReports_Api.Controllers
@@ -11,22 +12,24 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/regionperiodstatus")]
     public class RegionPeriodStatusController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly RegionPeriodStatusDAL _dal = new RegionPeriodStatusDAL();
         // PATH: /api/regionperiodstatus/report/2026/07/DISCO1
         [HttpGet]
         [Route("report/{repYear:regex(^\\d{{4}}$)}/{repMonth:regex(^\\d{{1,2}}$)}/{region}")]
-        public IHttpActionResult GetReport(string repYear, string repMonth, string region)
+        public IActionResult GetReport(string repYear, string repMonth, string region)
         {
             return ExecuteQuery(repYear, repMonth, region);
         }
         // QUERY: /api/regionperiodstatus/report?repYear=2026&repMonth=07&region=DISCO1
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string repYear, [FromUri] string repMonth, [FromUri] string region)
+        public IActionResult GetQuery([FromUri] string repYear, [FromUri] string repMonth, [FromUri] string region)
         {
             return ExecuteQuery(repYear, repMonth, region);
         }
-        private IHttpActionResult ExecuteQuery(string repYear, string repMonth, string region)
+        private IActionResult ExecuteQuery(string repYear, string repMonth, string region)
         {
             try
             {
@@ -68,6 +71,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. repYear={repYear}, repMonth={repMonth}, region={region}", repYear, repMonth, region);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

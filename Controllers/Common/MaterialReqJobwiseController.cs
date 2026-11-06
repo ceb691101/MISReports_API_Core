@@ -1,19 +1,22 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/materialreqjobwise")]
     public class MaterialReqJobwiseController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly MaterialReqJobwiseDAL _dal = new MaterialReqJobwiseDAL();
 
         // PATH: /api/materialreqjobwise/report/100/PRJ-2026-01
         // Also supports: /api/materialreqjobwise/report/510.20/866/2008k
         [HttpGet]
         [Route("report/{costCtr}/{*projectNo}")]
-        public IHttpActionResult GetReport(string costCtr, string projectNo)
+        public IActionResult GetReport(string costCtr, string projectNo)
         {
             return ExecuteQuery(costCtr, projectNo);
         }
@@ -21,12 +24,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/materialreqjobwise/report?costCtr=100&projectNo=PRJ-2026-01
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string costCtr, [FromUri] string projectNo)
+        public IActionResult GetQuery([FromUri] string costCtr, [FromUri] string projectNo)
         {
             return ExecuteQuery(costCtr, projectNo);
         }
 
-        private IHttpActionResult ExecuteQuery(string costCtr, string projectNo)
+        private IActionResult ExecuteQuery(string costCtr, string projectNo)
         {
             try
             {
@@ -70,6 +73,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. costCtr={costCtr}, projectNo={projectNo}", costCtr, projectNo);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }
