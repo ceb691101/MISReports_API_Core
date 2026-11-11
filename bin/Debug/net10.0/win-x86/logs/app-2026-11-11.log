@@ -1,2 +1,1026 @@
+<<<<<<< Updated upstream
 2026-11-11 14:07:53.8919 |  INFO | Startup | MISReports API started (.NET 10.0.11). 
 2026-11-11 14:07:53.9113 |  INFO | GatewayKeyMiddleware | Gateway key check mode: Log 
+=======
+2026-11-11 10:53:02.2902 |  INFO | Startup | MISReports API started (.NET 10.0.11). 
+2026-11-11 10:53:02.3256 |  INFO | GatewayKeyMiddleware | Gateway key check mode: Log 
+2026-11-11 10:53:05.6628 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ordinary/province 
+2026-11-11 10:53:05.6628 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/50 
+2026-11-11 10:53:05.6628 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ordinary/areas 
+2026-11-11 10:53:05.6628 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 10:53:05.7530 |  INFO | SharedController | Request started: GET /api/ordinary/areas -> GetAreas by (unknown). Parameters: (none) 
+2026-11-11 10:53:05.7530 |  INFO | SharedController | Request started: GET /api/ordinary/province -> GetOrdinaryProvince by (unknown). Parameters: (none) 
+2026-11-11 10:53:05.7690 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/50 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="50" 
+2026-11-11 10:53:05.7690 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 10:53:06.9434 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /favicon.ico 
+2026-11-11 10:53:07.5765 | ERROR | DBConnection | TestConnection failed. useBulkConnection=true System.InvalidOperationException: The 'Ifxoledbc' provider is not registered on the local machine.
+   at System.Data.OleDb.OleDbServicesWrapper.GetDataSource(OleDbConnectionString constr, DataSourceWrapper& datasrcWrapper)
+   at System.Data.OleDb.OleDbConnectionInternal..ctor(OleDbConnectionString constr, OleDbConnection connection)
+   at System.Data.OleDb.OleDbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   at System.Data.OleDb.OleDbConnection.Open()
+   at MISReports_Api.DBAccess.DBConnection.TestConnection(String& errorMessage, Boolean useBulkConnection) in C:\Users\USER\Desktop\MISReports_API_Core\DBAccess\DBConnection.cs:line 70
+2026-11-11 10:53:07.5765 | ERROR | DBConnection | TestConnection failed. useBulkConnection=true System.InvalidOperationException: The 'Ifxoledbc' provider is not registered on the local machine.
+   at System.Data.OleDb.OleDbServicesWrapper.GetDataSource(OleDbConnectionString constr, DataSourceWrapper& datasrcWrapper)
+   at System.Data.OleDb.OleDbConnectionInternal..ctor(OleDbConnectionString constr, OleDbConnection connection)
+   at System.Data.OleDb.OleDbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   at System.Data.OleDb.OleDbConnection.Open()
+   at MISReports_Api.DBAccess.DBConnection.TestConnection(String& errorMessage, Boolean useBulkConnection) in C:\Users\USER\Desktop\MISReports_API_Core\DBAccess\DBConnection.cs:line 70
+2026-11-11 10:53:07.9417 |  INFO | SharedController | Request completed: GET /api/ordinary/province -> GetOrdinaryProvince returned 200 in 2191 ms 
+2026-11-11 10:53:07.9417 |  INFO | SharedController | Request completed: GET /api/ordinary/areas -> GetAreas returned 200 in 2191 ms 
+2026-11-11 10:53:08.2444 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 2493 ms 
+2026-11-11 10:53:08.2444 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/50 -> GetCompaniesByUserLevel returned 200 in 2494 ms 
+2026-11-11 10:53:11.3880 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 10:53:11.3880 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 10:53:11.3880 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/50 
+2026-11-11 10:53:11.3880 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ordinary/areas 
+2026-11-11 10:53:11.3880 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ordinary/province 
+2026-11-11 10:53:11.3880 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/50 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="50" 
+2026-11-11 10:53:11.3935 |  INFO | SharedController | Request started: GET /api/ordinary/province -> GetOrdinaryProvince by (unknown). Parameters: (none) 
+2026-11-11 10:53:11.3935 | ERROR | DBConnection | TestConnection failed. useBulkConnection=true System.InvalidOperationException: The 'Ifxoledbc' provider is not registered on the local machine.
+   at System.Data.OleDb.OleDbServicesWrapper.GetDataSource(OleDbConnectionString constr, DataSourceWrapper& datasrcWrapper)
+   at System.Data.OleDb.OleDbConnectionInternal..ctor(OleDbConnectionString constr, OleDbConnection connection)
+   at System.Data.OleDb.OleDbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   at System.Data.OleDb.OleDbConnection.Open()
+   at MISReports_Api.DBAccess.DBConnection.TestConnection(String& errorMessage, Boolean useBulkConnection) in C:\Users\USER\Desktop\MISReports_API_Core\DBAccess\DBConnection.cs:line 70
+2026-11-11 10:53:11.3935 |  INFO | SharedController | Request started: GET /api/ordinary/areas -> GetAreas by (unknown). Parameters: (none) 
+2026-11-11 10:53:11.3935 |  INFO | SharedController | Request completed: GET /api/ordinary/province -> GetOrdinaryProvince returned 200 in 2 ms 
+2026-11-11 10:53:11.3935 | ERROR | DBConnection | TestConnection failed. useBulkConnection=true System.InvalidOperationException: The 'Ifxoledbc' provider is not registered on the local machine.
+   at System.Data.OleDb.OleDbServicesWrapper.GetDataSource(OleDbConnectionString constr, DataSourceWrapper& datasrcWrapper)
+   at System.Data.OleDb.OleDbConnectionInternal..ctor(OleDbConnectionString constr, OleDbConnection connection)
+   at System.Data.OleDb.OleDbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   at System.Data.OleDb.OleDbConnection.Open()
+   at MISReports_Api.DBAccess.DBConnection.TestConnection(String& errorMessage, Boolean useBulkConnection) in C:\Users\USER\Desktop\MISReports_API_Core\DBAccess\DBConnection.cs:line 70
+2026-11-11 10:53:11.3935 |  INFO | SharedController | Request completed: GET /api/ordinary/areas -> GetAreas returned 200 in 1 ms 
+2026-11-11 10:53:11.4271 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 38 ms 
+2026-11-11 10:53:11.4271 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 10:53:11.4271 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 10:53:11.4447 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 11 ms 
+2026-11-11 10:53:11.4447 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 10:53:11.4447 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 10:53:11.4447 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/50 -> GetCompaniesByUserLevel returned 200 in 62 ms 
+2026-11-11 10:53:11.4659 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 16 ms 
+2026-11-11 10:53:11.5286 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 10:53:11.5623 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 10:53:11.5745 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/piv-total?companyId=AMBALN 
+2026-11-11 10:53:11.5745 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/stock-value?companyId=AMBALN 
+2026-11-11 10:53:11.5745 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/piv-total?companyId=AMBALN -> GetPivTotal by (unknown). Parameters: companyId="AMBALN" 
+2026-11-11 10:53:11.5745 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/stock-value?companyId=AMBALN -> GetStockValue by (unknown). Parameters: companyId="AMBALN" 
+2026-11-11 10:53:11.5890 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/piv-period-summary?companyId=AMBALN&startDate=2026-10-12&endDate=2026-11-10 
+2026-11-11 10:53:11.5890 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/pending-applications?companyId=AMBALN&year=2026 
+2026-11-11 10:53:11.5890 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/application-count?companyId=AMBALN&year=2026 
+2026-11-11 10:53:11.5890 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/piv-period-summary?companyId=AMBALN&startDate=2026-10-12&endDate=2026-11-10 -> GetPivPeriodSummary by (unknown). Parameters: companyId="AMBALN", startDate="2026-10-12", endDate="2026-11-10" 
+2026-11-11 10:53:11.5890 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/pending-applications?companyId=AMBALN&year=2026 -> GetPendingApplications by (unknown). Parameters: companyId="AMBALN", year=2026 
+2026-11-11 10:53:11.5890 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/application-count?companyId=AMBALN&year=2026 -> GetApplicationCount by (unknown). Parameters: companyId="AMBALN", year=2026 
+2026-11-11 10:53:11.6507 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/stock-value?companyId=AMBALN -> GetStockValue returned 200 in 72 ms 
+2026-11-11 10:53:11.6587 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/material-master?companyId=AMBALN 
+2026-11-11 10:53:11.6587 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/material-master?companyId=AMBALN -> GetMaterialMaster by (unknown). Parameters: companyId="AMBALN" 
+2026-11-11 10:53:12.1211 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/material-master?companyId=AMBALN -> GetMaterialMaster returned 200 in 455 ms 
+2026-11-11 10:53:12.1271 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/connections-given?companyId=AMBALN&year=2026 
+2026-11-11 10:53:12.1271 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/connections-given?companyId=AMBALN&year=2026 -> GetConnectionsGiven by (unknown). Parameters: companyId="AMBALN", year=2026 
+2026-11-11 10:53:12.1440 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/piv-period-summary?companyId=AMBALN&startDate=2026-10-12&endDate=2026-11-10 -> GetPivPeriodSummary returned 200 in 550 ms 
+2026-11-11 10:53:12.2648 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/piv-total?companyId=AMBALN -> GetPivTotal returned 200 in 686 ms 
+2026-11-11 10:53:12.5161 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 953 ms 
+2026-11-11 10:53:12.5218 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 10:53:12.5218 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 10:53:12.5827 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 60 ms 
+2026-11-11 10:53:12.5827 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 10:53:12.5827 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 10:53:12.6311 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 42 ms 
+2026-11-11 10:53:12.8199 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/application-count?companyId=AMBALN&year=2026 -> GetApplicationCount returned 200 in 1226 ms 
+2026-11-11 10:53:15.3077 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/pending-applications?companyId=AMBALN&year=2026 -> GetPendingApplications returned 200 in 3714 ms 
+2026-11-11 10:53:15.9457 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/connections-given?companyId=AMBALN&year=2026 -> GetConnectionsGiven returned 200 in 3807 ms 
+2026-11-11 10:54:00.7190 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reportcatalog/all?epfNo=035838 
+2026-11-11 10:54:00.7278 |  INFO | ReportCatalogController | Request started: GET /api/reportcatalog/all?epfNo=035838 -> GetAllReports by (unknown). Parameters: epfNo="035838" 
+2026-11-11 10:54:01.3393 |  INFO | ReportCatalogController | Request completed: GET /api/reportcatalog/all?epfNo=035838 -> GetAllReports returned 200 in 605 ms 
+2026-11-11 10:55:37.6032 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 10:55:37.6032 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 10:55:37.6558 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 52 ms 
+2026-11-11 10:55:37.6675 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 10:55:37.6675 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 10:55:37.7455 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 77 ms 
+2026-11-11 10:55:41.5907 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/60 
+2026-11-11 10:55:41.5907 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="60" 
+2026-11-11 10:55:41.6950 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel returned 200 in 104 ms 
+2026-11-11 10:56:11.2654 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchpendingdocinquiry/report/2026-11-01/2026-11-11/AFMR1%20 
+2026-11-11 10:56:11.2654 |  INFO | BranchPendingDocInquiryController | Request started: GET /api/branchpendingdocinquiry/report/2026-11-01/2026-11-11/AFMR1%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", compId="AFMR1 " 
+2026-11-11 10:56:40.1492 |  INFO | BranchPendingDocInquiryController | Request completed: GET /api/branchpendingdocinquiry/report/2026-11-01/2026-11-11/AFMR1%20 -> GetReport returned 200 in 28882 ms 
+2026-11-11 10:57:09.4451 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 10:57:09.4451 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 10:57:09.5421 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 94 ms 
+2026-11-11 10:57:19.3984 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ccdocinquirypending/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 10:57:19.3984 |  INFO | CCDocInquiryPendingController | Request started: GET /api/ccdocinquirypending/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="100.00         " 
+2026-11-11 10:57:21.0730 |  INFO | CCDocInquiryPendingController | Request completed: GET /api/ccdocinquirypending/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 1672 ms 
+2026-11-11 10:58:01.8363 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 10:58:01.8363 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 10:58:01.9686 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 132 ms 
+2026-11-11 10:58:11.1792 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirygeneralledger/report/2026-11-01/2026-11-11/511.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 10:58:11.1792 |  INFO | InquiryGeneralLedgerController | Request started: GET /api/inquirygeneralledger/report/2026-11-01/2026-11-11/511.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="511.00         " 
+2026-11-11 10:58:12.6936 |  INFO | InquiryGeneralLedgerController | Request completed: GET /api/inquirygeneralledger/report/2026-11-01/2026-11-11/511.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 1512 ms 
+2026-11-11 10:58:21.4209 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirygeneralledger/report/2026-11-01/2026-11-11/511.20%20%20%20%20%20%20%20%20%20 
+2026-11-11 10:58:21.4209 |  INFO | InquiryGeneralLedgerController | Request started: GET /api/inquirygeneralledger/report/2026-11-01/2026-11-11/511.20%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="511.20         " 
+2026-11-11 10:58:28.2378 |  INFO | InquiryGeneralLedgerController | Request completed: GET /api/inquirygeneralledger/report/2026-11-01/2026-11-11/511.20%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 6816 ms 
+2026-11-11 10:58:31.9854 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirygeneralledger/report/2026-11-01/2026-11-11/511.40%20%20%20%20%20%20%20%20%20 
+2026-11-11 10:58:31.9854 |  INFO | InquiryGeneralLedgerController | Request started: GET /api/inquirygeneralledger/report/2026-11-01/2026-11-11/511.40%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="511.40         " 
+2026-11-11 10:58:32.1141 |  INFO | InquiryGeneralLedgerController | Request completed: GET /api/inquirygeneralledger/report/2026-11-01/2026-11-11/511.40%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 128 ms 
+2026-11-11 10:58:39.0935 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirygeneralledger/report/2026-11-01/2026-11-11/423.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 10:58:39.0935 |  INFO | InquiryGeneralLedgerController | Request started: GET /api/inquirygeneralledger/report/2026-11-01/2026-11-11/423.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="423.00         " 
+2026-11-11 10:58:51.3276 |  INFO | InquiryGeneralLedgerController | Request completed: GET /api/inquirygeneralledger/report/2026-11-01/2026-11-11/423.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 12233 ms 
+2026-11-11 10:59:10.7295 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 10:59:10.7295 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 10:59:10.8060 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 76 ms 
+2026-11-11 10:59:19.1973 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquiryinventory/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 10:59:19.1973 |  INFO | InquiryInventoryController | Request started: GET /api/inquiryinventory/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="100.00         " 
+2026-11-11 10:59:19.2812 |  INFO | InquiryInventoryController | Request completed: GET /api/inquiryinventory/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 81 ms 
+2026-11-11 11:00:01.0878 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquiryinventory/report/2026-11-01/2026-11-11/520.11%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:00:01.0878 |  INFO | InquiryInventoryController | Request started: GET /api/inquiryinventory/report/2026-11-01/2026-11-11/520.11%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="520.11         " 
+2026-11-11 11:00:01.1317 |  INFO | InquiryInventoryController | Request completed: GET /api/inquiryinventory/report/2026-11-01/2026-11-11/520.11%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 43 ms 
+2026-11-11 11:00:11.6199 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:00:11.6199 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:00:11.7152 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 95 ms 
+2026-11-11 11:00:36.6280 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirycashbook/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:00:36.6280 |  INFO | InquiryCashBookController | Request started: GET /api/inquirycashbook/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="100.00         " 
+2026-11-11 11:00:36.6824 |  INFO | InquiryCashBookController | Request completed: GET /api/inquirycashbook/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 52 ms 
+2026-11-11 11:01:12.1430 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:01:12.1430 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:01:12.3275 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 184 ms 
+2026-11-11 11:01:21.6443 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirychequerun/report/2026-11-01/2026-11-11/110.10%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:01:21.6443 |  INFO | InquiryChequeRunController | Request started: GET /api/inquirychequerun/report/2026-11-01/2026-11-11/110.10%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="110.10         " 
+2026-11-11 11:01:21.8340 |  INFO | InquiryChequeRunController | Request completed: GET /api/inquirychequerun/report/2026-11-01/2026-11-11/110.10%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 187 ms 
+2026-11-11 11:01:26.6124 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirychequerun/report/2026-11-01/2026-11-11/510.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:01:26.6124 |  INFO | InquiryChequeRunController | Request started: GET /api/inquirychequerun/report/2026-11-01/2026-11-11/510.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="510.00         " 
+2026-11-11 11:01:26.8610 |  INFO | InquiryChequeRunController | Request completed: GET /api/inquirychequerun/report/2026-11-01/2026-11-11/510.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 248 ms 
+2026-11-11 11:01:42.9310 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:01:42.9310 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:01:43.3604 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 429 ms 
+2026-11-11 11:01:51.2241 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:01:51.2241 |  INFO | InquiryMaterialRequisitionController | Request started: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="100.00         " 
+2026-11-11 11:01:51.6168 |  INFO | InquiryMaterialRequisitionController | Request completed: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 391 ms 
+2026-11-11 11:01:56.8570 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/510.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:01:56.8570 |  INFO | InquiryMaterialRequisitionController | Request started: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/510.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="510.00         " 
+2026-11-11 11:01:57.1795 |  INFO | InquiryMaterialRequisitionController | Request completed: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/510.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 322 ms 
+2026-11-11 11:02:03.0683 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:02:03.0683 |  INFO | InquiryMaterialRequisitionController | Request started: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="510.11         " 
+2026-11-11 11:02:03.3882 |  INFO | InquiryMaterialRequisitionController | Request completed: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 319 ms 
+2026-11-11 11:02:09.7160 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/423.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:02:09.7160 |  INFO | InquiryMaterialRequisitionController | Request started: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/423.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="423.00         " 
+2026-11-11 11:02:10.0747 |  INFO | InquiryMaterialRequisitionController | Request completed: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/423.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 358 ms 
+2026-11-11 11:02:15.9241 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/520.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:02:15.9241 |  INFO | InquiryMaterialRequisitionController | Request started: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/520.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="520.00         " 
+2026-11-11 11:02:16.1844 |  INFO | InquiryMaterialRequisitionController | Request completed: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/520.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 260 ms 
+2026-11-11 11:02:18.4118 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/520.11%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:02:18.4118 |  INFO | InquiryMaterialRequisitionController | Request started: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/520.11%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="520.11         " 
+2026-11-11 11:02:18.6560 |  INFO | InquiryMaterialRequisitionController | Request completed: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/520.11%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 243 ms 
+2026-11-11 11:02:29.9828 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/110.10%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:02:29.9828 |  INFO | InquiryMaterialRequisitionController | Request started: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/110.10%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="110.10         " 
+2026-11-11 11:02:30.2015 |  INFO | InquiryMaterialRequisitionController | Request completed: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/110.10%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 218 ms 
+2026-11-11 11:03:03.9029 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/410.20%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:03:03.9029 |  INFO | InquiryMaterialRequisitionController | Request started: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/410.20%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="410.20         " 
+2026-11-11 11:03:04.8569 |  INFO | InquiryMaterialRequisitionController | Request completed: GET /api/inquirymaterialrequisition/report/2026-11-01/2026-11-11/410.20%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 953 ms 
+2026-11-11 11:03:37.7434 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inquirymaterialrequisition/report/2026-09-01/2026-11-11/410.20%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:03:37.7434 |  INFO | InquiryMaterialRequisitionController | Request started: GET /api/inquirymaterialrequisition/report/2026-09-01/2026-11-11/410.20%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-09-01", toDate="2026-11-11", costCtr="410.20         " 
+2026-11-11 11:03:38.1661 |  INFO | InquiryMaterialRequisitionController | Request completed: GET /api/inquirymaterialrequisition/report/2026-09-01/2026-11-11/410.20%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 422 ms 
+2026-11-11 11:06:05.8704 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventorydocinquiry/report?docNo=510.11%2FISS%2F26%2F0001 
+2026-11-11 11:06:05.8704 |  INFO | InventoryDocInquiryController | Request started: GET /api/inventorydocinquiry/report?docNo=510.11%2FISS%2F26%2F0001 -> GetQuery by (unknown). Parameters: docNo="510.11/ISS/26/0001" 
+2026-11-11 11:06:10.8882 |  INFO | InventoryDocInquiryController | Request completed: GET /api/inventorydocinquiry/report?docNo=510.11%2FISS%2F26%2F0001 -> GetQuery returned 200 in 5013 ms 
+2026-11-11 11:07:03.7271 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:07:03.7271 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:07:03.8191 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 91 ms 
+2026-11-11 11:07:27.2751 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialreqjobwise/report?costCtr=510.20+++++++++&projectNo=866%2F2008K 
+2026-11-11 11:07:27.2751 |  INFO | MaterialReqJobwiseController | Request started: GET /api/materialreqjobwise/report?costCtr=510.20+++++++++&projectNo=866%2F2008K -> GetQuery by (unknown). Parameters: costCtr="510.20         ", projectNo="866/2008K" 
+2026-11-11 11:07:27.2751 |  INFO | MaterialReqJobwiseDAL | GetMaterialReqJobwise called with costCtr='510.20', projectNo='866/2008K' 
+2026-11-11 11:07:27.4530 |  INFO | MaterialReqJobwiseDAL | Records found with TRIM match: 6 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 1 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 2 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 3 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 4 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 5 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 6 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 7 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 8 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 9 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 10 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 11 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 12 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 13 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 14 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 15 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 16 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 17 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 18 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 19 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 20 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 21 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 22 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 23 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 24 records 
+2026-11-11 11:07:27.6880 |  INFO | MaterialReqJobwiseDAL | Main query returned 25 records 
+2026-11-11 11:07:27.7075 |  INFO | MaterialReqJobwiseDAL | Main query returned 26 records 
+2026-11-11 11:07:27.7075 |  INFO | MaterialReqJobwiseDAL | Main query returned 27 records 
+2026-11-11 11:07:27.7075 |  INFO | MaterialReqJobwiseDAL | Main query returned 28 records 
+2026-11-11 11:07:27.7075 |  INFO | MaterialReqJobwiseDAL | Main query returned 29 records 
+2026-11-11 11:07:27.7075 |  INFO | MaterialReqJobwiseDAL | Main query returned 30 records 
+2026-11-11 11:07:27.7075 |  INFO | MaterialReqJobwiseDAL | Main query returned 31 records 
+2026-11-11 11:07:27.7075 |  INFO | MaterialReqJobwiseDAL | Main query returned 32 records 
+2026-11-11 11:07:27.7075 |  INFO | MaterialReqJobwiseDAL | Main query returned 33 records 
+2026-11-11 11:07:27.7075 |  INFO | MaterialReqJobwiseController | Request completed: GET /api/materialreqjobwise/report?costCtr=510.20+++++++++&projectNo=866%2F2008K -> GetQuery returned 200 in 436 ms 
+2026-11-11 11:08:03.2216 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:08:03.2216 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:08:03.3125 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 90 ms 
+2026-11-11 11:08:14.0687 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialreqjobwisenomat/report?costCtr=510.20+++++++++&projectNo=866%2F2008K 
+2026-11-11 11:08:14.0687 |  INFO | MaterialReqJobwiseNoMatController | Request started: GET /api/materialreqjobwisenomat/report?costCtr=510.20+++++++++&projectNo=866%2F2008K -> GetQuery by (unknown). Parameters: costCtr="510.20         ", projectNo="866/2008K" 
+2026-11-11 11:08:14.0687 |  INFO | MaterialReqJobwiseNoMatDAL | GetMaterialReqJobwiseNoMat called with costCtr='510.20', projectNo='866/2008K' 
+2026-11-11 11:08:14.2625 |  INFO | MaterialReqJobwiseNoMatDAL | Records found with TRIM match: 6 
+2026-11-11 11:08:14.4771 |  INFO | MaterialReqJobwiseNoMatDAL | Main query returned 6 records 
+2026-11-11 11:08:14.4771 |  INFO | MaterialReqJobwiseNoMatController | Request completed: GET /api/materialreqjobwisenomat/report?costCtr=510.20+++++++++&projectNo=866%2F2008K -> GetQuery returned 200 in 411 ms 
+2026-11-11 11:08:58.3288 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:08:58.3288 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:08:58.4716 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 142 ms 
+2026-11-11 11:09:13.2070 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialrequisitionwithissuedetails/report/2026-10-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20/ALL 
+2026-11-11 11:09:13.2070 |  INFO | MaterialRequisitionWithIssueDetailsController | Request started: GET /api/materialrequisitionwithissuedetails/report/2026-10-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20/ALL -> GetReport by (unknown). Parameters: fromDate="2026-10-01", toDate="2026-11-11", costCtr="510.20         ", matCode="ALL" 
+2026-11-11 11:09:14.3063 |  INFO | MaterialRequisitionWithIssueDetailsController | Request completed: GET /api/materialrequisitionwithissuedetails/report/2026-10-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20/ALL -> GetReport returned 200 in 1097 ms 
+2026-11-11 11:09:19.9578 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:09:19.9578 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:09:20.0629 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 104 ms 
+2026-11-11 11:09:31.2303 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/transactionspercostcenter/report/2026-11-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:09:31.2303 |  INFO | TransactionsPerCostCenterController | Request started: GET /api/transactionspercostcenter/report/2026-11-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="510.20         " 
+2026-11-11 11:09:43.8170 |  INFO | TransactionsPerCostCenterController | Request completed: GET /api/transactionspercostcenter/report/2026-11-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 12585 ms 
+2026-11-11 11:09:54.7894 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/60 
+2026-11-11 11:09:54.7894 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="60" 
+2026-11-11 11:09:54.8533 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel returned 200 in 63 ms 
+2026-11-11 11:10:09.3698 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqdetail/report/2026-11-01/2026-11-11/AFMR1%20 
+2026-11-11 11:11:36.5673 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqdetail/report/2026-11-01/2026-11-11/CC%20%20%20%20 
+2026-11-11 11:14:14.9590 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/60 
+2026-11-11 11:14:14.9590 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="60" 
+2026-11-11 11:14:14.9747 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel returned 200 in 15 ms 
+2026-11-11 11:14:27.9754 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqsummary/report/2026-11-01/2026-11-11/AFMR1%20 
+2026-11-11 11:14:27.9754 |  INFO | ProvinceMaterialReqSummaryController | Request started: GET /api/provincematerialreqsummary/report/2026-11-01/2026-11-11/AFMR1%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", compId="AFMR1 " 
+2026-11-11 11:14:29.1097 |  INFO | ProvinceMaterialReqSummaryController | Request completed: GET /api/provincematerialreqsummary/report/2026-11-01/2026-11-11/AFMR1%20 -> GetReport returned 200 in 1126 ms 
+2026-11-11 11:14:34.2015 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqsummary/report/2026-11-01/2026-11-11/CC%20%20%20%20 
+2026-11-11 11:14:34.2015 |  INFO | ProvinceMaterialReqSummaryController | Request started: GET /api/provincematerialreqsummary/report/2026-11-01/2026-11-11/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", compId="CC    " 
+2026-11-11 11:14:34.4167 |  INFO | ProvinceMaterialReqSummaryController | Request completed: GET /api/provincematerialreqsummary/report/2026-11-01/2026-11-11/CC%20%20%20%20 -> GetReport returned 200 in 214 ms 
+2026-11-11 11:14:51.0943 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqsummary/report/2026-10-01/2026-11-11/CC%20%20%20%20 
+2026-11-11 11:14:51.0943 |  INFO | ProvinceMaterialReqSummaryController | Request started: GET /api/provincematerialreqsummary/report/2026-10-01/2026-11-11/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-10-01", toDate="2026-11-11", compId="CC    " 
+2026-11-11 11:14:51.2788 |  INFO | ProvinceMaterialReqSummaryController | Request completed: GET /api/provincematerialreqsummary/report/2026-10-01/2026-11-11/CC%20%20%20%20 -> GetReport returned 200 in 184 ms 
+2026-11-11 11:14:59.3615 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqsummary/report/2026-08-01/2026-11-11/CC%20%20%20%20 
+2026-11-11 11:14:59.3615 |  INFO | ProvinceMaterialReqSummaryController | Request started: GET /api/provincematerialreqsummary/report/2026-08-01/2026-11-11/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-08-01", toDate="2026-11-11", compId="CC    " 
+2026-11-11 11:14:59.5324 |  INFO | ProvinceMaterialReqSummaryController | Request completed: GET /api/provincematerialreqsummary/report/2026-08-01/2026-11-11/CC%20%20%20%20 -> GetReport returned 200 in 170 ms 
+2026-11-11 11:15:14.5538 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqsummary/report/2025-10-01/2026-11-11/CC%20%20%20%20 
+2026-11-11 11:15:14.5538 |  INFO | ProvinceMaterialReqSummaryController | Request started: GET /api/provincematerialreqsummary/report/2025-10-01/2026-11-11/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2025-10-01", toDate="2026-11-11", compId="CC    " 
+2026-11-11 11:15:14.8057 |  INFO | ProvinceMaterialReqSummaryController | Request completed: GET /api/provincematerialreqsummary/report/2025-10-01/2026-11-11/CC%20%20%20%20 -> GetReport returned 200 in 251 ms 
+2026-11-11 11:16:44.8232 |  INFO | Startup | MISReports API stopping. 
+2026-11-11 11:16:50.8064 |  INFO | Startup | MISReports API started (.NET 10.0.11). 
+2026-11-11 11:16:50.8216 |  INFO | GatewayKeyMiddleware | Gateway key check mode: Log 
+2026-11-11 11:17:04.3441 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/60 
+2026-11-11 11:17:04.3846 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="60" 
+2026-11-11 11:17:05.6163 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel returned 200 in 1236 ms 
+2026-11-11 11:17:13.2920 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqdetail/report/2026-11-01/2026-11-11/CC%20%20%20%20 
+2026-11-11 11:17:13.2920 |  INFO | ProvinceMaterialReqDetailController | Request started: GET /api/provincematerialreqdetail/report/2026-11-01/2026-11-11/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", compId="CC    " 
+2026-11-11 11:17:14.1208 |  INFO | ProvinceMaterialReqDetailController | Request completed: GET /api/provincematerialreqdetail/report/2026-11-01/2026-11-11/CC%20%20%20%20 -> GetReport returned 200 in 822 ms 
+2026-11-11 11:17:22.8502 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqdetail/report/2026-08-01/2026-11-11/CC%20%20%20%20 
+2026-11-11 11:17:22.8502 |  INFO | ProvinceMaterialReqDetailController | Request started: GET /api/provincematerialreqdetail/report/2026-08-01/2026-11-11/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-08-01", toDate="2026-11-11", compId="CC    " 
+2026-11-11 11:17:23.0657 |  INFO | ProvinceMaterialReqDetailController | Request completed: GET /api/provincematerialreqdetail/report/2026-08-01/2026-11-11/CC%20%20%20%20 -> GetReport returned 200 in 215 ms 
+2026-11-11 11:18:28.5201 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqdetail/report/2026-01-01/2026-11-11/CC%20%20%20%20 
+2026-11-11 11:18:28.5201 |  INFO | ProvinceMaterialReqDetailController | Request started: GET /api/provincematerialreqdetail/report/2026-01-01/2026-11-11/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-01-01", toDate="2026-11-11", compId="CC    " 
+2026-11-11 11:18:28.7735 |  INFO | ProvinceMaterialReqDetailController | Request completed: GET /api/provincematerialreqdetail/report/2026-01-01/2026-11-11/CC%20%20%20%20 -> GetReport returned 200 in 253 ms 
+2026-11-11 11:20:38.6194 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqdetail/report/2026-01-01/2026-01-31/CC%20%20%20%20 
+2026-11-11 11:20:38.6194 |  INFO | ProvinceMaterialReqDetailController | Request started: GET /api/provincematerialreqdetail/report/2026-01-01/2026-01-31/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-01-01", toDate="2026-01-31", compId="CC    " 
+2026-11-11 11:20:39.3199 |  INFO | ProvinceMaterialReqDetailController | Request completed: GET /api/provincematerialreqdetail/report/2026-01-01/2026-01-31/CC%20%20%20%20 -> GetReport returned 200 in 700 ms 
+2026-11-11 11:21:22.7495 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqdetail/report/2026-01-01/2026-01-31/CC%20%20%20%20 
+2026-11-11 11:21:22.7495 |  INFO | ProvinceMaterialReqDetailController | Request started: GET /api/provincematerialreqdetail/report/2026-01-01/2026-01-31/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-01-01", toDate="2026-01-31", compId="CC    " 
+2026-11-11 11:21:22.9706 |  INFO | ProvinceMaterialReqDetailController | Request completed: GET /api/provincematerialreqdetail/report/2026-01-01/2026-01-31/CC%20%20%20%20 -> GetReport returned 200 in 220 ms 
+2026-11-11 11:22:43.0915 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:22:43.0993 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:22:43.2317 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 132 ms 
+2026-11-11 11:22:52.1164 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqsummary/report/2026-01-01/2026-01-31/CC 
+2026-11-11 11:22:52.1164 |  INFO | ProvinceMaterialReqSummaryController | Request started: GET /api/provincematerialreqsummary/report/2026-01-01/2026-01-31/CC -> GetReport by (unknown). Parameters: fromDate="2026-01-01", toDate="2026-01-31", compId="CC" 
+2026-11-11 11:22:52.2687 |  INFO | ProvinceMaterialReqSummaryController | Request completed: GET /api/provincematerialreqsummary/report/2026-01-01/2026-01-31/CC -> GetReport returned 200 in 148 ms 
+2026-11-11 11:22:52.3592 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqdetail/report/2026-01-01/2026-01-31/CC 
+2026-11-11 11:22:52.3592 |  INFO | ProvinceMaterialReqDetailController | Request started: GET /api/provincematerialreqdetail/report/2026-01-01/2026-01-31/CC -> GetReport by (unknown). Parameters: fromDate="2026-01-01", toDate="2026-01-31", compId="CC" 
+2026-11-11 11:22:52.5810 |  INFO | ProvinceMaterialReqDetailController | Request completed: GET /api/provincematerialreqdetail/report/2026-01-01/2026-01-31/CC -> GetReport returned 200 in 221 ms 
+2026-11-11 11:23:52.5969 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/tenderdocinquiry/report?fromDate=2026-11-01&toDate=2026-11-11&costCtr=100.00+++++++++&refNo=1 
+2026-11-11 11:23:52.6140 |  INFO | TenderDocInquiryController | Request started: GET /api/tenderdocinquiry/report?fromDate=2026-11-01&toDate=2026-11-11&costCtr=100.00+++++++++&refNo=1 -> GetQuery by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="100.00         ", refNo="1" 
+2026-11-11 11:23:54.7557 |  INFO | TenderDocInquiryController | Request completed: GET /api/tenderdocinquiry/report?fromDate=2026-11-01&toDate=2026-11-11&costCtr=100.00+++++++++&refNo=1 -> GetQuery returned 200 in 2131 ms 
+2026-11-11 11:24:03.7117 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/tenderdocinquiry/report?fromDate=2026-11-01&toDate=2026-11-11&costCtr=510.20+++++++++&refNo=1 
+2026-11-11 11:24:03.7117 |  INFO | TenderDocInquiryController | Request started: GET /api/tenderdocinquiry/report?fromDate=2026-11-01&toDate=2026-11-11&costCtr=510.20+++++++++&refNo=1 -> GetQuery by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="510.20         ", refNo="1" 
+2026-11-11 11:24:05.8733 |  INFO | TenderDocInquiryController | Request completed: GET /api/tenderdocinquiry/report?fromDate=2026-11-01&toDate=2026-11-11&costCtr=510.20+++++++++&refNo=1 -> GetQuery returned 200 in 2160 ms 
+2026-11-11 11:27:31.0061 |  INFO | Startup | MISReports API stopping. 
+2026-11-11 11:27:39.9246 |  INFO | Startup | MISReports API started (.NET 10.0.11). 
+2026-11-11 11:27:39.9528 |  INFO | GatewayKeyMiddleware | Gateway key check mode: Log 
+2026-11-11 11:28:39.7383 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 11:28:39.8292 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 11:28:42.1487 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:28:42.1487 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:28:42.4730 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 2659 ms 
+2026-11-11 11:28:42.4932 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 344 ms 
+2026-11-11 11:28:42.5044 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 11:28:42.5593 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 11:28:43.3899 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 830 ms 
+2026-11-11 11:29:03.3177 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/issuereceiptsummary/report/2025-12-04/2026-11-11/653.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:29:03.3177 |  INFO | IssueReceiptSummaryController | Request started: GET /api/issuereceiptsummary/report/2025-12-04/2026-11-11/653.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2025-12-04", toDate="2026-11-11", costCtr="653.00         " 
+2026-11-11 11:29:03.9859 |  INFO | IssueReceiptSummaryController | Request completed: GET /api/issuereceiptsummary/report/2025-12-04/2026-11-11/653.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 662 ms 
+2026-11-11 11:32:04.0538 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:32:04.0538 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:32:04.3105 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 255 ms 
+2026-11-11 11:32:09.3551 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=657.00%20%20%20%20%20%20%20%20%20&t=1794376929345 
+2026-11-11 11:32:09.3616 |  INFO | InventoryAverageConsumptionController | Request started: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=657.00%20%20%20%20%20%20%20%20%20&t=1794376929345 -> GetWarehousesByEpfNo by (unknown). Parameters: epfNo="035838", costCenterId="657.00         " 
+2026-11-11 11:32:09.3994 |  INFO | InventoryAverageConsumptionController | Request completed: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=657.00%20%20%20%20%20%20%20%20%20&t=1794376929345 -> GetWarehousesByEpfNo returned 200 in 37 ms 
+2026-11-11 11:32:13.4436 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/quantitymatfifo/report?costCtr=657.00%20%20%20%20%20%20%20%20%20&whCode=WH_CELIFT&matCode= 
+2026-11-11 11:32:13.4436 |  INFO | QuantityMatFIFOController | Request started: GET /api/quantitymatfifo/report?costCtr=657.00%20%20%20%20%20%20%20%20%20&whCode=WH_CELIFT&matCode= -> GetQuery by (unknown). Parameters: costCtr="657.00         ", whCode="WH_CELIFT", matCode=null 
+2026-11-11 11:32:13.9358 |  INFO | QuantityMatFIFOController | Request completed: GET /api/quantitymatfifo/report?costCtr=657.00%20%20%20%20%20%20%20%20%20&whCode=WH_CELIFT&matCode= -> GetQuery returned 200 in 487 ms 
+2026-11-11 11:32:39.4892 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 11:32:39.4892 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 11:32:39.5072 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 17 ms 
+2026-11-11 11:32:39.5190 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 11:32:39.5190 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 11:32:39.6059 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 83 ms 
+2026-11-11 11:32:42.2419 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:32:42.2419 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:32:42.3584 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 115 ms 
+2026-11-11 11:32:48.4382 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ledgercard/costcenter-transfer-vouchers/doc-profiles?costctr=830.00 
+2026-11-11 11:32:48.4439 |  INFO | CostCenterTransferVouchersController | Request started: GET /api/ledgercard/costcenter-transfer-vouchers/doc-profiles?costctr=830.00 -> GetDocProfiles by (unknown). Parameters: costctr="830.00" 
+2026-11-11 11:32:48.6383 |  INFO | CostCenterTransferVouchersController | Request completed: GET /api/ledgercard/costcenter-transfer-vouchers/doc-profiles?costctr=830.00 -> GetDocProfiles returned 200 in 194 ms 
+2026-11-11 11:33:19.4938 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ledgercard/costcenter-transfer-vouchers?costctr=830.00&repyear=2026&startmonth=1&endmonth=1&subac=831.00&docpf=TV-ONLINE 
+2026-11-11 11:33:19.5052 |  INFO | CostCenterTransferVouchersController | Request started: GET /api/ledgercard/costcenter-transfer-vouchers?costctr=830.00&repyear=2026&startmonth=1&endmonth=1&subac=831.00&docpf=TV-ONLINE -> GetReport by (unknown). Parameters: costctr="830.00", repyear=2026, startmonth=1, endmonth=1, subac="831.00", docpf="TV-ONLINE" 
+2026-11-11 11:33:25.4545 |  INFO | CostCenterTransferVouchersController | Request completed: GET /api/ledgercard/costcenter-transfer-vouchers?costctr=830.00&repyear=2026&startmonth=1&endmonth=1&subac=831.00&docpf=TV-ONLINE -> GetReport returned 200 in 5941 ms 
+2026-11-11 11:49:34.1595 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 11:49:34.1595 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 11:49:34.1595 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 8 ms 
+2026-11-11 11:49:34.1595 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ordinary/province 
+2026-11-11 11:49:34.1595 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ordinary/areas 
+2026-11-11 11:49:34.1595 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/50 
+2026-11-11 11:49:34.1778 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/50 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="50" 
+2026-11-11 11:49:34.1778 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 11:49:34.1778 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 11:49:34.1905 |  INFO | SharedController | Request started: GET /api/ordinary/province -> GetOrdinaryProvince by (unknown). Parameters: (none) 
+2026-11-11 11:49:34.1905 |  INFO | SharedController | Request started: GET /api/ordinary/areas -> GetAreas by (unknown). Parameters: (none) 
+2026-11-11 11:49:34.1905 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 11:49:34.1905 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 11:49:34.2063 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/50 -> GetCompaniesByUserLevel returned 200 in 30 ms 
+2026-11-11 11:49:34.2063 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 26 ms 
+2026-11-11 11:49:34.2210 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 11:49:34.2210 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 11:49:34.2210 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/piv-total?companyId=AMBALN 
+2026-11-11 11:49:34.2387 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/piv-total?companyId=AMBALN -> GetPivTotal by (unknown). Parameters: companyId="AMBALN" 
+2026-11-11 11:49:34.2387 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 49 ms 
+2026-11-11 11:49:34.2387 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 28 ms 
+2026-11-11 11:49:34.2724 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/stock-value?companyId=AMBALN 
+2026-11-11 11:49:34.2724 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/application-count?companyId=AMBALN&year=2026 
+2026-11-11 11:49:34.2724 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/stock-value?companyId=AMBALN -> GetStockValue by (unknown). Parameters: companyId="AMBALN" 
+2026-11-11 11:49:34.2724 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/application-count?companyId=AMBALN&year=2026 -> GetApplicationCount by (unknown). Parameters: companyId="AMBALN", year=2026 
+2026-11-11 11:49:34.3207 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/connections-given?companyId=AMBALN&year=2026 
+2026-11-11 11:49:34.3207 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/connections-given?companyId=AMBALN&year=2026 -> GetConnectionsGiven by (unknown). Parameters: companyId="AMBALN", year=2026 
+2026-11-11 11:49:34.3691 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/stock-value?companyId=AMBALN -> GetStockValue returned 200 in 93 ms 
+2026-11-11 11:49:34.3800 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/pending-applications?companyId=AMBALN&year=2026 
+2026-11-11 11:49:34.3800 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/pending-applications?companyId=AMBALN&year=2026 -> GetPendingApplications by (unknown). Parameters: companyId="AMBALN", year=2026 
+2026-11-11 11:49:34.5093 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/piv-total?companyId=AMBALN -> GetPivTotal returned 200 in 270 ms 
+2026-11-11 11:49:34.5214 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/piv-period-summary?companyId=AMBALN&startDate=2026-10-12&endDate=2026-11-10 
+2026-11-11 11:49:34.5214 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/piv-period-summary?companyId=AMBALN&startDate=2026-10-12&endDate=2026-11-10 -> GetPivPeriodSummary by (unknown). Parameters: companyId="AMBALN", startDate="2026-10-12", endDate="2026-11-10" 
+2026-11-11 11:49:34.7817 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/piv-period-summary?companyId=AMBALN&startDate=2026-10-12&endDate=2026-11-10 -> GetPivPeriodSummary returned 200 in 252 ms 
+2026-11-11 11:49:34.8008 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/material-master?companyId=AMBALN 
+2026-11-11 11:49:34.8008 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/material-master?companyId=AMBALN -> GetMaterialMaster by (unknown). Parameters: companyId="AMBALN" 
+2026-11-11 11:49:34.9118 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/material-master?companyId=AMBALN -> GetMaterialMaster returned 200 in 105 ms 
+2026-11-11 11:49:34.9255 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 11:49:34.9255 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 11:49:34.9825 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 50 ms 
+2026-11-11 11:49:34.9967 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/billmap/035838 
+2026-11-11 11:49:35.0191 |  INFO | BillMapController | Request started: GET /api/billmap/035838 -> GetBillMaps by (unknown). Parameters: epfNo="035838" 
+2026-11-11 11:49:35.0441 |  INFO | BillMapController | Request completed: GET /api/billmap/035838 -> GetBillMaps returned 200 in 25 ms 
+2026-11-11 11:49:35.0584 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 11:49:35.0584 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 11:49:35.0770 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 20 ms 
+2026-11-11 11:49:35.0836 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 11:49:35.0836 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 11:49:35.0994 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 7 ms 
+2026-11-11 11:49:35.3813 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/application-count?companyId=AMBALN&year=2026 -> GetApplicationCount returned 200 in 1104 ms 
+2026-11-11 11:49:36.4543 | ERROR | DBConnection | TestConnection failed. useBulkConnection=true System.InvalidOperationException: The 'Ifxoledbc' provider is not registered on the local machine.
+   at System.Data.OleDb.OleDbServicesWrapper.GetDataSource(OleDbConnectionString constr, DataSourceWrapper& datasrcWrapper)
+   at System.Data.OleDb.OleDbConnectionInternal..ctor(OleDbConnectionString constr, OleDbConnection connection)
+   at System.Data.OleDb.OleDbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   at System.Data.OleDb.OleDbConnection.Open()
+   at MISReports_Api.DBAccess.DBConnection.TestConnection(String& errorMessage, Boolean useBulkConnection) in C:\Users\USER\Desktop\MISReports_API_Core\DBAccess\DBConnection.cs:line 70
+2026-11-11 11:49:36.4543 | ERROR | DBConnection | TestConnection failed. useBulkConnection=true System.InvalidOperationException: The 'Ifxoledbc' provider is not registered on the local machine.
+   at System.Data.OleDb.OleDbServicesWrapper.GetDataSource(OleDbConnectionString constr, DataSourceWrapper& datasrcWrapper)
+   at System.Data.OleDb.OleDbConnectionInternal..ctor(OleDbConnectionString constr, OleDbConnection connection)
+   at System.Data.OleDb.OleDbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   at System.Data.OleDb.OleDbConnection.Open()
+   at MISReports_Api.DBAccess.DBConnection.TestConnection(String& errorMessage, Boolean useBulkConnection) in C:\Users\USER\Desktop\MISReports_API_Core\DBAccess\DBConnection.cs:line 70
+2026-11-11 11:49:36.5557 |  INFO | SharedController | Request completed: GET /api/ordinary/province -> GetOrdinaryProvince returned 200 in 2365 ms 
+2026-11-11 11:49:36.5557 |  INFO | SharedController | Request completed: GET /api/ordinary/areas -> GetAreas returned 200 in 2365 ms 
+2026-11-11 11:49:37.1361 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/pending-applications?companyId=AMBALN&year=2026 -> GetPendingApplications returned 200 in 2749 ms 
+2026-11-11 11:49:37.4473 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/connections-given?companyId=AMBALN&year=2026 -> GetConnectionsGiven returned 200 in 3122 ms 
+2026-11-11 11:49:37.9162 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 11:49:37.9162 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 11:49:37.9162 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 6 ms 
+2026-11-11 11:49:37.9287 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 11:49:37.9287 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 11:49:37.9641 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 25 ms 
+2026-11-11 11:49:40.7102 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:49:40.7102 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:49:40.8066 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 96 ms 
+2026-11-11 11:49:56.6452 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/costcenterwisegldocument/report/2026-11-01/2026-11-11/423.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:49:56.6452 |  INFO | CostCenterWiseGLDocumentController | Request started: GET /api/costcenterwisegldocument/report/2026-11-01/2026-11-11/423.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="423.00         " 
+2026-11-11 11:50:11.3088 |  INFO | CostCenterWiseGLDocumentController | Request completed: GET /api/costcenterwisegldocument/report/2026-11-01/2026-11-11/423.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 14658 ms 
+2026-11-11 11:50:31.0050 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:50:31.0050 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:50:31.1022 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 97 ms 
+2026-11-11 11:50:43.6410 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/docinquirygl/report/2026-11-01/2026-11-11/423.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:50:43.6433 |  INFO | DocInquiryGlController | Request started: GET /api/docinquirygl/report/2026-11-01/2026-11-11/423.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="423.00         " 
+2026-11-11 11:50:44.0732 |  INFO | DocInquiryGlController | Request completed: GET /api/docinquirygl/report/2026-11-01/2026-11-11/423.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 427 ms 
+2026-11-11 11:51:12.4786 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/docinquirygl/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:51:12.4786 |  INFO | DocInquiryGlController | Request started: GET /api/docinquirygl/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="510.11         " 
+2026-11-11 11:51:12.7165 |  INFO | DocInquiryGlController | Request completed: GET /api/docinquirygl/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 237 ms 
+2026-11-11 11:51:19.0273 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/docinquirygl/report/2026-11-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:51:19.0273 |  INFO | DocInquiryGlController | Request started: GET /api/docinquirygl/report/2026-11-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="510.20         " 
+2026-11-11 11:51:24.0507 |  INFO | DocInquiryGlController | Request completed: GET /api/docinquirygl/report/2026-11-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 5023 ms 
+2026-11-11 11:51:39.7234 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/docinquirygl/report/2026-09-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:51:39.7234 |  INFO | DocInquiryGlController | Request started: GET /api/docinquirygl/report/2026-09-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-09-01", toDate="2026-11-11", costCtr="510.20         " 
+2026-11-11 11:51:40.0191 |  INFO | DocInquiryGlController | Request completed: GET /api/docinquirygl/report/2026-09-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 295 ms 
+2026-11-11 11:51:53.3154 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/docinquirygl/report/2026-09-01/2026-11-11/480.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:51:53.3154 |  INFO | DocInquiryGlController | Request started: GET /api/docinquirygl/report/2026-09-01/2026-11-11/480.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-09-01", toDate="2026-11-11", costCtr="480.00         " 
+2026-11-11 11:51:55.9660 |  INFO | DocInquiryGlController | Request completed: GET /api/docinquirygl/report/2026-09-01/2026-11-11/480.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 2650 ms 
+2026-11-11 11:52:55.6285 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/glinquirybydoc/report?docNo=914.00%2FPSA%2F26%2F0100 
+2026-11-11 11:52:55.6285 |  INFO | GlInquiryByDocController | Request started: GET /api/glinquirybydoc/report?docNo=914.00%2FPSA%2F26%2F0100 -> GetQuery by (unknown). Parameters: docNo="914.00/PSA/26/0100" 
+2026-11-11 11:53:24.7550 |  INFO | GlInquiryByDocController | Request completed: GET /api/glinquirybydoc/report?docNo=914.00%2FPSA%2F26%2F0100 -> GetQuery returned 200 in 29123 ms 
+2026-11-11 11:53:40.0763 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 11:53:40.0763 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 11:53:40.1069 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 30 ms 
+2026-11-11 11:53:40.1382 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 11:53:40.1382 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 11:53:40.2364 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 97 ms 
+2026-11-11 11:53:51.4078 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:53:51.4082 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:53:51.5809 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 172 ms 
+2026-11-11 11:54:02.2553 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=510.11%20%20%20%20%20%20%20%20%20&t=1794378242245 
+2026-11-11 11:54:02.2553 |  INFO | InventoryAverageConsumptionController | Request started: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=510.11%20%20%20%20%20%20%20%20%20&t=1794378242245 -> GetWarehousesByEpfNo by (unknown). Parameters: epfNo="035838", costCenterId="510.11         " 
+2026-11-11 11:54:02.3020 |  INFO | InventoryAverageConsumptionController | Request completed: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=510.11%20%20%20%20%20%20%20%20%20&t=1794378242245 -> GetWarehousesByEpfNo returned 200 in 45 ms 
+2026-11-11 11:54:05.6829 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryaverageconsumption/report/510.11%20%20%20%20%20%20%20%20%20/WRH-A/20261101/20261111 
+2026-11-11 11:54:05.6829 |  INFO | InventoryAverageConsumptionController | Request started: GET /api/inventoryaverageconsumption/report/510.11%20%20%20%20%20%20%20%20%20/WRH-A/20261101/20261111 -> GetAverageConsumption by (unknown). Parameters: costCenter="510.11         ", warehouseCode="WRH-A", fromDate="20261101", toDate="20261111" 
+2026-11-11 11:54:05.7659 |  INFO | InventoryAverageConsumptionController | Request completed: GET /api/inventoryaverageconsumption/report/510.11%20%20%20%20%20%20%20%20%20/WRH-A/20261101/20261111 -> GetAverageConsumption returned 200 in 77 ms 
+2026-11-11 11:54:20.4097 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:54:20.4097 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:54:20.5489 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 138 ms 
+2026-11-11 11:54:36.1123 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=510.11%20%20%20%20%20%20%20%20%20&t=1794378276105 
+2026-11-11 11:54:36.1123 |  INFO | InventoryAverageConsumptionController | Request started: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=510.11%20%20%20%20%20%20%20%20%20&t=1794378276105 -> GetWarehousesByEpfNo by (unknown). Parameters: epfNo="035838", costCenterId="510.11         " 
+2026-11-11 11:54:36.1359 |  INFO | InventoryAverageConsumptionController | Request completed: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=510.11%20%20%20%20%20%20%20%20%20&t=1794378276105 -> GetWarehousesByEpfNo returned 200 in 23 ms 
+2026-11-11 11:54:39.5203 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/avg-consumption-selected/510.11%20%20%20%20%20%20%20%20%20/WRH-A/20261101/20261111 
+2026-11-11 11:54:39.5203 |  INFO | AvgConsumptionSelectedController | Request started: GET /api/avg-consumption-selected/510.11%20%20%20%20%20%20%20%20%20/WRH-A/20261101/20261111 -> GetSelectedAverageConsumption by (unknown). Parameters: costCenter="510.11         ", warehouseCode="WRH-A", fromDate="20261101", toDate="20261111" 
+2026-11-11 11:54:39.5763 |  INFO | AvgConsumptionSelectedController | Request completed: GET /api/avg-consumption-selected/510.11%20%20%20%20%20%20%20%20%20/WRH-A/20261101/20261111 -> GetSelectedAverageConsumption returned 200 in 50 ms 
+2026-11-11 11:55:18.3828 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/60 
+2026-11-11 11:55:18.3828 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="60" 
+2026-11-11 11:55:18.4341 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel returned 200 in 51 ms 
+2026-11-11 11:55:32.0146 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchgrnnotgen/report/2026-11-01/2026-11-11/CC%20%20%20%20 
+2026-11-11 11:55:32.0191 |  INFO | BranchGrnNotGenController | Request started: GET /api/branchgrnnotgen/report/2026-11-01/2026-11-11/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", compId="CC    " 
+2026-11-11 11:55:32.0741 |  INFO | BranchGrnNotGenController | Request completed: GET /api/branchgrnnotgen/report/2026-11-01/2026-11-11/CC%20%20%20%20 -> GetReport returned 200 in 55 ms 
+2026-11-11 11:55:45.5944 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/CC%20%20%20%20 
+2026-11-11 11:55:45.5944 |  INFO | BranchGrnNotGenController | Request started: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-06-01", toDate="2026-11-11", compId="CC    " 
+2026-11-11 11:55:45.6246 |  INFO | BranchGrnNotGenController | Request completed: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/CC%20%20%20%20 -> GetReport returned 200 in 29 ms 
+2026-11-11 11:55:47.7401 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/CCR1%20%20 
+2026-11-11 11:55:47.7401 |  INFO | BranchGrnNotGenController | Request started: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/CCR1%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-06-01", toDate="2026-11-11", compId="CCR1  " 
+2026-11-11 11:55:47.8189 |  INFO | BranchGrnNotGenController | Request completed: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/CCR1%20%20 -> GetReport returned 200 in 78 ms 
+2026-11-11 11:55:52.6190 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/AFMR1%20 
+2026-11-11 11:55:52.6190 |  INFO | BranchGrnNotGenController | Request started: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/AFMR1%20 -> GetReport by (unknown). Parameters: fromDate="2026-06-01", toDate="2026-11-11", compId="AFMR1 " 
+2026-11-11 11:55:52.6319 |  INFO | BranchGrnNotGenController | Request completed: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/AFMR1%20 -> GetReport returned 200 in 17 ms 
+2026-11-11 11:55:57.5710 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/AFMR4%20 
+2026-11-11 11:55:57.5710 |  INFO | BranchGrnNotGenController | Request started: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/AFMR4%20 -> GetReport by (unknown). Parameters: fromDate="2026-06-01", toDate="2026-11-11", compId="AFMR4 " 
+2026-11-11 11:55:57.6455 |  INFO | BranchGrnNotGenController | Request completed: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/AFMR4%20 -> GetReport returned 200 in 74 ms 
+2026-11-11 11:55:58.7342 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/AFMTRA 
+2026-11-11 11:55:58.7342 |  INFO | BranchGrnNotGenController | Request started: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/AFMTRA -> GetReport by (unknown). Parameters: fromDate="2026-06-01", toDate="2026-11-11", compId="AFMTRA" 
+2026-11-11 11:55:58.8436 |  INFO | BranchGrnNotGenController | Request completed: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/AFMTRA -> GetReport returned 200 in 109 ms 
+2026-11-11 11:56:07.5303 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/CP%20%20%20%20 
+2026-11-11 11:56:07.5303 |  INFO | BranchGrnNotGenController | Request started: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/CP%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-06-01", toDate="2026-11-11", compId="CP    " 
+2026-11-11 11:56:07.5772 |  INFO | BranchGrnNotGenController | Request completed: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/CP%20%20%20%20 -> GetReport returned 200 in 46 ms 
+2026-11-11 11:56:36.4046 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/WPS1%20%20 
+2026-11-11 11:56:36.4046 |  INFO | BranchGrnNotGenController | Request started: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/WPS1%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-06-01", toDate="2026-11-11", compId="WPS1  " 
+2026-11-11 11:56:36.4687 |  INFO | BranchGrnNotGenController | Request completed: GET /api/branchgrnnotgen/report/2026-06-01/2026-11-11/WPS1%20%20 -> GetReport returned 200 in 63 ms 
+2026-11-11 11:56:53.5317 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchgrnnotgen/report/2025-07-01/2026-11-11/WPS1%20%20 
+2026-11-11 11:56:53.5317 |  INFO | BranchGrnNotGenController | Request started: GET /api/branchgrnnotgen/report/2025-07-01/2026-11-11/WPS1%20%20 -> GetReport by (unknown). Parameters: fromDate="2025-07-01", toDate="2026-11-11", compId="WPS1  " 
+2026-11-11 11:56:53.5837 |  INFO | BranchGrnNotGenController | Request completed: GET /api/branchgrnnotgen/report/2025-07-01/2026-11-11/WPS1%20%20 -> GetReport returned 200 in 51 ms 
+2026-11-11 11:57:27.7422 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 11:57:27.7422 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 11:57:27.8018 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 59 ms 
+2026-11-11 11:57:27.8307 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 11:57:27.8307 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 11:57:27.9153 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 84 ms 
+2026-11-11 11:57:32.8902 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/60 
+2026-11-11 11:57:32.8902 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="60" 
+2026-11-11 11:57:32.9607 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel returned 200 in 70 ms 
+2026-11-11 11:57:44.6091 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqsummary/report/2026-11-01/2026-11-11/CC%20%20%20%20 
+2026-11-11 11:57:44.6132 |  INFO | ProvinceMaterialReqSummaryController | Request started: GET /api/provincematerialreqsummary/report/2026-11-01/2026-11-11/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", compId="CC    " 
+2026-11-11 11:57:44.8688 |  INFO | ProvinceMaterialReqSummaryController | Request completed: GET /api/provincematerialreqsummary/report/2026-11-01/2026-11-11/CC%20%20%20%20 -> GetReport returned 200 in 255 ms 
+2026-11-11 11:57:55.0317 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/provincematerialreqsummary/report/2026-01-01/2026-11-11/CC%20%20%20%20 
+2026-11-11 11:57:55.0317 |  INFO | ProvinceMaterialReqSummaryController | Request started: GET /api/provincematerialreqsummary/report/2026-01-01/2026-11-11/CC%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-01-01", toDate="2026-11-11", compId="CC    " 
+2026-11-11 11:57:55.3265 |  INFO | ProvinceMaterialReqSummaryController | Request completed: GET /api/provincematerialreqsummary/report/2026-01-01/2026-11-11/CC%20%20%20%20 -> GetReport returned 200 in 294 ms 
+2026-11-11 11:58:04.3270 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 11:58:04.3270 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 11:58:04.3736 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 46 ms 
+2026-11-11 11:58:04.3875 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 11:58:04.3875 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 11:58:04.4687 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 80 ms 
+2026-11-11 11:58:08.7075 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/60 
+2026-11-11 11:58:08.7075 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="60" 
+2026-11-11 11:58:08.7674 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel returned 200 in 59 ms 
+2026-11-11 11:58:35.0447 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchgrnnotgen/report/2025-08-01/2026-11-11/WPS1%20%20 
+2026-11-11 11:58:35.0447 |  INFO | BranchGrnNotGenController | Request started: GET /api/branchgrnnotgen/report/2025-08-01/2026-11-11/WPS1%20%20 -> GetReport by (unknown). Parameters: fromDate="2025-08-01", toDate="2026-11-11", compId="WPS1  " 
+2026-11-11 11:58:35.0509 |  INFO | BranchGrnNotGenController | Request completed: GET /api/branchgrnnotgen/report/2025-08-01/2026-11-11/WPS1%20%20 -> GetReport returned 200 in 12 ms 
+2026-11-11 11:59:16.5296 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 11:59:16.5296 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 11:59:16.6671 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 137 ms 
+2026-11-11 11:59:20.0532 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchgrnnotgen/report/2025-08-01/2026-11-11/WPS1%20%20 
+2026-11-11 11:59:20.0532 |  INFO | BranchGrnNotGenController | Request started: GET /api/branchgrnnotgen/report/2025-08-01/2026-11-11/WPS1%20%20 -> GetReport by (unknown). Parameters: fromDate="2025-08-01", toDate="2026-11-11", compId="WPS1  " 
+2026-11-11 11:59:20.1031 |  INFO | BranchGrnNotGenController | Request completed: GET /api/branchgrnnotgen/report/2025-08-01/2026-11-11/WPS1%20%20 -> GetReport returned 200 in 49 ms 
+2026-11-11 11:59:27.4888 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:59:27.4888 |  INFO | CcGrnNotGenController | Request started: GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="100.00         " 
+2026-11-11 11:59:27.9113 |  INFO | CcGrnNotGenController | Request completed: GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/100.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 415 ms 
+2026-11-11 11:59:39.2915 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:59:39.2915 |  INFO | CcGrnNotGenController | Request started: GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="510.11         " 
+2026-11-11 11:59:39.8153 |  INFO | CcGrnNotGenController | Request completed: GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 523 ms 
+2026-11-11 11:59:44.0836 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:59:44.0836 |  INFO | CcGrnNotGenController | Request started: GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="510.20         " 
+2026-11-11 11:59:44.4130 |  INFO | CcGrnNotGenController | Request completed: GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/510.20%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 329 ms 
+2026-11-11 11:59:50.8867 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/520.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 11:59:50.8867 |  INFO | CcGrnNotGenController | Request started: GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/520.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="520.00         " 
+2026-11-11 11:59:51.4044 |  INFO | CcGrnNotGenController | Request completed: GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/520.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 517 ms 
+2026-11-11 12:00:34.9942 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 
+2026-11-11 12:00:34.9942 |  INFO | CcGrnNotGenController | Request started: GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="510.11         " 
+2026-11-11 12:00:35.3989 |  INFO | CcGrnNotGenController | Request completed: GET /api/ccgrnnotgen/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 404 ms 
+2026-11-11 12:00:47.9985 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ccgrnnotgen/report/2025-09-01/2026-11-11/510.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 12:00:47.9985 |  INFO | CcGrnNotGenController | Request started: GET /api/ccgrnnotgen/report/2025-09-01/2026-11-11/510.00%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2025-09-01", toDate="2026-11-11", costCtr="510.00         " 
+2026-11-11 12:00:48.4911 |  INFO | CcGrnNotGenController | Request completed: GET /api/ccgrnnotgen/report/2025-09-01/2026-11-11/510.00%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 492 ms 
+2026-11-11 12:00:55.2942 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:00:55.2942 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:00:55.4773 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 182 ms 
+2026-11-11 12:01:01.4403 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ccwiseissue/report?repYear=2026&repMonth=11&costCtr=100.00%20%20%20%20%20%20%20%20%20 
+2026-11-11 12:01:01.4403 |  INFO | CCWiseIssueController | Request started: GET /api/ccwiseissue/report?repYear=2026&repMonth=11&costCtr=100.00%20%20%20%20%20%20%20%20%20 -> GetQuery by (unknown). Parameters: repYear="2026", repMonth="11", costCtr="100.00         " 
+2026-11-11 12:01:02.2414 |  INFO | CCWiseIssueController | Request completed: GET /api/ccwiseissue/report?repYear=2026&repMonth=11&costCtr=100.00%20%20%20%20%20%20%20%20%20 -> GetQuery returned 200 in 796 ms 
+2026-11-11 12:01:07.2423 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ccwiseissue/report?repYear=2026&repMonth=11&costCtr=510.11%20%20%20%20%20%20%20%20%20 
+2026-11-11 12:01:07.2423 |  INFO | CCWiseIssueController | Request started: GET /api/ccwiseissue/report?repYear=2026&repMonth=11&costCtr=510.11%20%20%20%20%20%20%20%20%20 -> GetQuery by (unknown). Parameters: repYear="2026", repMonth="11", costCtr="510.11         " 
+2026-11-11 12:01:07.6153 |  INFO | CCWiseIssueController | Request completed: GET /api/ccwiseissue/report?repYear=2026&repMonth=11&costCtr=510.11%20%20%20%20%20%20%20%20%20 -> GetQuery returned 200 in 372 ms 
+2026-11-11 12:01:26.9032 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ccwiseissue/report?repYear=2026&repMonth=11&costCtr=510.20%20%20%20%20%20%20%20%20%20 
+2026-11-11 12:01:26.9032 |  INFO | CCWiseIssueController | Request started: GET /api/ccwiseissue/report?repYear=2026&repMonth=11&costCtr=510.20%20%20%20%20%20%20%20%20%20 -> GetQuery by (unknown). Parameters: repYear="2026", repMonth="11", costCtr="510.20         " 
+2026-11-11 12:01:26.9337 |  INFO | CCWiseIssueController | Request completed: GET /api/ccwiseissue/report?repYear=2026&repMonth=11&costCtr=510.20%20%20%20%20%20%20%20%20%20 -> GetQuery returned 200 in 30 ms 
+2026-11-11 12:01:33.5773 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ccwiseissue/report?repYear=2026&repMonth=11&costCtr=510.11%20%20%20%20%20%20%20%20%20 
+2026-11-11 12:01:33.5773 |  INFO | CCWiseIssueController | Request started: GET /api/ccwiseissue/report?repYear=2026&repMonth=11&costCtr=510.11%20%20%20%20%20%20%20%20%20 -> GetQuery by (unknown). Parameters: repYear="2026", repMonth="11", costCtr="510.11         " 
+2026-11-11 12:01:34.3163 |  INFO | CCWiseIssueController | Request completed: GET /api/ccwiseissue/report?repYear=2026&repMonth=11&costCtr=510.11%20%20%20%20%20%20%20%20%20 -> GetQuery returned 200 in 738 ms 
+2026-11-11 12:01:45.7981 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ccwiseissue/report?repYear=2025&repMonth=11&costCtr=510.11%20%20%20%20%20%20%20%20%20 
+2026-11-11 12:01:45.7989 |  INFO | CCWiseIssueController | Request started: GET /api/ccwiseissue/report?repYear=2025&repMonth=11&costCtr=510.11%20%20%20%20%20%20%20%20%20 -> GetQuery by (unknown). Parameters: repYear="2025", repMonth="11", costCtr="510.11         " 
+2026-11-11 12:01:46.7641 |  INFO | CCWiseIssueController | Request completed: GET /api/ccwiseissue/report?repYear=2025&repMonth=11&costCtr=510.11%20%20%20%20%20%20%20%20%20 -> GetQuery returned 200 in 965 ms 
+2026-11-11 12:01:51.1377 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:01:51.1377 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:01:51.1927 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 54 ms 
+2026-11-11 12:02:07.0208 |  INFO | Startup | MISReports API stopping. 
+2026-11-11 12:02:15.3237 |  INFO | Startup | MISReports API started (.NET 10.0.11). 
+2026-11-11 12:02:15.3464 |  INFO | GatewayKeyMiddleware | Gateway key check mode: Log 
+2026-11-11 12:02:35.1167 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryonhand/510.11 
+2026-11-11 12:02:35.2648 |  INFO | InventoryOnHandController | Request started: GET /api/inventoryonhand/510.11 -> GetInventoryOnHand by (unknown). Parameters: deptId="510.11" 
+2026-11-11 12:02:39.5536 |  INFO | InventoryOnHandController | Request completed: GET /api/inventoryonhand/510.11 -> GetInventoryOnHand returned 200 in 4308 ms 
+2026-11-11 12:02:50.9148 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/60 
+2026-11-11 12:02:50.9148 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="60" 
+2026-11-11 12:02:51.2268 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel returned 200 in 305 ms 
+2026-11-11 12:03:08.2423 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/branchgrnnotgen/report/2025-12-01/2026-11-11/WPS1%20%20 
+2026-11-11 12:03:08.2423 |  INFO | BranchGrnNotGenController | Request started: GET /api/branchgrnnotgen/report/2025-12-01/2026-11-11/WPS1%20%20 -> GetReport by (unknown). Parameters: fromDate="2025-12-01", toDate="2026-11-11", compId="WPS1  " 
+2026-11-11 12:03:53.5000 |  INFO | BranchGrnNotGenController | Request completed: GET /api/branchgrnnotgen/report/2025-12-01/2026-11-11/WPS1%20%20 -> GetReport returned 200 in 45252 ms 
+2026-11-11 12:04:00.8280 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialflow/gradecodes 
+2026-11-11 12:04:00.8306 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:04:00.8306 |  INFO | MaterialFlowController | Request started: GET /api/materialflow/gradecodes -> GetGradeCodes by (unknown). Parameters: (none) 
+2026-11-11 12:04:00.8306 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:04:00.9279 |  INFO | MaterialFlowController | Request completed: GET /api/materialflow/gradecodes -> GetGradeCodes returned 200 in 97 ms 
+2026-11-11 12:04:01.0697 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 235 ms 
+2026-11-11 12:04:16.9184 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=510.11%20%20%20%20%20%20%20%20%20&t=1794378856907 
+2026-11-11 12:04:16.9461 |  INFO | InventoryAverageConsumptionController | Request started: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=510.11%20%20%20%20%20%20%20%20%20&t=1794378856907 -> GetWarehousesByEpfNo by (unknown). Parameters: epfNo="035838", costCenterId="510.11         " 
+2026-11-11 12:04:17.0275 |  INFO | InventoryAverageConsumptionController | Request completed: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=510.11%20%20%20%20%20%20%20%20%20&t=1794378856907 -> GetWarehousesByEpfNo returned 200 in 81 ms 
+2026-11-11 12:04:33.1550 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialflow/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20/A0203/NEW/WRH-A 
+2026-11-11 12:04:33.1594 |  INFO | MaterialFlowController | Request started: GET /api/materialflow/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20/A0203/NEW/WRH-A -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="510.11         ", matCode="A0203", grCode="NEW", whCode="WRH-A" 
+2026-11-11 12:04:34.0228 |  INFO | MaterialFlowController | Request completed: GET /api/materialflow/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20/A0203/NEW/WRH-A -> GetReport returned 200 in 863 ms 
+2026-11-11 12:04:48.0235 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/grnraisedforpurchasing/report/2026-11-01/2026-11-11 
+2026-11-11 12:04:48.0235 |  INFO | GrnRaisedForPurchasingController | Request started: GET /api/grnraisedforpurchasing/report/2026-11-01/2026-11-11 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11" 
+2026-11-11 12:05:02.8865 |  INFO | GrnRaisedForPurchasingController | Request completed: GET /api/grnraisedforpurchasing/report/2026-11-01/2026-11-11 -> GetReport returned 200 in 14856 ms 
+2026-11-11 12:05:18.8645 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:05:18.8645 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:05:18.9669 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 101 ms 
+2026-11-11 12:05:29.1563 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/issuereceiptwp/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 
+2026-11-11 12:05:29.1602 |  INFO | IssueReceiptWPController | Request started: GET /api/issuereceiptwp/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11", costCtr="510.11         " 
+2026-11-11 12:05:29.1916 |  INFO | IssueReceiptWPController | Request completed: GET /api/issuereceiptwp/report/2026-11-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 31 ms 
+2026-11-11 12:05:38.0446 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/issuereceiptwp/report/2026-07-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 
+2026-11-11 12:05:38.0446 |  INFO | IssueReceiptWPController | Request started: GET /api/issuereceiptwp/report/2026-07-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: fromDate="2026-07-01", toDate="2026-11-11", costCtr="510.11         " 
+2026-11-11 12:05:38.7074 |  INFO | IssueReceiptWPController | Request completed: GET /api/issuereceiptwp/report/2026-07-01/2026-11-11/510.11%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 662 ms 
+2026-11-11 12:06:11.1471 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/60 
+2026-11-11 12:06:11.1471 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="60" 
+2026-11-11 12:06:11.2573 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel returned 200 in 109 ms 
+2026-11-11 12:06:17.2980 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/issuesummaryprovince/report?fromDate=2026-10-31&toDate=2026-11-11&compId=CC%20%20%20%20&matCode= 
+2026-11-11 12:06:17.3030 |  INFO | IssueSummaryProvinceController | Request started: GET /api/issuesummaryprovince/report?fromDate=2026-10-31&toDate=2026-11-11&compId=CC%20%20%20%20&matCode= -> GetQuery by (unknown). Parameters: fromDate="2026-10-31", toDate="2026-11-11", compId="CC    ", matCode=null 
+2026-11-11 12:06:17.7229 |  INFO | IssueSummaryProvinceController | Request completed: GET /api/issuesummaryprovince/report?fromDate=2026-10-31&toDate=2026-11-11&compId=CC%20%20%20%20&matCode= -> GetQuery returned 200 in 419 ms 
+2026-11-11 12:06:32.3123 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/issuesraisedforjobs/report/2026-11-01/2026-11-11 
+2026-11-11 12:06:32.3157 |  INFO | IssuesRaisedForJobsController | Request started: GET /api/issuesraisedforjobs/report/2026-11-01/2026-11-11 -> GetReport by (unknown). Parameters: fromDate="2026-11-01", toDate="2026-11-11" 
+2026-11-11 12:06:32.5053 |  INFO | IssuesRaisedForJobsController | Request completed: GET /api/issuesraisedforjobs/report/2026-11-01/2026-11-11 -> GetReport returned 200 in 188 ms 
+2026-11-11 12:06:47.5934 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials 
+2026-11-11 12:06:47.5963 |  INFO | MaterialController | Request started: GET /api/materials -> GetMaterials by (unknown). Parameters: (none) 
+2026-11-11 12:06:50.0896 |  INFO | MaterialController | Request completed: GET /api/materials -> GetMaterials returned 200 in 2492 ms 
+2026-11-11 12:07:12.7456 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stocks/by-matcd/0A0203 
+2026-11-11 12:07:12.7536 |  INFO | MaterialController | Request started: GET /api/materials/stocks/by-matcd/0A0203 -> GetMaterialStocksByMatCd by (unknown). Parameters: (none) 
+2026-11-11 12:07:12.7536 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stock-balances?matCd=0A0203 
+2026-11-11 12:07:12.7536 |  INFO | MaterialController | Request completed: GET /api/materials/stocks/by-matcd/0A0203 -> GetMaterialStocksByMatCd returned 200 in 7 ms 
+2026-11-11 12:07:12.7536 |  INFO | MaterialController | Request started: GET /api/materials/stock-balances?matCd=0A0203 -> GetMaterialStockBalances by (unknown). Parameters: matCd="0A0203" 
+2026-11-11 12:07:12.7536 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stocks/by-matcd-province-wise/0A0203 
+2026-11-11 12:07:12.7685 |  INFO | MaterialController | Request started: GET /api/materials/stocks/by-matcd-province-wise/0A0203 -> GetMaterialStocksByMatCdProvinceWise by (unknown). Parameters: (none) 
+2026-11-11 12:07:12.7685 |  INFO | MaterialController | Request completed: GET /api/materials/stocks/by-matcd-province-wise/0A0203 -> GetMaterialStocksByMatCdProvinceWise returned 200 in 2 ms 
+2026-11-11 12:07:12.9032 |  INFO | MaterialController | Request completed: GET /api/materials/stock-balances?matCd=0A0203 -> GetMaterialStockBalances returned 200 in 138 ms 
+2026-11-11 12:07:16.7009 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 12:07:16.7009 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 12:07:16.7620 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 57 ms 
+2026-11-11 12:07:16.7748 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 12:07:16.7918 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 12:07:16.8465 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 54 ms 
+2026-11-11 12:07:20.5493 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials 
+2026-11-11 12:07:20.5493 |  INFO | MaterialController | Request started: GET /api/materials -> GetMaterials by (unknown). Parameters: (none) 
+2026-11-11 12:07:22.7547 |  INFO | MaterialController | Request completed: GET /api/materials -> GetMaterials returned 200 in 2205 ms 
+2026-11-11 12:07:37.3945 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stocks/by-matcd/D0210 
+2026-11-11 12:07:37.3945 |  INFO | MaterialController | Request started: GET /api/materials/stocks/by-matcd/D0210 -> GetMaterialStocksByMatCd by (unknown). Parameters: (none) 
+2026-11-11 12:07:37.3945 |  INFO | MaterialController | Request completed: GET /api/materials/stocks/by-matcd/D0210 -> GetMaterialStocksByMatCd returned 200 in 0 ms 
+2026-11-11 12:07:37.3945 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stocks/by-matcd-province-wise/D0210 
+2026-11-11 12:07:37.3945 |  INFO | MaterialController | Request started: GET /api/materials/stocks/by-matcd-province-wise/D0210 -> GetMaterialStocksByMatCdProvinceWise by (unknown). Parameters: (none) 
+2026-11-11 12:07:37.3945 |  INFO | MaterialController | Request completed: GET /api/materials/stocks/by-matcd-province-wise/D0210 -> GetMaterialStocksByMatCdProvinceWise returned 200 in 0 ms 
+2026-11-11 12:07:37.3945 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stock-balances?matCd=D0210 
+2026-11-11 12:07:37.3945 |  INFO | MaterialController | Request started: GET /api/materials/stock-balances?matCd=D0210 -> GetMaterialStockBalances by (unknown). Parameters: matCd="D0210" 
+2026-11-11 12:07:37.4866 |  INFO | MaterialController | Request completed: GET /api/materials/stock-balances?matCd=D0210 -> GetMaterialStockBalances returned 200 in 85 ms 
+2026-11-11 12:08:10.0108 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 12:08:10.0108 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 12:08:10.0708 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 59 ms 
+2026-11-11 12:08:10.0799 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 12:08:10.0799 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 12:08:10.1743 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 94 ms 
+2026-11-11 12:08:16.7800 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:08:16.7800 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialflow/gradecodes 
+2026-11-11 12:08:16.7800 |  INFO | MaterialFlowController | Request started: GET /api/materialflow/gradecodes -> GetGradeCodes by (unknown). Parameters: (none) 
+2026-11-11 12:08:16.7800 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:08:16.8439 |  INFO | MaterialFlowController | Request completed: GET /api/materialflow/gradecodes -> GetGradeCodes returned 200 in 63 ms 
+2026-11-11 12:08:16.8960 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 115 ms 
+2026-11-11 12:08:19.9235 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials 
+2026-11-11 12:08:19.9235 |  INFO | MaterialController | Request started: GET /api/materials -> GetMaterials by (unknown). Parameters: (none) 
+2026-11-11 12:08:22.2143 |  INFO | MaterialController | Request completed: GET /api/materials -> GetMaterials returned 200 in 2290 ms 
+2026-11-11 12:08:28.2762 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stocks/by-matcd/D0210 
+2026-11-11 12:08:28.2762 |  INFO | MaterialController | Request started: GET /api/materials/stocks/by-matcd/D0210 -> GetMaterialStocksByMatCd by (unknown). Parameters: (none) 
+2026-11-11 12:08:28.2762 |  INFO | MaterialController | Request completed: GET /api/materials/stocks/by-matcd/D0210 -> GetMaterialStocksByMatCd returned 200 in 0 ms 
+2026-11-11 12:08:28.2762 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stock-balances?matCd=D0210 
+2026-11-11 12:08:28.2762 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stocks/by-matcd-province-wise/D0210 
+2026-11-11 12:08:28.2762 |  INFO | MaterialController | Request started: GET /api/materials/stocks/by-matcd-province-wise/D0210 -> GetMaterialStocksByMatCdProvinceWise by (unknown). Parameters: (none) 
+2026-11-11 12:08:28.2762 |  INFO | MaterialController | Request started: GET /api/materials/stock-balances?matCd=D0210 -> GetMaterialStockBalances by (unknown). Parameters: matCd="D0210" 
+2026-11-11 12:08:28.2762 |  INFO | MaterialController | Request completed: GET /api/materials/stocks/by-matcd-province-wise/D0210 -> GetMaterialStocksByMatCdProvinceWise returned 200 in 0 ms 
+2026-11-11 12:08:28.4200 |  INFO | MaterialController | Request completed: GET /api/materials/stock-balances?matCd=D0210 -> GetMaterialStockBalances returned 200 in 142 ms 
+2026-11-11 12:10:31.2385 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stocks/by-matcd-province-wise/D0210 
+2026-11-11 12:10:31.2385 |  INFO | MaterialController | Request started: GET /api/materials/stocks/by-matcd-province-wise/D0210 -> GetMaterialStocksByMatCdProvinceWise by (unknown). Parameters: (none) 
+2026-11-11 12:10:31.2385 |  INFO | MaterialController | Request completed: GET /api/materials/stocks/by-matcd-province-wise/D0210 -> GetMaterialStocksByMatCdProvinceWise returned 200 in 0 ms 
+2026-11-11 12:10:31.5450 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 12:10:31.5450 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 12:10:31.5627 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 17 ms 
+2026-11-11 12:10:31.5851 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 12:10:31.5851 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 12:10:31.6823 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 90 ms 
+2026-11-11 12:10:36.9575 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialmaster/report 
+2026-11-11 12:10:36.9575 |  INFO | MaterialMasterController | Request started: GET /api/materialmaster/report -> GetQuery by (unknown). Parameters: (none) 
+2026-11-11 12:10:40.6574 |  INFO | MaterialMasterController | Request completed: GET /api/materialmaster/report -> GetQuery returned 200 in 3692 ms 
+2026-11-11 12:11:15.7100 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:11:15.7100 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:11:15.7777 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 67 ms 
+2026-11-11 12:11:19.2896 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/material-price?costCtr=100.00%20%20%20%20%20%20%20%20%20&repYear=2026 
+2026-11-11 12:11:19.3274 |  INFO | MaterialPriceByYearController | Request started: GET /api/material-price?costCtr=100.00%20%20%20%20%20%20%20%20%20&repYear=2026 -> GetMaterialPriceByYear by (unknown). Parameters: costCtr="100.00         ", repYear="2026" 
+2026-11-11 12:11:19.3669 |  INFO | MaterialPriceByYearController | Request completed: GET /api/material-price?costCtr=100.00%20%20%20%20%20%20%20%20%20&repYear=2026 -> GetMaterialPriceByYear returned 200 in 42 ms 
+2026-11-11 12:11:24.5140 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/material-price?costCtr=510.11%20%20%20%20%20%20%20%20%20&repYear=2026 
+2026-11-11 12:11:24.5140 |  INFO | MaterialPriceByYearController | Request started: GET /api/material-price?costCtr=510.11%20%20%20%20%20%20%20%20%20&repYear=2026 -> GetMaterialPriceByYear by (unknown). Parameters: costCtr="510.11         ", repYear="2026" 
+2026-11-11 12:11:24.9988 |  INFO | MaterialPriceByYearController | Request completed: GET /api/material-price?costCtr=510.11%20%20%20%20%20%20%20%20%20&repYear=2026 -> GetMaterialPriceByYear returned 200 in 484 ms 
+2026-11-11 12:12:14.7359 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialcommittedstock/provinces 
+2026-11-11 12:12:14.7532 |  INFO | MaterialCommittedStockController | Request started: GET /api/materialcommittedstock/provinces -> GetProvinces by (unknown). Parameters: (none) 
+2026-11-11 12:12:14.8603 |  INFO | MaterialCommittedStockController | Request completed: GET /api/materialcommittedstock/provinces -> GetProvinces returned 200 in 107 ms 
+2026-11-11 12:12:20.1122 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialcommittedstock/get?compId=CC 
+2026-11-11 12:12:20.1122 |  INFO | MaterialCommittedStockController | Request started: GET /api/materialcommittedstock/get?compId=CC -> GetMaterialCommittedStock by (unknown). Parameters: compId="CC" 
+2026-11-11 12:12:20.1969 |  INFO | MaterialCommittedStockController | Request completed: GET /api/materialcommittedstock/get?compId=CC -> GetMaterialCommittedStock returned 200 in 70 ms 
+2026-11-11 12:12:47.3483 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 12:12:47.3483 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 12:12:47.3483 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 12:12:47.3483 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 12:12:47.3483 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 7 ms 
+2026-11-11 12:12:47.3483 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 7 ms 
+2026-11-11 12:12:47.7577 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 12:12:47.7577 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 12:12:47.7577 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 12:12:47.7577 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 12:12:47.8005 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 42 ms 
+2026-11-11 12:12:47.8199 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 61 ms 
+2026-11-11 12:12:54.5538 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialcommittedstock/provinces 
+2026-11-11 12:12:54.5538 |  INFO | MaterialCommittedStockController | Request started: GET /api/materialcommittedstock/provinces -> GetProvinces by (unknown). Parameters: (none) 
+2026-11-11 12:12:54.5670 |  INFO | MaterialCommittedStockController | Request completed: GET /api/materialcommittedstock/provinces -> GetProvinces returned 200 in 18 ms 
+2026-11-11 12:13:01.3232 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialcommittedstock/get?compId=CC 
+2026-11-11 12:13:01.3232 |  INFO | MaterialCommittedStockController | Request started: GET /api/materialcommittedstock/get?compId=CC -> GetMaterialCommittedStock by (unknown). Parameters: compId="CC" 
+2026-11-11 12:13:01.3793 |  INFO | MaterialCommittedStockController | Request completed: GET /api/materialcommittedstock/get?compId=CC -> GetMaterialCommittedStock returned 200 in 55 ms 
+2026-11-11 12:13:30.5692 |  INFO | Startup | MISReports API stopping. 
+2026-11-11 12:13:45.1445 |  INFO | Startup | MISReports API started (.NET 10.0.11). 
+2026-11-11 12:13:45.1654 |  INFO | GatewayKeyMiddleware | Gateway key check mode: Log 
+2026-11-11 12:14:00.0390 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials 
+2026-11-11 12:14:00.0982 |  INFO | MaterialController | Request started: GET /api/materials -> GetMaterials by (unknown). Parameters: (none) 
+2026-11-11 12:14:06.7944 |  INFO | MaterialController | Request completed: GET /api/materials -> GetMaterials returned 200 in 6701 ms 
+2026-11-11 12:14:14.3420 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stocks/by-matcd/D0210 
+2026-11-11 12:14:14.3461 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stock-balances?matCd=D0210 
+2026-11-11 12:14:14.3461 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materials/stocks/by-matcd-province-wise/D0210 
+2026-11-11 12:14:14.4034 |  INFO | MaterialController | Request started: GET /api/materials/stocks/by-matcd/D0210 -> GetMaterialStocksByMatCd by (unknown). Parameters: matCd="D0210" 
+2026-11-11 12:14:14.4034 |  INFO | MaterialController | Request started: GET /api/materials/stocks/by-matcd-province-wise/D0210 -> GetMaterialStocksByMatCdProvinceWise by (unknown). Parameters: matCd="D0210" 
+2026-11-11 12:14:14.4034 |  INFO | MaterialController | Request started: GET /api/materials/stock-balances?matCd=D0210 -> GetMaterialStockBalances by (unknown). Parameters: matCd="D0210" 
+2026-11-11 12:14:14.7838 |  INFO | MaterialController | Request completed: GET /api/materials/stocks/by-matcd-province-wise/D0210 -> GetMaterialStocksByMatCdProvinceWise returned 200 in 387 ms 
+2026-11-11 12:14:14.7838 |  INFO | MaterialController | Request completed: GET /api/materials/stocks/by-matcd/D0210 -> GetMaterialStocksByMatCd returned 200 in 387 ms 
+2026-11-11 12:14:14.8060 |  INFO | MaterialController | Request completed: GET /api/materials/stock-balances?matCd=D0210 -> GetMaterialStockBalances returned 200 in 407 ms 
+2026-11-11 12:14:21.8479 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 12:14:21.8479 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 12:14:21.9331 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 79 ms 
+2026-11-11 12:14:21.9485 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 12:14:21.9753 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 12:14:22.8278 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 852 ms 
+2026-11-11 12:14:29.8436 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialcommittedstock/provinces 
+2026-11-11 12:14:29.8676 |  INFO | MaterialCommittedStockController | Request started: GET /api/materialcommittedstock/provinces -> GetProvinces by (unknown). Parameters: (none) 
+2026-11-11 12:14:29.9139 |  INFO | MaterialCommittedStockController | Request completed: GET /api/materialcommittedstock/provinces -> GetProvinces returned 200 in 46 ms 
+2026-11-11 12:14:37.6842 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialcommittedstock/get?compId=CC 
+2026-11-11 12:14:37.7008 |  INFO | MaterialCommittedStockController | Request started: GET /api/materialcommittedstock/get?compId=CC -> GetMaterialCommittedStock by (unknown). Parameters: compId="CC" 
+2026-11-11 12:14:37.7243 |  INFO | MaterialCommittedStockController | Request completed: GET /api/materialcommittedstock/get?compId=CC -> GetMaterialCommittedStock returned 200 in 23 ms 
+2026-11-11 12:15:31.8778 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialcommittedstock/get?compId=CC 
+2026-11-11 12:15:31.8778 |  INFO | MaterialCommittedStockController | Request started: GET /api/materialcommittedstock/get?compId=CC -> GetMaterialCommittedStock by (unknown). Parameters: compId="CC" 
+2026-11-11 12:15:31.9453 |  INFO | MaterialCommittedStockController | Request completed: GET /api/materialcommittedstock/get?compId=CC -> GetMaterialCommittedStock returned 200 in 67 ms 
+2026-11-11 12:16:46.3531 |  INFO | Startup | MISReports API stopping. 
+2026-11-11 12:16:59.3258 |  INFO | Startup | MISReports API started (.NET 10.0.11). 
+2026-11-11 12:16:59.3456 |  INFO | GatewayKeyMiddleware | Gateway key check mode: Log 
+2026-11-11 12:17:45.4474 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialcommittedstock/get?compId=CC 
+2026-11-11 12:17:45.6145 |  INFO | MaterialCommittedStockController | Request started: GET /api/materialcommittedstock/get?compId=CC -> GetMaterialCommittedStock by (unknown). Parameters: compId="CC" 
+2026-11-11 12:17:49.8404 |  INFO | MaterialCommittedStockController | Request completed: GET /api/materialcommittedstock/get?compId=CC -> GetMaterialCommittedStock returned 200 in 4241 ms 
+2026-11-11 12:18:03.5781 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/60 
+2026-11-11 12:18:03.5873 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="60" 
+2026-11-11 12:18:03.9565 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel returned 200 in 369 ms 
+2026-11-11 12:18:11.4372 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/province-qty-onhand-crosstab/list?compId=CC&matcode= 
+2026-11-11 12:18:11.4622 |  INFO | ProvinceQtyOnHandCrossTabController | Request started: GET /api/province-qty-onhand-crosstab/list?compId=CC&matcode= -> GetReport by (unknown). Parameters: compId="CC", matcode=null 
+2026-11-11 12:18:11.8224 |  INFO | ProvinceQtyOnHandCrossTabController | Request completed: GET /api/province-qty-onhand-crosstab/list?compId=CC&matcode= -> GetReport returned 200 in 360 ms 
+2026-11-11 12:20:55.8677 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:20:55.8677 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:20:55.9803 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 107 ms 
+2026-11-11 12:21:00.3225 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/quantityonhandlessthanreorderlevel/report?costCtr=510.11 
+2026-11-11 12:21:00.3225 |  INFO | QuantityOnHandLessThanReorderLevelController | Request started: GET /api/quantityonhandlessthanreorderlevel/report?costCtr=510.11 -> GetQuery by (unknown). Parameters: costCtr="510.11" 
+2026-11-11 12:21:00.3997 |  INFO | QuantityOnHandLessThanReorderLevelController | Request completed: GET /api/quantityonhandlessthanreorderlevel/report?costCtr=510.11 -> GetQuery returned 200 in 71 ms 
+2026-11-11 12:23:58.5640 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:23:58.5646 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:23:58.7166 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 152 ms 
+2026-11-11 12:24:03.9432 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/qtyonhandreorder/report/510.11%20%20%20%20%20%20%20%20%20 
+2026-11-11 12:24:03.9432 |  INFO | QtyOnHandReorderController | Request started: GET /api/qtyonhandreorder/report/510.11%20%20%20%20%20%20%20%20%20 -> GetReport by (unknown). Parameters: costCtr="510.11         " 
+2026-11-11 12:24:04.0295 |  INFO | QtyOnHandReorderController | Request completed: GET /api/qtyonhandreorder/report/510.11%20%20%20%20%20%20%20%20%20 -> GetReport returned 200 in 82 ms 
+2026-11-11 12:25:59.1947 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/70 
+2026-11-11 12:25:59.1947 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="70" 
+2026-11-11 12:25:59.2547 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel returned 200 in 59 ms 
+2026-11-11 12:26:03.7782 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/qty-on-hand-all-region?compId=DISCO1&matcode= 
+2026-11-11 12:26:03.7980 |  INFO | QtyonHandAllRegionController | Request started: GET /api/qty-on-hand-all-region?compId=DISCO1&matcode= -> GetQtyonHandAllRegion by (unknown). Parameters: compId="DISCO1", matcode=null 
+2026-11-11 12:26:04.9127 |  INFO | QtyonHandAllRegionController | Request completed: GET /api/qty-on-hand-all-region?compId=DISCO1&matcode= -> GetQtyonHandAllRegion returned 200 in 1114 ms 
+2026-11-11 12:26:12.9420 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:26:12.9420 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:26:13.0246 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 82 ms 
+2026-11-11 12:26:25.0740 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/quantity-on-hand-grade-codewise/report/510.11/NEW 
+2026-11-11 12:26:25.0853 |  INFO | QuantityOnHandGradeCodewiseController | Request started: GET /api/quantity-on-hand-grade-codewise/report/510.11/NEW -> GetQuantityOnHandGradeCodewise by (unknown). Parameters: costCenter="510.11", gradeCode="NEW" 
+2026-11-11 12:26:25.3274 |  INFO | QuantityOnHandGradeCodewiseController | Request completed: GET /api/quantity-on-hand-grade-codewise/report/510.11/NEW -> GetQuantityOnHandGradeCodewise returned 200 in 242 ms 
+2026-11-11 12:27:01.9483 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialcommittedstock/provinces 
+2026-11-11 12:27:01.9642 |  INFO | MaterialCommittedStockController | Request started: GET /api/materialcommittedstock/provinces -> GetProvinces by (unknown). Parameters: (none) 
+2026-11-11 12:27:02.0644 |  INFO | MaterialCommittedStockController | Request completed: GET /api/materialcommittedstock/provinces -> GetProvinces returned 200 in 95 ms 
+2026-11-11 12:27:07.7527 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/materialcommittedstock/get?compId=CC 
+2026-11-11 12:27:07.7527 |  INFO | MaterialCommittedStockController | Request started: GET /api/materialcommittedstock/get?compId=CC -> GetMaterialCommittedStock by (unknown). Parameters: compId="CC" 
+2026-11-11 12:27:08.2214 |  INFO | MaterialCommittedStockController | Request completed: GET /api/materialcommittedstock/get?compId=CC -> GetMaterialCommittedStock returned 200 in 468 ms 
+2026-11-11 12:27:15.4069 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/60 
+2026-11-11 12:27:15.4069 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="60" 
+2026-11-11 12:27:15.4280 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/60 -> GetCompaniesByUserLevel returned 200 in 20 ms 
+2026-11-11 12:27:22.2896 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/province-qty-onhand-crosstab/list?compId=CC&matcode= 
+2026-11-11 12:27:22.2896 |  INFO | ProvinceQtyOnHandCrossTabController | Request started: GET /api/province-qty-onhand-crosstab/list?compId=CC&matcode= -> GetReport by (unknown). Parameters: compId="CC", matcode=null 
+2026-11-11 12:27:22.6184 |  INFO | ProvinceQtyOnHandCrossTabController | Request completed: GET /api/province-qty-onhand-crosstab/list?compId=CC&matcode= -> GetReport returned 200 in 328 ms 
+2026-11-11 12:27:25.7306 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:27:25.7306 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:27:25.8227 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 91 ms 
+2026-11-11 12:27:29.0983 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:27:29.0983 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:27:29.1484 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 49 ms 
+2026-11-11 12:27:32.0956 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:27:32.0956 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:27:32.2672 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 171 ms 
+2026-11-11 12:29:07.9322 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 12:29:07.9322 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 12:29:07.9638 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 27 ms 
+2026-11-11 12:29:07.9957 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 12:29:08.0108 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 12:29:08.1079 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 97 ms 
+2026-11-11 12:29:09.2986 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/70 
+2026-11-11 12:29:09.2986 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="70" 
+2026-11-11 12:29:09.3187 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel returned 200 in 19 ms 
+2026-11-11 12:29:29.2616 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ledgercard/report-71-8?compId=DISCO1&repyear=2025&repmonth=11 
+2026-11-11 12:29:29.2616 |  INFO | Report71_8Controller | Request started: GET /api/ledgercard/report-71-8?compId=DISCO1&repyear=2025&repmonth=11 -> GetReport by (unknown). Parameters: compId="DISCO1", repyear=2025, repmonth=11 
+2026-11-11 12:29:47.7272 |  INFO | Report71_8Controller | Request completed: GET /api/ledgercard/report-71-8?compId=DISCO1&repyear=2025&repmonth=11 -> GetReport returned 200 in 18462 ms 
+2026-11-11 12:29:58.2859 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/70 
+2026-11-11 12:29:58.2859 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="70" 
+2026-11-11 12:29:58.3232 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel returned 200 in 36 ms 
+2026-11-11 12:30:20.0092 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ledgercard/current-account-reconciliation-external?compId=DISCO1&repyear=2025&repmonth=1&subac=600.00 
+2026-11-11 12:30:20.0092 |  INFO | CurrentAccountReconciliationExternalController | Request started: GET /api/ledgercard/current-account-reconciliation-external?compId=DISCO1&repyear=2025&repmonth=1&subac=600.00 -> GetReport by (unknown). Parameters: compId="DISCO1", repyear=2025, repmonth=1, subac="600.00" 
+2026-11-11 12:30:52.7746 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 12:30:52.7746 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 12:30:52.7858 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ordinary/province 
+2026-11-11 12:30:52.7858 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ordinary/areas 
+2026-11-11 12:30:52.7858 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/50 
+2026-11-11 12:30:52.7858 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/50 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="50" 
+2026-11-11 12:30:52.8035 |  INFO | SharedController | Request started: GET /api/ordinary/areas -> GetAreas by (unknown). Parameters: (none) 
+2026-11-11 12:30:52.8035 |  INFO | SharedController | Request started: GET /api/ordinary/province -> GetOrdinaryProvince by (unknown). Parameters: (none) 
+2026-11-11 12:30:52.9203 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 145 ms 
+2026-11-11 12:30:52.9300 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 12:30:52.9300 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 12:30:52.9632 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/50 -> GetCompaniesByUserLevel returned 200 in 174 ms 
+2026-11-11 12:30:52.9931 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 62 ms 
+2026-11-11 12:30:52.9931 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 12:30:52.9931 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 12:30:53.0152 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 13 ms 
+2026-11-11 12:30:53.3267 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 12:30:53.3267 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 12:30:53.4866 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/piv-total?companyId=AMBALN 
+2026-11-11 12:30:53.4866 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/piv-total?companyId=AMBALN -> GetPivTotal by (unknown). Parameters: companyId="AMBALN" 
+2026-11-11 12:30:53.4866 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/stock-value?companyId=AMBALN 
+2026-11-11 12:30:53.4866 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/stock-value?companyId=AMBALN -> GetStockValue by (unknown). Parameters: companyId="AMBALN" 
+2026-11-11 12:30:53.5245 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 197 ms 
+2026-11-11 12:30:53.5466 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/application-count?companyId=AMBALN&year=2026 
+2026-11-11 12:30:53.5522 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/application-count?companyId=AMBALN&year=2026 -> GetApplicationCount by (unknown). Parameters: companyId="AMBALN", year=2026 
+2026-11-11 12:30:53.5522 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/stock-value?companyId=AMBALN -> GetStockValue returned 200 in 64 ms 
+2026-11-11 12:30:53.5748 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/connections-given?companyId=AMBALN&year=2026 
+2026-11-11 12:30:53.5748 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/connections-given?companyId=AMBALN&year=2026 -> GetConnectionsGiven by (unknown). Parameters: companyId="AMBALN", year=2026 
+2026-11-11 12:30:54.8750 | ERROR | DBConnection | TestConnection failed. useBulkConnection=true System.InvalidOperationException: The 'Ifxoledbc' provider is not registered on the local machine.
+   at System.Data.OleDb.OleDbServicesWrapper.GetDataSource(OleDbConnectionString constr, DataSourceWrapper& datasrcWrapper)
+   at System.Data.OleDb.OleDbConnectionInternal..ctor(OleDbConnectionString constr, OleDbConnection connection)
+   at System.Data.OleDb.OleDbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   at System.Data.OleDb.OleDbConnection.Open()
+   at MISReports_Api.DBAccess.DBConnection.TestConnection(String& errorMessage, Boolean useBulkConnection) in C:\Users\USER\Desktop\MISReports_API_Core\DBAccess\DBConnection.cs:line 70
+2026-11-11 12:30:54.8750 | ERROR | DBConnection | TestConnection failed. useBulkConnection=true System.InvalidOperationException: The 'Ifxoledbc' provider is not registered on the local machine.
+   at System.Data.OleDb.OleDbServicesWrapper.GetDataSource(OleDbConnectionString constr, DataSourceWrapper& datasrcWrapper)
+   at System.Data.OleDb.OleDbConnectionInternal..ctor(OleDbConnectionString constr, OleDbConnection connection)
+   at System.Data.OleDb.OleDbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   at System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   at System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   at System.Data.OleDb.OleDbConnection.Open()
+   at MISReports_Api.DBAccess.DBConnection.TestConnection(String& errorMessage, Boolean useBulkConnection) in C:\Users\USER\Desktop\MISReports_API_Core\DBAccess\DBConnection.cs:line 70
+2026-11-11 12:30:54.9361 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/application-count?companyId=AMBALN&year=2026 -> GetApplicationCount returned 200 in 1384 ms 
+2026-11-11 12:30:54.9522 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/pending-applications?companyId=AMBALN&year=2026 
+2026-11-11 12:30:54.9577 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/pending-applications?companyId=AMBALN&year=2026 -> GetPendingApplications by (unknown). Parameters: companyId="AMBALN", year=2026 
+2026-11-11 12:30:54.9933 |  INFO | SharedController | Request completed: GET /api/ordinary/areas -> GetAreas returned 200 in 2189 ms 
+2026-11-11 12:30:54.9933 |  INFO | SharedController | Request completed: GET /api/ordinary/province -> GetOrdinaryProvince returned 200 in 2189 ms 
+2026-11-11 12:30:55.0114 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/piv-period-summary?companyId=AMBALN&startDate=2026-10-12&endDate=2026-11-10 
+2026-11-11 12:30:55.0207 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/piv-period-summary?companyId=AMBALN&startDate=2026-10-12&endDate=2026-11-10 -> GetPivPeriodSummary by (unknown). Parameters: companyId="AMBALN", startDate="2026-10-12", endDate="2026-11-10" 
+2026-11-11 12:30:55.0207 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/areaengineer/material-master?companyId=AMBALN 
+2026-11-11 12:30:55.0207 |  INFO | AreaEngineerDashboardController | Request started: GET /api/areaengineer/material-master?companyId=AMBALN -> GetMaterialMaster by (unknown). Parameters: companyId="AMBALN" 
+2026-11-11 12:30:55.1237 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/material-master?companyId=AMBALN -> GetMaterialMaster returned 200 in 95 ms 
+2026-11-11 12:30:55.1367 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 12:30:55.1421 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 12:30:55.2420 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 99 ms 
+2026-11-11 12:30:55.2586 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 12:30:55.2586 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 12:30:55.2911 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 32 ms 
+2026-11-11 12:30:56.1146 |  INFO | CurrentAccountReconciliationExternalController | Request completed: GET /api/ledgercard/current-account-reconciliation-external?compId=DISCO1&repyear=2025&repmonth=1&subac=600.00 -> GetReport returned 200 in 36101 ms 
+2026-11-11 12:30:57.1539 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 12:30:57.1539 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 12:30:57.1674 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 15 ms 
+2026-11-11 12:30:57.1831 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 12:30:57.1831 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 12:30:57.2083 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 24 ms 
+2026-11-11 12:30:58.0464 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/piv-period-summary?companyId=AMBALN&startDate=2026-10-12&endDate=2026-11-10 -> GetPivPeriodSummary returned 200 in 3025 ms 
+2026-11-11 12:30:58.0527 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/piv-total?companyId=AMBALN -> GetPivTotal returned 200 in 4563 ms 
+2026-11-11 12:30:58.2070 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/pending-applications?companyId=AMBALN&year=2026 -> GetPendingApplications returned 200 in 3249 ms 
+2026-11-11 12:30:59.2064 |  INFO | AreaEngineerDashboardController | Request completed: GET /api/areaengineer/connections-given?companyId=AMBALN&year=2026 -> GetConnectionsGiven returned 200 in 5627 ms 
+2026-11-11 12:30:59.6281 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/70 
+2026-11-11 12:30:59.6281 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="70" 
+2026-11-11 12:30:59.6281 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel returned 200 in 6 ms 
+2026-11-11 12:31:13.7769 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ledgercard/curr-acct-recon-ext-period?compId=DISCO1&repyear=2025&monthFrom=1&monthTo=2&subac=600.00 
+2026-11-11 12:31:13.7769 |  INFO | CurrAcctReconExtPeriodController | Request started: GET /api/ledgercard/curr-acct-recon-ext-period?compId=DISCO1&repyear=2025&monthFrom=1&monthTo=2&subac=600.00 -> GetReport by (unknown). Parameters: compId="DISCO1", repyear=2025, monthFrom=1, monthTo=2, subac="600.00" 
+2026-11-11 12:31:19.8346 |  INFO | CurrAcctReconExtPeriodController | Request completed: GET /api/ledgercard/curr-acct-recon-ext-period?compId=DISCO1&repyear=2025&monthFrom=1&monthTo=2&subac=600.00 -> GetReport returned 200 in 6053 ms 
+2026-11-11 12:32:08.0924 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/70 
+2026-11-11 12:32:08.0924 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="70" 
+2026-11-11 12:32:08.1486 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel returned 200 in 55 ms 
+2026-11-11 12:32:20.2424 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ledgercard/current-account-reconciliation-internal?REGION=DISCO1&YEAR=2025&MONTH=1&SUBAC=600.00 
+2026-11-11 12:32:20.2424 |  INFO | CurrAcctReconIntController | Request started: GET /api/ledgercard/current-account-reconciliation-internal?REGION=DISCO1&YEAR=2025&MONTH=1&SUBAC=600.00 -> GetReport by (unknown). Parameters: region="DISCO1", year=2025, month=1, subac="600.00" 
+2026-11-11 12:32:24.6700 |  INFO | CurrAcctReconIntController | Request completed: GET /api/ledgercard/current-account-reconciliation-internal?REGION=DISCO1&YEAR=2025&MONTH=1&SUBAC=600.00 -> GetReport returned 200 in 4424 ms 
+2026-11-11 12:33:08.6503 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/70 
+2026-11-11 12:33:08.6503 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="70" 
+2026-11-11 12:33:08.6752 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel returned 200 in 24 ms 
+2026-11-11 12:33:23.2539 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ledgercard/current-account-reconciliation-internal?REGION=DISCO1&YEAR=2026&MONTH=1&SUBAC=600.00 
+2026-11-11 12:33:23.2539 |  INFO | CurrAcctReconIntController | Request started: GET /api/ledgercard/current-account-reconciliation-internal?REGION=DISCO1&YEAR=2026&MONTH=1&SUBAC=600.00 -> GetReport by (unknown). Parameters: region="DISCO1", year=2026, month=1, subac="600.00" 
+2026-11-11 12:33:27.9897 |  INFO | CurrAcctReconIntController | Request completed: GET /api/ledgercard/current-account-reconciliation-internal?REGION=DISCO1&YEAR=2026&MONTH=1&SUBAC=600.00 -> GetReport returned 200 in 4735 ms 
+2026-11-11 12:33:34.4586 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/Usercompanies/035838/70 
+2026-11-11 12:33:34.4586 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel by (unknown). Parameters: epfno="035838", lvl_no="70" 
+2026-11-11 12:33:34.4788 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/Usercompanies/035838/70 -> GetCompaniesByUserLevel returned 200 in 20 ms 
+2026-11-11 12:33:54.6245 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/ledgercard/current-account-reconciliation-own-other?REGION=AFMHQ%20&YEAR=2026&MONTH=1&SUBAC=AFMHQ 
+2026-11-11 12:33:54.6286 |  INFO | CurrAcctReconOwnOtherController | Request started: GET /api/ledgercard/current-account-reconciliation-own-other?REGION=AFMHQ%20&YEAR=2026&MONTH=1&SUBAC=AFMHQ -> GetReport by (unknown). Parameters: region="AFMHQ ", year=2026, month=1, subac="AFMHQ" 
+2026-11-11 12:33:54.9616 |  INFO | CurrAcctReconOwnOtherController | Request completed: GET /api/ledgercard/current-account-reconciliation-own-other?REGION=AFMHQ%20&YEAR=2026&MONTH=1&SUBAC=AFMHQ -> GetReport returned 200 in 333 ms 
+2026-11-11 12:47:50.0565 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/userrole/035838 
+2026-11-11 12:47:50.0565 |  INFO | UserRoleController | Request started: GET /api/userrole/035838 -> GetUserRole by (unknown). Parameters: epfNo="035838" 
+2026-11-11 12:47:50.1069 |  INFO | UserRoleController | Request completed: GET /api/userrole/035838 -> GetUserRole returned 200 in 50 ms 
+2026-11-11 12:47:50.1174 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/reprolereports/get?roleId=NIRO 
+2026-11-11 12:47:50.1174 |  INFO | RepRoleReportController | Request started: GET /api/reprolereports/get?roleId=NIRO -> GetReports by (unknown). Parameters: roleId="NIRO" 
+2026-11-11 12:47:50.1711 |  INFO | RepRoleReportController | Request completed: GET /api/reprolereports/get?roleId=NIRO -> GetReports returned 200 in 48 ms 
+2026-11-11 12:47:51.2778 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:47:51.2778 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:47:51.4443 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 166 ms 
+2026-11-11 12:47:57.6893 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=656.00%20%20%20%20%20%20%20%20%20&t=1794381477681 
+2026-11-11 12:47:57.6893 |  INFO | InventoryAverageConsumptionController | Request started: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=656.00%20%20%20%20%20%20%20%20%20&t=1794381477681 -> GetWarehousesByEpfNo by (unknown). Parameters: epfNo="035838", costCenterId="656.00         " 
+2026-11-11 12:47:57.7154 |  INFO | InventoryAverageConsumptionController | Request completed: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=656.00%20%20%20%20%20%20%20%20%20&t=1794381477681 -> GetWarehousesByEpfNo returned 200 in 22 ms 
+2026-11-11 12:47:58.7852 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/phv-obsolete-idle-fifo/list?deptId=656.00+++++++++&warehouseCode=WH_CEAC&repYear=2025 
+2026-11-11 12:47:58.8027 |  INFO | PHVObsoleteIdleFIFOController | Request started: GET /api/phv-obsolete-idle-fifo/list?deptId=656.00+++++++++&warehouseCode=WH_CEAC&repYear=2025 -> GetPHVObsoleteIdleFIFO by (unknown). Parameters: deptId="656.00         ", warehouseCode="WH_CEAC", repYear=2025 
+2026-11-11 12:47:59.1617 |  INFO | PHVObsoleteIdleFIFOController | Request completed: GET /api/phv-obsolete-idle-fifo/list?deptId=656.00+++++++++&warehouseCode=WH_CEAC&repYear=2025 -> GetPHVObsoleteIdleFIFO returned 200 in 359 ms 
+2026-11-11 12:48:48.6056 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:48:48.6056 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:48:48.6859 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 80 ms 
+2026-11-11 12:48:52.6031 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381532594 
+2026-11-11 12:48:52.6031 |  INFO | InventoryAverageConsumptionController | Request started: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381532594 -> GetWarehousesByEpfNo by (unknown). Parameters: epfNo="035838", costCenterId="653.00         " 
+2026-11-11 12:48:52.6211 |  INFO | InventoryAverageConsumptionController | Request completed: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381532594 -> GetWarehousesByEpfNo returned 200 in 17 ms 
+2026-11-11 12:48:57.5159 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/phv-damage-fifo/list?deptId=653.00+++++++++&warehouseCode=WH_CEPP&repYear=2025 
+2026-11-11 12:48:57.5334 |  INFO | PHVDamageFIFOController | Request started: GET /api/phv-damage-fifo/list?deptId=653.00+++++++++&warehouseCode=WH_CEPP&repYear=2025 -> GetPHVDamageFIFO by (unknown). Parameters: deptId="653.00         ", warehouseCode="WH_CEPP", repYear=2025 
+2026-11-11 12:48:57.6392 |  INFO | PHVDamageFIFOController | Request completed: GET /api/phv-damage-fifo/list?deptId=653.00+++++++++&warehouseCode=WH_CEPP&repYear=2025 -> GetPHVDamageFIFO returned 200 in 105 ms 
+2026-11-11 12:49:01.0803 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:49:01.0810 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:49:01.1273 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 46 ms 
+2026-11-11 12:49:07.8339 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381547826 
+2026-11-11 12:49:07.8339 |  INFO | InventoryAverageConsumptionController | Request started: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381547826 -> GetWarehousesByEpfNo by (unknown). Parameters: epfNo="035838", costCenterId="653.00         " 
+2026-11-11 12:49:07.8475 |  INFO | InventoryAverageConsumptionController | Request completed: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381547826 -> GetWarehousesByEpfNo returned 200 in 13 ms 
+2026-11-11 12:49:11.4996 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/phvslowmovingwh/report/2025/WH_CEPP 
+2026-11-11 12:49:11.5040 |  INFO | PHVSlowMovingWHController | Request started: GET /api/phvslowmovingwh/report/2025/WH_CEPP -> GetReport by (unknown). Parameters: repYear="2025", whCode="WH_CEPP" 
+2026-11-11 12:49:11.5966 |  INFO | PHVSlowMovingWHController | Request completed: GET /api/phvslowmovingwh/report/2025/WH_CEPP -> GetReport returned 200 in 92 ms 
+2026-11-11 12:49:54.3684 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:49:54.3684 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:49:54.4462 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 77 ms 
+2026-11-11 12:49:58.5371 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381598529 
+2026-11-11 12:49:58.5371 |  INFO | InventoryAverageConsumptionController | Request started: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381598529 -> GetWarehousesByEpfNo by (unknown). Parameters: epfNo="035838", costCenterId="653.00         " 
+2026-11-11 12:49:58.5524 |  INFO | InventoryAverageConsumptionController | Request completed: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381598529 -> GetWarehousesByEpfNo returned 200 in 15 ms 
+2026-11-11 12:50:04.8759 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/phvnonmovingwh/report/2025/WH_CEPP 
+2026-11-11 12:50:04.8784 |  INFO | PHVNonMovingWHController | Request started: GET /api/phvnonmovingwh/report/2025/WH_CEPP -> GetReport by (unknown). Parameters: repYear="2025", whCode="WH_CEPP" 
+2026-11-11 12:50:05.1094 |  INFO | PHVNonMovingWHController | Request completed: GET /api/phvnonmovingwh/report/2025/WH_CEPP -> GetReport returned 200 in 231 ms 
+2026-11-11 12:50:08.2873 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:50:08.2873 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:50:08.3413 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 53 ms 
+2026-11-11 12:50:12.1816 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381612174 
+2026-11-11 12:50:12.1816 |  INFO | InventoryAverageConsumptionController | Request started: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381612174 -> GetWarehousesByEpfNo by (unknown). Parameters: epfNo="035838", costCenterId="653.00         " 
+2026-11-11 12:50:12.2072 |  INFO | InventoryAverageConsumptionController | Request completed: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381612174 -> GetWarehousesByEpfNo returned 200 in 25 ms 
+2026-11-11 12:50:17.0218 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/phvdamagebos/report/2025/WH_CEPP 
+2026-11-11 12:50:17.0218 |  INFO | PHVDamageBOSController | Request started: GET /api/phvdamagebos/report/2025/WH_CEPP -> GetReport by (unknown). Parameters: repYear="2025", whCode="WH_CEPP" 
+2026-11-11 12:50:17.1054 |  INFO | PHVDamageBOSController | Request completed: GET /api/phvdamagebos/report/2025/WH_CEPP -> GetReport returned 200 in 79 ms 
+2026-11-11 12:51:09.3502 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:51:09.3502 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:51:09.3915 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 41 ms 
+2026-11-11 12:51:17.7677 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381677760 
+2026-11-11 12:51:17.7677 |  INFO | InventoryAverageConsumptionController | Request started: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381677760 -> GetWarehousesByEpfNo by (unknown). Parameters: epfNo="035838", costCenterId="653.00         " 
+2026-11-11 12:51:17.7677 |  INFO | InventoryAverageConsumptionController | Request completed: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381677760 -> GetWarehousesByEpfNo returned 200 in 12 ms 
+2026-11-11 12:51:21.2958 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/phvobsoletebos/report/2025/WH_CEPP 
+2026-11-11 12:51:21.2958 |  INFO | PHVObsoleteBOSController | Request started: GET /api/phvobsoletebos/report/2025/WH_CEPP -> GetReport by (unknown). Parameters: repYear="2025", whCode="WH_CEPP" 
+2026-11-11 12:51:21.4205 |  INFO | PHVObsoleteBOSController | Request completed: GET /api/phvobsoletebos/report/2025/WH_CEPP -> GetReport returned 200 in 122 ms 
+2026-11-11 12:51:24.9852 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/incomeexpenditure/departments/035838 
+2026-11-11 12:51:24.9852 |  INFO | IncomeExpenditureController | Request started: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser by (unknown). Parameters: epfno="035838" 
+2026-11-11 12:51:25.0247 |  INFO | IncomeExpenditureController | Request completed: GET /api/incomeexpenditure/departments/035838 -> GetDepartmentsByUser returned 200 in 39 ms 
+2026-11-11 12:51:31.5460 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381691537 
+2026-11-11 12:51:31.5460 |  INFO | InventoryAverageConsumptionController | Request started: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381691537 -> GetWarehousesByEpfNo by (unknown). Parameters: epfNo="035838", costCenterId="653.00         " 
+2026-11-11 12:51:31.5502 |  INFO | InventoryAverageConsumptionController | Request completed: GET /api/inventoryaverageconsumption/warehouses/035838?costCenterId=653.00%20%20%20%20%20%20%20%20%20&t=1794381691537 -> GetWarehousesByEpfNo returned 200 in 17 ms 
+2026-11-11 12:51:34.8808 |  WARN | GatewayKeyMiddleware | Request without a valid gateway key (allowed in Log mode): GET /api/phvnonmovingbos/report/2025/WH_CEPP 
+2026-11-11 12:51:34.8808 |  INFO | PHVNonMovingBOSController | Request started: GET /api/phvnonmovingbos/report/2025/WH_CEPP -> GetReport by (unknown). Parameters: repYear="2025", whCode="WH_CEPP" 
+2026-11-11 12:51:34.9669 |  INFO | PHVNonMovingBOSController | Request completed: GET /api/phvnonmovingbos/report/2025/WH_CEPP -> GetReport returned 200 in 83 ms 
+>>>>>>> Stashed changes

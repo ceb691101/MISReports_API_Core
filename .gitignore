@@ -1,0 +1,28 @@
+# .NET build and publish output
+[Bb]in/
+[Oo]bj/
+artifacts/
+publish/
+
+# Visual Studio user-specific files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Test output
+TestResults/
+*.trx
+
+# Application logs
+logs/
+*.log
+
+# Local secrets (keep the checked-in .example template)
+/secrets/appsettings.secrets.json
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
