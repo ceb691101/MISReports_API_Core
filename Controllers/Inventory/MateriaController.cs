@@ -123,7 +123,7 @@ namespace MISReports_Api.Controllers
         // Get region-wise stock by material code
         [HttpGet]
         [Route("stocks/by-matcd/{matCd}")]
-        public IActionResult GetMaterialStocksByMatCd([FromUri] string matCd)
+        public IActionResult GetMaterialStocksByMatCd([FromRoute] string matCd)
         {
             if (string.IsNullOrWhiteSpace(matCd))
             {
@@ -165,7 +165,7 @@ namespace MISReports_Api.Controllers
         // Get province-wise stock by material code
         [HttpGet]
         [Route("stocks/by-matcd-province-wise/{matCd}")]
-        public IActionResult GetMaterialStocksByMatCdProvinceWise([FromUri] string matCd)
+        public IActionResult GetMaterialStocksByMatCdProvinceWise([FromRoute] string matCd)
         {
             if (string.IsNullOrWhiteSpace(matCd))
             {

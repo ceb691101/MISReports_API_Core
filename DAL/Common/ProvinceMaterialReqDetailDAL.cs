@@ -26,17 +26,19 @@ namespace MISReports_Api.DAL
                      WHEN status = 7 THEN 'Requisition Confirm '
                      WHEN status = 9 THEN 'Posted Cancellation '
                      ELSE NULL END) AS tranStatus,
-               (SELECT comp_nm FROM glcompm WHERE comp_id = :compid) AS cct_name
+               (SELECT comp_nm FROM glcompm WHERE TRIM(comp_id) = :compid) AS cct_name
         FROM mtreqhmt
         WHERE dept_id IN (
               SELECT dept_id FROM gldeptm
-              WHERE comp_id IN (
-                  SELECT comp_id FROM glcompm
-                  WHERE comp_id = :compid OR parent_id = :compid
+              WHERE TRIM(comp_id) IN (
+                  SELECT TRIM(comp_id) FROM glcompm
+                  WHERE TRIM(comp_id) = :compid
+                     OR TRIM(parent_id) = :compid
+                     OR TRIM(grp_comp) = :compid
               )
           )
           AND req_dt >= TO_DATE(:fromdate,'yyyy/mm/dd')
-          AND req_dt <= TO_DATE(:todate,'yyyy/mm/dd')
+          AND req_dt < TO_DATE(:todate,'yyyy/mm/dd') + 1
         UNION ALL
         SELECT 'Material Requisition-Temp' AS Category, dept_id, doc_no, doc_pf, req_dt, ent_by, modi_by, apr_uid_1,
                (CASE WHEN status = 2 THEN 'Send for Approval'
@@ -45,18 +47,20 @@ namespace MISReports_Api.DAL
                      WHEN status = 8 THEN 'Send for Printing '
                      WHEN status = 9 THEN 'Cancelled'
                      ELSE NULL END) AS tranStatus,
-               (SELECT comp_nm FROM glcompm WHERE comp_id = :compid) AS cct_name
+               (SELECT comp_nm FROM glcompm WHERE TRIM(comp_id) = :compid) AS cct_name
         FROM mtreqhtt
         WHERE status IN (2, 3, 4, 8, 9)
           AND dept_id IN (
               SELECT dept_id FROM gldeptm
-              WHERE comp_id IN (
-                  SELECT comp_id FROM glcompm
-                  WHERE comp_id = :compid OR parent_id = :compid
+              WHERE TRIM(comp_id) IN (
+                  SELECT TRIM(comp_id) FROM glcompm
+                  WHERE TRIM(comp_id) = :compid
+                     OR TRIM(parent_id) = :compid
+                     OR TRIM(grp_comp) = :compid
               )
           )
           AND req_dt >= TO_DATE(:fromdate,'yyyy/mm/dd')
-          AND req_dt <= TO_DATE(:todate,'yyyy/mm/dd')
+          AND req_dt < TO_DATE(:todate,'yyyy/mm/dd') + 1
         ORDER BY 1, 9, doc_pf, doc_no, req_dt";
 
             using (var conn = new OracleConnection(_connectionString))
