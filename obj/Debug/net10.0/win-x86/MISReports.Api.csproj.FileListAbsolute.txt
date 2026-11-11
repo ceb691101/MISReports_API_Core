@@ -750,3 +750,14 @@ C:\Users\USER\Desktop\MISReports_API_Core\obj\Debug\net10.0\win-x86\refint\MISRe
 C:\Users\USER\Desktop\MISReports_API_Core\obj\Debug\net10.0\win-x86\MISReports.Api.pdb
 C:\Users\USER\Desktop\MISReports_API_Core\obj\Debug\net10.0\win-x86\MISReports.Api.genruntimeconfig.cache
 C:\Users\USER\Desktop\MISReports_API_Core\obj\Debug\net10.0\win-x86\ref\MISReports.Api.dll
+C:\Users\USER\Desktop\MISReports_API_Core\obj\Debug\net10.0\win-x86\MISReports.Api.sourcelink.json
+C:\Users\USER\AppData\Local\Temp\MISReportsApiVerify\NLog.config
+C:\Users\USER\AppData\Local\Temp\MISReportsApiVerify\appsettings.Development.json
+C:\Users\USER\AppData\Local\Temp\MISReportsApiVerify\appsettings.json
+C:\Users\USER\AppData\Local\Temp\MISReportsApiVerify\secrets\appsettings.secrets.json
+C:\Users\USER\AppData\Local\Temp\MISReportsApiVerify\MISReports.Api.staticwebassets.endpoints.json
+C:\Users\USER\AppData\Local\Temp\MISReportsApiVerify\MISReports.Api.exe
+C:\Users\USER\AppData\Local\Temp\MISReportsApiVerify\MISReports.Api.deps.json
+C:\Users\USER\AppData\Local\Temp\MISReportsApiVerify\MISReports.Api.runtimeconfig.json
+C:\Users\USER\AppData\Local\Temp\MISReportsApiVerify\MISReports.Api.dll
+C:\Users\USER\AppData\Local\Temp\MISReportsApiVerify\MISReports.Api.pdb
