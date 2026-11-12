@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 using MISReports_Api.Models.Accounts;
 namespace MISReports_Api.DAL
 {
@@ -11,6 +12,27 @@ namespace MISReports_Api.DAL
     {
         private readonly string _connectionString =
             ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
+
+        // Overflow-safe decimal reader, same pattern used on CCJobSummaryDAL and SmcLineDetailsDAL.
+        // Oracle NUMBER columns (e.g., date differences like approved_date - submit_date)
+        // can exceed .NET decimal's ~28-29 digit range, making Convert.ToDecimal throw
+        // OverflowException -> 500 error / timeout.
+        private static decimal? SafeGetDecimal(OracleDataReader reader, string columnName)
+        {
+            int ordinal = reader.GetOrdinal(columnName);
+            if (reader.IsDBNull(ordinal)) return null;
+
+            OracleDecimal od = reader.GetOracleDecimal(ordinal);
+            try
+            {
+                od = OracleDecimal.SetPrecision(od, 28);
+                return od.Value;
+            }
+            catch (OverflowException)
+            {
+                return (decimal)(double)od;
+            }
+        }
 
         public List<SMCJobProgressModel> GetSmcJobProgress(string fromDate, string toDate, string costCtr)
         {
@@ -91,7 +113,7 @@ namespace MISReports_Api.DAL
                             SubmitDate = reader["submit_date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["submit_date"]),
                             ApprovedDate = reader["approved_date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["approved_date"]),
                             Piv2ConfirmedDate = reader["piv2_confirmed_date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["piv2_confirmed_date"]),
-                            DNoticeDays = reader["d_notice_days"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["d_notice_days"]),
+                            DNoticeDays = SafeGetDecimal(reader, "d_notice_days"),
                             AllocatedDate = reader["allocated_date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["allocated_date"]),
                             FinishedDate = reader["finished_date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["finished_date"]),
                             ProjectNo = reader["projectno"] == DBNull.Value ? null : reader["projectno"].ToString(),
@@ -100,9 +122,9 @@ namespace MISReports_Api.DAL
                             EngizedDate = reader["engized_date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["engized_date"]),
                             AccNo = reader["acc_no"] == DBNull.Value ? null : reader["acc_no"].ToString(),
                             AccDate = reader["acc_date"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["acc_date"]),
-                            T1 = reader["t1"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["t1"]),
-                            T2Smc = reader["t2_smc"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["t2_smc"]),
-                            T3 = reader["t3"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["t3"]),
+                            T1 = SafeGetDecimal(reader, "t1"),
+                            T2Smc = SafeGetDecimal(reader, "t2_smc"),
+                            T3 = SafeGetDecimal(reader, "t3"),
                             CctName = reader["CCT_NAME"] == DBNull.Value ? null : reader["CCT_NAME"].ToString()
                         });
                     }
