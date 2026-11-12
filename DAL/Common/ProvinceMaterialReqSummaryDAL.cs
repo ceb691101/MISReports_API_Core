@@ -27,17 +27,19 @@ namespace MISReports_Api.DAL
                      WHEN status = 9 THEN '9-Posted Cancellation '
                      ELSE NULL END) AS tranStatus,
                dept_id, COUNT(dept_id) AS no_of_documents,
-               (SELECT comp_nm FROM glcompm WHERE comp_id = :compid) AS cct_name
+               (SELECT comp_nm FROM glcompm WHERE TRIM(comp_id) = :compid) AS cct_name
         FROM mtreqhmt
         WHERE dept_id IN (
               SELECT dept_id FROM gldeptm
-              WHERE comp_id IN (
-                  SELECT comp_id FROM glcompm
-                  WHERE comp_id = :compid OR parent_id = :compid
+              WHERE TRIM(comp_id) IN (
+                  SELECT TRIM(comp_id) FROM glcompm
+                  WHERE TRIM(comp_id) = :compid
+                     OR TRIM(parent_id) = :compid
+                     OR TRIM(grp_comp) = :compid
               )
           )
           AND req_dt >= TO_DATE(:fromdate,'yyyy/mm/dd')
-          AND req_dt <= TO_DATE(:todate,'yyyy/mm/dd')
+          AND req_dt < TO_DATE(:todate,'yyyy/mm/dd') + 1
         GROUP BY
                (CASE WHEN status = 1 THEN '1-Approved'
                      WHEN status = 2 THEN '2-Approved for Issued Return'
