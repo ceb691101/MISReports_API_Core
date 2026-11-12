@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 using MISReports_Api.Models.Accounts;
 namespace MISReports_Api.DAL
 {
@@ -10,6 +11,26 @@ namespace MISReports_Api.DAL
     {
         private readonly string _connectionString =
             ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
+
+        // Overflow-safe decimal reader, same pattern used on CCJobSummaryDAL.
+        // Oracle NUMBER columns can exceed .NET decimal's ~28-29 digit range,
+        // making Convert.ToDecimal throw OverflowException.
+        private static decimal? SafeGetDecimal(OracleDataReader reader, string columnName)
+        {
+            int ordinal = reader.GetOrdinal(columnName);
+            if (reader.IsDBNull(ordinal)) return null;
+
+            OracleDecimal od = reader.GetOracleDecimal(ordinal);
+            try
+            {
+                od = OracleDecimal.SetPrecision(od, 28);
+                return od.Value;
+            }
+            catch (OverflowException)
+            {
+                return (decimal)(double)od;
+            }
+        }
 
         public List<SmcLineDetailsModel> GetSmcLineDetails(string fromDate, string toDate, string compId)
         {
@@ -73,11 +94,11 @@ namespace MISReports_Api.DAL
                             TariffCatCode = reader["tariff_cat_code"] == DBNull.Value ? null : reader["tariff_cat_code"].ToString(),
                             LoopCable = reader["loop_cable"] == DBNull.Value ? null : reader["loop_cable"].ToString(),
                             WiringType = reader["wiring_type"] == DBNull.Value ? null : reader["wiring_type"].ToString(),
-                            LineLength = reader["line_length"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["line_length"]),
-                            ServiceLength = reader["service_length"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["service_length"]),
-                            InsideLength = reader["inside_length"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["inside_length"]),
-                            ActualCost = reader["actual_cost"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["actual_cost"]),
-                            StandardCost = reader["Standard_Cost"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["Standard_Cost"]),
+                            LineLength = SafeGetDecimal(reader, "line_length"),
+                            ServiceLength = SafeGetDecimal(reader, "service_length"),
+                            InsideLength = SafeGetDecimal(reader, "inside_length"),
+                            ActualCost = SafeGetDecimal(reader, "actual_cost"),
+                            StandardCost = SafeGetDecimal(reader, "Standard_Cost"),
                             ProjectNo = reader["project_no"] == DBNull.Value ? null : reader["project_no"].ToString()
                         });
                     }
