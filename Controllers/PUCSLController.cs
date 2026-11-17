@@ -1,11 +1,12 @@
-﻿using MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection;
 using MISReports_Api.Models.PUCSLReports.PUCSLSolarConnection;
 using MISReports_Api.DAL.PUCSLReports;
 using MISReports_Api.Models.PUCSLReports;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
@@ -24,6 +25,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api")]
     public class PUCSLController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly FixedSolarDataDao _fixedSolarDataDao = new FixedSolarDataDao();
         private readonly VariableSolarDataDao _variableSolarDataDao = new VariableSolarDataDao();
         private readonly TotalSolarCustomersDao _totalSolarCustomersDao = new TotalSolarCustomersDao();
@@ -33,6 +36,33 @@ namespace MISReports_Api.Controllers
         private readonly OrdinaryPUCSLSolarCustomersDao _ordinaryPUCSLSolarCustomersDao = new OrdinaryPUCSLSolarCustomersDao();
         private readonly SolarDataUNTCalculationDao _untCalculationDao = new SolarDataUNTCalculationDao();
 
+        [HttpPost]
+        [Route("pucsl/solarJournalsRetail")]
+        public IActionResult GetSolarJournalsRetail([FromBody] SolarJournalsRetailRequest request)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            try
+            {
+                SolarJournalsRetailDao.ValidateRequest(request);
+                var report = new SolarJournalsRetailDao().GetReport(request);
+                return Ok(JObject.FromObject(new { data = report, errorMessage = (string)null }));
+            }
+            catch (ArgumentException ex)
+            {
+                logger.Warn("GetSolarJournalsRetail rejected: {error}. request={@request}", ex.Message, request);
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                NLog.LogManager.GetCurrentClassLogger().Error(ex, "Cannot retrieve Solar Journals - Retail report.");
+                return Content(System.Net.HttpStatusCode.InternalServerError, new
+                {
+                    data = (object)null,
+                    errorMessage = "Cannot retrieve Solar Journals - Retail report. Please try again."
+                });
+            }
+        }
+
 
         // ================================================================
         //  POST  pucsl/solarConnections
@@ -41,7 +71,7 @@ namespace MISReports_Api.Controllers
         // ================================================================
         [HttpPost]
         [Route("pucsl/solarConnections")]
-        public IHttpActionResult GetSolarData([FromBody] PUCSLRequest request)
+        public IActionResult GetSolarData([FromBody] PUCSLRequest request)
         {
             // ── Null body guard ───────────────────────────────────────
             if (request == null)
@@ -105,7 +135,7 @@ namespace MISReports_Api.Controllers
         // ================================================================
         //  PRIVATE — Fixed Solar Data
         // ================================================================
-        private IHttpActionResult ProcessFixedSolarData(PUCSLRequest request)
+        private IActionResult ProcessFixedSolarData(PUCSLRequest request)
         {
             try
             {
@@ -129,10 +159,12 @@ namespace MISReports_Api.Controllers
             }
             catch (ArgumentException argEx)
             {
+                logger.Warn("ProcessFixedSolarData rejected: {error}", argEx.Message);
                 return BadRequest(argEx.Message); 
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessFixedSolarData failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -145,7 +177,7 @@ namespace MISReports_Api.Controllers
         // ================================================================
         //  PRIVATE — Variable Solar Data
         // ================================================================
-        private IHttpActionResult ProcessVariableSolarData(PUCSLRequest request)
+        private IActionResult ProcessVariableSolarData(PUCSLRequest request)
         {
             try
             {
@@ -169,10 +201,12 @@ namespace MISReports_Api.Controllers
             }
             catch (ArgumentException argEx)
             {
+                logger.Warn("ProcessVariableSolarData rejected: {error}", argEx.Message);
                 return BadRequest(argEx.Message); // Returns 400 with clean message
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessVariableSolarData failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -185,7 +219,7 @@ namespace MISReports_Api.Controllers
         // ================================================================
         //  PRIVATE — Total Solar Customers
         // ================================================================
-        private IHttpActionResult ProcessTotalSolarCustomers(PUCSLRequest request)
+        private IActionResult ProcessTotalSolarCustomers(PUCSLRequest request)
         {
             try
             {
@@ -209,6 +243,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessTotalSolarCustomers failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -221,7 +256,7 @@ namespace MISReports_Api.Controllers
         // ================================================================
         //  PRIVATE — Raw Data For Solar
         // ================================================================
-        private IHttpActionResult ProcessRawDataForSolar(PUCSLRequest request)
+        private IActionResult ProcessRawDataForSolar(PUCSLRequest request)
         {
             try
             {
@@ -245,6 +280,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessRawDataForSolar failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -257,7 +293,7 @@ namespace MISReports_Api.Controllers
         // ================================================================
         //  PRIVATE — Net Metering
         // ================================================================
-        private IHttpActionResult ProcessNetMetering(PUCSLRequest request)
+        private IActionResult ProcessNetMetering(PUCSLRequest request)
         {
             try
             {
@@ -281,6 +317,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessNetMetering failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -303,7 +340,7 @@ namespace MISReports_Api.Controllers
         // ================================================================
         [HttpPost]
         [Route("pucsl/bulkSolarCustomers")]
-        public IHttpActionResult GetBulkSolarCustomers([FromBody] BulkPUCSLSolarCustomersRequest request)
+        public IActionResult GetBulkSolarCustomers([FromBody] BulkPUCSLSolarCustomersRequest request)
         {
             // ── Null body guard ───────────────────────────────────────
             if (request == null)
@@ -358,10 +395,12 @@ namespace MISReports_Api.Controllers
             }
             catch (ArgumentException argEx)
             {
+                logger.Warn("GetBulkSolarCustomers rejected: {error}. request={@request}", argEx.Message, request);
                 return BadRequest(argEx.Message);
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetBulkSolarCustomers failed. request={@request}", request);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -385,7 +424,7 @@ namespace MISReports_Api.Controllers
         // ================================================================
         [HttpPost]
         [Route("pucsl/ordinarySolarCustomers")]
-        public IHttpActionResult GetOrdinarySolarCustomers([FromBody] OrdinaryPUCSLSolarCustomersRequest request)
+        public IActionResult GetOrdinarySolarCustomers([FromBody] OrdinaryPUCSLSolarCustomersRequest request)
         {
             // ── Null body guard ───────────────────────────────────────
             if (request == null)
@@ -440,10 +479,12 @@ namespace MISReports_Api.Controllers
             }
             catch (ArgumentException argEx)
             {
+                logger.Warn("GetOrdinarySolarCustomers rejected: {error}. request={@request}", argEx.Message, request);
                 return BadRequest(argEx.Message);
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetOrdinarySolarCustomers failed. request={@request}", request);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -458,7 +499,7 @@ namespace MISReports_Api.Controllers
         // ================================================================
         [HttpPost]
         [Route("pucsl/solarDataUNT")]
-        public IHttpActionResult GetSolarDataUNT([FromBody] PUCSLRequest request)
+        public IActionResult GetSolarDataUNT([FromBody] PUCSLRequest request)
         {
             if (request == null)
             {
@@ -512,6 +553,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetSolarDataUNT failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,

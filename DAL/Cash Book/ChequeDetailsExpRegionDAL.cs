@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using MISReports_Api.Models.Accounts;

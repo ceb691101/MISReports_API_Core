@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 
 namespace MISReports_Api.DAL
@@ -10,6 +10,8 @@ namespace MISReports_Api.DAL
 {
     public class TrialBalanceRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
         public List<TrialBalanceModel> GetTrialBalance(string costctr, string repyear, string repmonth)
@@ -81,6 +83,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetTrialBalance failed (exception rethrown). costctr={costctr}, repyear={repyear}, repmonth={repmonth}", costctr, repyear, repmonth);
                 Debug.WriteLine($"Error in GetTrialBalance: {ex.Message}");
                 Debug.WriteLine(ex.StackTrace);
                 throw;

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using MISReports_Api.Models.Accounts;
@@ -9,6 +9,8 @@ namespace MISReports_Api.DAL
 {
     public class InventoryDocInquiryDAL
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string _connectionString =
             ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
@@ -212,6 +214,7 @@ namespace MISReports_Api.DAL
             }
             catch (OracleException ex)
             {
+                logger.Error(ex, "GetInventoryDocInquiry failed (exception rethrown). docNo={docNo}", docNo);
                 System.Diagnostics.Debug.WriteLine($"=== ORACLE ERROR: {ex.Message} ===");
                 System.Diagnostics.Debug.WriteLine($"Error Code: {ex.ErrorCode}");
                 System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
@@ -219,6 +222,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetInventoryDocInquiry failed (exception rethrown). docNo={docNo}", docNo);
                 System.Diagnostics.Debug.WriteLine($"=== GENERAL ERROR: {ex.Message} ===");
                 System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
                 throw;

@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.General;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Text;
 
 namespace MISReports_Api.DAL.General.ListingOfCustomer
@@ -98,7 +99,7 @@ namespace MISReports_Api.DAL.General.ListingOfCustomer
 
                     logger.Info($"Executing SQL with {parameters.Count} parameters");
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         foreach (var p in parameters)
                             cmd.Parameters.AddWithValue("?", p);
@@ -241,7 +242,7 @@ namespace MISReports_Api.DAL.General.ListingOfCustomer
         /// Returns the distinct values for a single column — used for filter dropdowns.
         /// </summary>
         private List<FilterOptionModel> GetDistinctValues(
-            OleDbConnection conn, string areaCode, string billCycle, string columnName)
+            DbConnection conn, string areaCode, string billCycle, string columnName)
         {
             var options = new List<FilterOptionModel>();
 
@@ -251,7 +252,7 @@ namespace MISReports_Api.DAL.General.ListingOfCustomer
                              $"WHERE area_code = ? AND bill_cycle = ? " +
                              $"ORDER BY {columnName}";
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@area_code", areaCode);
                     cmd.Parameters.AddWithValue("@bill_cycle", billCycle);
@@ -276,7 +277,7 @@ namespace MISReports_Api.DAL.General.ListingOfCustomer
         }
 
         /// <summary>Maps a data reader row to a ListingOfCustomerModel.</summary>
-        private ListingOfCustomerModel MapReaderToModel(OleDbDataReader reader)
+        private ListingOfCustomerModel MapReaderToModel(DbDataReader reader)
         {
             var model = new ListingOfCustomerModel();
 
@@ -329,13 +330,13 @@ namespace MISReports_Api.DAL.General.ListingOfCustomer
         }
 
         /// <summary>Looks up the area name for a given area code.</summary>
-        private string GetAreaName(OleDbConnection conn, string areaCode)
+        private string GetAreaName(DbConnection conn, string areaCode)
         {
             try
             {
                 const string sql = "SELECT area_name FROM areas WHERE area_code = ?";
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@area_code", areaCode);
                     var result = cmd.ExecuteScalar();
@@ -353,7 +354,7 @@ namespace MISReports_Api.DAL.General.ListingOfCustomer
 
         // ── Low-level helpers ────────────────────────────────────────────────
 
-        private string GetString(OleDbDataReader reader, string column)
+        private string GetString(DbDataReader reader, string column)
         {
             try
             {
@@ -367,7 +368,7 @@ namespace MISReports_Api.DAL.General.ListingOfCustomer
             }
         }
 
-        private decimal GetDecimal(OleDbDataReader reader, string column)
+        private decimal GetDecimal(DbDataReader reader, string column)
         {
             try
             {

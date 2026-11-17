@@ -1,10 +1,10 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Models.CustomerDetails;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.CustomerDetails
@@ -30,6 +30,7 @@ namespace MISReports_Api.DAL.CustomerDetails
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "TestConnection failed");
                 errorMessage = ex.Message;
                 return false;
             }
@@ -61,7 +62,7 @@ namespace MISReports_Api.DAL.CustomerDetails
             }
         }
 
-        private List<LatestUpdateTimeRecord> GetLatestUpdateTimes(OleDbConnection conn)
+        private List<LatestUpdateTimeRecord> GetLatestUpdateTimes(DbConnection conn)
         {
             var records = new List<LatestUpdateTimeRecord>();
 
@@ -76,7 +77,7 @@ namespace MISReports_Api.DAL.CustomerDetails
 				  AND a.center = b.center
 				ORDER BY a.agent, a.center";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -190,7 +191,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                         WHERE acct_number = ?
                         ORDER BY bill_cycle DESC";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@acctNo", accountNumber);
 
@@ -231,7 +232,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                         FROM customer
                         WHERE acc_nbr = ?";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@acctNo", accountNumber);
 
@@ -280,7 +281,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                         WHERE a.acct_number = ?
                           AND a.area_code = b.area_code";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@acctNo", accountNumber);
 
@@ -326,7 +327,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                         WHERE a.acc_no = ?
                           AND a.area_code = b.area_code";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@acctNo1", accountNumber);
                         cmd.Parameters.AddWithValue("@acctNo2", accountNumber);
@@ -351,7 +352,7 @@ namespace MISReports_Api.DAL.CustomerDetails
         }
 
        //payment inquiry 
-        private List<PaymentInquiryPaymentRecord> GetPaymentRecords(OleDbConnection conn, string accountNumber, string fromDate)
+        private List<PaymentInquiryPaymentRecord> GetPaymentRecords(DbConnection conn, string accountNumber, string fromDate)
         {
             var records = new List<PaymentInquiryPaymentRecord>();
 
@@ -400,7 +401,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                   AND trans_date >= ?
                 ORDER BY 1";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 //online payments
                 cmd.Parameters.AddWithValue("@acctNo1", accountNumber);
@@ -480,7 +481,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                         WHERE agent = ?
                           AND center = ?";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@agent", agent);
                         cmd.Parameters.AddWithValue("@center", center);
@@ -523,7 +524,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                         FROM counter_details
                         WHERE counter = ?";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@counter", countNo);
 
@@ -565,7 +566,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                         FROM code_paymode
                         WHERE pay_mode = ?";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@payMode", payMode);
 
@@ -608,7 +609,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                           AND count_no = ?
                           AND stub_no = ?";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@accountNumber", accountNumber);
                         cmd.Parameters.AddWithValue("@transDate", transDate);
@@ -655,7 +656,7 @@ namespace MISReports_Api.DAL.CustomerDetails
             return value.Trim();
         }
 
-        private static string GetDateValue(OleDbDataReader reader, string columnName)
+        private static string GetDateValue(DbDataReader reader, string columnName)
         {
             object value = reader[columnName];
 
@@ -684,7 +685,7 @@ namespace MISReports_Api.DAL.CustomerDetails
             return decimal.TryParse(value, out decimal parsed) ? parsed : 0m;
         }
 
-        private static OleDbConnection GetConnection(string connectionName)
+        private static DbConnection GetConnection(string connectionName)
         {
             var connectionStringSettings = ConfigurationManager.ConnectionStrings[connectionName];
 
@@ -693,16 +694,16 @@ namespace MISReports_Api.DAL.CustomerDetails
                 throw new ConfigurationErrorsException($"{connectionName} connection string is missing from Web.config");
             }
 
-            return new OleDbConnection(connectionStringSettings.ConnectionString);
+            return Informix.CreateConnection(connectionStringSettings.ConnectionString);
         }
 
-        private static string GetStringValue(OleDbDataReader reader, string columnName)
+        private static string GetStringValue(DbDataReader reader, string columnName)
         {
             object value = reader[columnName];
             return value == null || value == DBNull.Value ? string.Empty : value.ToString().Trim();
         }
 
-        private static string GetDateTimeValue(OleDbDataReader reader, string columnName)
+        private static string GetDateTimeValue(DbDataReader reader, string columnName)
         {
             object value = reader[columnName];
 
@@ -754,7 +755,7 @@ namespace MISReports_Api.DAL.CustomerDetails
             }
         }
 
-        private List<ProvinceData> GetProvincesList(OleDbConnection conn)
+        private List<ProvinceData> GetProvincesList(DbConnection conn)
         {
             var provinces = new List<ProvinceData>();
 
@@ -767,7 +768,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                 FROM prov_servers
                 ORDER BY prov_name";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.CommandTimeout = 30;
                 using (var reader = cmd.ExecuteReader())
@@ -821,7 +822,7 @@ namespace MISReports_Api.DAL.CustomerDetails
             }
         }
 
-        private List<AreaData> GetAreasList(OleDbConnection conn, string provCode)
+        private List<AreaData> GetAreasList(DbConnection conn, string provCode)
         {
             var areas = new List<AreaData>();
 
@@ -832,7 +833,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                 WHERE prov_code = ?
                 ORDER BY area_name";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@provCode", provCode);
                 cmd.CommandTimeout = 30;
@@ -943,7 +944,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                     return counters;
                 }
 
-                using (var conn = new OleDbConnection(connectionSetting.ConnectionString))
+                using (var conn = Informix.CreateConnection(connectionSetting.ConnectionString))
                 {
                     conn.Open();
 
@@ -956,7 +957,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                               AND b.prov_code = ?
                             ORDER BY a.count_no";
 
-                        using (var cmd = new OleDbCommand(sqlSpecial, conn))
+                        using (var cmd = Informix.CreateCommand(sqlSpecial, conn))
                         {
                             cmd.Parameters.AddWithValue("@provCode", provCode);
                             cmd.CommandTimeout = 15;
@@ -982,7 +983,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                             FROM cus_counts
                             ORDER BY count_no";
 
-                        using (var cmd = new OleDbCommand(sqlGeneral, conn))
+                        using (var cmd = Informix.CreateCommand(sqlGeneral, conn))
                         {
                             cmd.CommandTimeout = 15;
 
@@ -1006,6 +1007,7 @@ namespace MISReports_Api.DAL.CustomerDetails
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCountersFromConnection failed. connectionName={connectionName}, provCode={provCode}", connectionName, provCode);
                 if (ex.Message.Contains("-111") || ex.Message.Contains("ISAM error"))
                 {
                     logMessage = $"Success on {connectionName} (0 counters found).";
@@ -1132,7 +1134,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                     return records;
                 }
 
-                using (var conn = new OleDbConnection(connectionSetting.ConnectionString))
+                using (var conn = Informix.CreateConnection(connectionSetting.ConnectionString))
                 {
                     conn.Open();
 
@@ -1148,28 +1150,28 @@ namespace MISReports_Api.DAL.CustomerDetails
                         FROM cus_tran
                         WHERE trans_date = ? AND trans_type = '0'";
 
-                    var parameters = new List<OleDbParameter>
+                    var parameters = new List<DbParameter>
                     {
-                        new OleDbParameter("@transDate", transDate)
+                        Informix.CreateParameter("@transDate", transDate)
                     };
 
                     // Build dynamic WHERE clause based on filters
                     if (!string.IsNullOrWhiteSpace(request.AreaCode) && request.AreaCode != "*")
                     {
                         sql += " AND area_code = ?";
-                        parameters.Add(new OleDbParameter("@areaCode", request.AreaCode));
+                        parameters.Add(Informix.CreateParameter("@areaCode", request.AreaCode));
                     }
 
                     if (!string.IsNullOrWhiteSpace(request.CounterNo) && request.CounterNo != "*")
                     {
                         sql += " AND count_no = ?";
-                        parameters.Add(new OleDbParameter("@countNo", request.CounterNo));
+                        parameters.Add(Informix.CreateParameter("@countNo", request.CounterNo));
                     }
 
                     if (!string.IsNullOrWhiteSpace(request.PayMode) && request.PayMode != "*")
                     {
                         sql += " AND pay_mode = ?";
-                        parameters.Add(new OleDbParameter("@payMode", request.PayMode));
+                        parameters.Add(Informix.CreateParameter("@payMode", request.PayMode));
                     }
 
                     if (!string.IsNullOrWhiteSpace(request.PayType) && request.PayType != "*")
@@ -1185,12 +1187,12 @@ namespace MISReports_Api.DAL.CustomerDetails
                         }
 
                         sql += " AND pay_type = ?";
-                        parameters.Add(new OleDbParameter("@payType", dbPayType));
+                        parameters.Add(Informix.CreateParameter("@payType", dbPayType));
                     }
 
                     sql += " ORDER BY count_no, stub_no";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.CommandTimeout = 15;
                         foreach (var param in parameters)
@@ -1229,6 +1231,7 @@ namespace MISReports_Api.DAL.CustomerDetails
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCollectionBreakupFromConnection failed. connectionName={connectionName}, request={@request}, transDate={transDate}", connectionName, request, transDate);
                 if (ex.Message.Contains("-111") || ex.Message.Contains("ISAM error"))
                 {
                     logMessage = $"Success on {connectionName} (0 records found).";
@@ -1263,7 +1266,7 @@ namespace MISReports_Api.DAL.CustomerDetails
                         WHERE pay_mode IS NOT NULL
                         ORDER BY code_discrp";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.CommandTimeout = 30;
                         using (var reader = cmd.ExecuteReader())

@@ -1,22 +1,25 @@
 ﻿//07.2 PIV Collections by IPG ( SLT )
 
 // File: Controllers/PivBySLTController.cs
+using MISReports_Api.Compat;
 using MISReports_Api.DAL.PIV;
 using System;
 using System.Globalization;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/pivbyslt")]
     public class PivBySLTController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly PivBySLTRepository _repo = new PivBySLTRepository();
 
         // GET: api/pivbysltbank/get?fromDate=20250401&toDate=20250430
         [HttpGet]
         [Route("get")]
-        public IHttpActionResult Get(string fromDate, string toDate)
+        public IActionResult Get(string fromDate, string toDate)
         {
             if (string.IsNullOrWhiteSpace(fromDate) || string.IsNullOrWhiteSpace(toDate))
             {
@@ -41,6 +44,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "Get failed. fromDate={fromDate}, toDate={toDate}", fromDate, toDate);
                 return InternalServerError(new Exception("Error while fetching PIV by People (Bank) report: " + ex.Message));
             }
         }

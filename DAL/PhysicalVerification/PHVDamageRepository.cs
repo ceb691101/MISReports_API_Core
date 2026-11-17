@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models.PhysicalVerification;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.PhysicalVerification;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Threading.Tasks;
 
 namespace MISReports_Api.DAL.PhysicalVerification
@@ -45,7 +45,7 @@ namespace MISReports_Api.DAL.PhysicalVerification
                                   AND T5.GRADE_CD = T4.GRADE_CD
                                   AND T3.WRH_CD = T4.WRH_CD
                 WHERE
-                    T4.STATUS IN (2,7)
+                    T4.STATUS IN (2,7,3)
                     AND TRIM(T1.DEPT_ID) = :dept_id
                     AND TRIM(T3.WRH_CD) = :wrh_cd
                     AND TO_CHAR(T3.PHV_DT,'YYYY') = :rep_year

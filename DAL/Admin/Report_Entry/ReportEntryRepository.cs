@@ -1,14 +1,16 @@
+using MISReports_Api.Compat;
 using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 
 namespace MISReports_Api.DAL
 {
     public class ReportEntryRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
         private static string NormalizeRepId(string repId)
@@ -33,6 +35,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetNextReportIdNo failed (exception rethrown)");
                 Debug.WriteLine($"Error in GetNextReportIdNo: {ex.Message}");
                 throw;
             }
@@ -91,6 +94,7 @@ namespace MISReports_Api.DAL
                     }
                     catch (Exception ex)
                     {
+                        logger.Error(ex, "AddReportEntry failed (exception rethrown). request={@request}", request);
                         transaction.Rollback();
                         Debug.WriteLine($"Error in AddReportEntry: {ex.Message}");
                         throw;
@@ -439,6 +443,7 @@ namespace MISReports_Api.DAL
                     }
                     catch (Exception ex)
                     {
+                        logger.Error(ex, "EditReportEntry failed (exception rethrown). repIdNo={repIdNo}, currentCatCode={currentCatCode}, request={@request}", repIdNo, currentCatCode, request);
                         transaction.Rollback();
                         Debug.WriteLine($"Error in EditReportEntry: {ex.Message}");
                         throw;
@@ -512,6 +517,7 @@ namespace MISReports_Api.DAL
                     }
                     catch (Exception ex)
                     {
+                        logger.Error(ex, "DeleteReportEntry failed (exception rethrown). repIdNo={repIdNo}, catCode={catCode}", repIdNo, catCode);
                         transaction.Rollback();
                         Debug.WriteLine($"Error in DeleteReportEntry: {ex.Message}");
                         throw;
@@ -590,6 +596,7 @@ namespace MISReports_Api.DAL
                     }
                     catch (OracleException ex) when (ex.Number == 904)
                     {
+                        logger.Error(ex, "FilterReportEntries failed. repid={repid}, catcode={catcode}", repid, catcode);
                         using (var cmd = new OracleCommand(fallbackSql, conn))
                         {
                             cmd.BindByName = true;
@@ -620,6 +627,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "FilterReportEntries failed (exception rethrown). repid={repid}, catcode={catcode}", repid, catcode);
                 Debug.WriteLine($"Error in FilterReportEntries: {ex.Message}");
                 throw;
             }
@@ -691,6 +699,7 @@ namespace MISReports_Api.DAL
                     }
                     catch (OracleException ex) when (ex.Number == 904)
                     {
+                        logger.Error(ex, "GetAllReportEntries failed");
                         using (var cmd = new OracleCommand(fallbackSql, conn))
                         {
                             using (var reader = cmd.ExecuteReader())
@@ -717,6 +726,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAllReportEntries failed (exception rethrown)");
                 Debug.WriteLine($"Error in GetAllReportEntries: {ex.Message}");
                 throw;
             }
@@ -776,6 +786,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReportEntriesByCategory failed (exception rethrown). catCode={catCode}", catCode);
                 Debug.WriteLine($"Error in GetReportEntriesByCategory: {ex.Message}");
                 throw;
             }

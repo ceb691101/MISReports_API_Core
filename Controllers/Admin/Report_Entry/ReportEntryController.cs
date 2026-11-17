@@ -1,3 +1,4 @@
+﻿using MISReports_Api.Compat;
 using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json;
@@ -7,14 +8,15 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/reportentry")]
     public class ReportEntryController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ReportEntryRepository _repository = new ReportEntryRepository();
 
         private static string NormalizeRepId(string repId)
@@ -26,7 +28,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("nextid")]
-        public IHttpActionResult GetNextReportIdNo()
+        public IActionResult GetNextReportIdNo()
         {
             try
             {
@@ -35,13 +37,14 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetNextReportIdNo failed");
                 return Ok(JObject.FromObject(new { data = (object)null, errorMessage = "Cannot get next ID.", errorDetails = ex.Message }));
             }
         }
 
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetAllReportEntries([FromUri] string catcode = null)
+        public IActionResult GetAllReportEntries([FromUri] string catcode = null)
         {
             try
             {
@@ -56,6 +59,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAllReportEntries failed. catcode={catcode}", catcode);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -67,7 +71,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("filter")]
-        public IHttpActionResult FilterReportEntries([FromUri] string repid, [FromUri] string catcode)
+        public IActionResult FilterReportEntries([FromUri] string repid, [FromUri] string catcode)
         {
             try
             {
@@ -89,6 +93,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "FilterReportEntries failed. repid={repid}, catcode={catcode}", repid, catcode);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -100,7 +105,7 @@ namespace MISReports_Api.Controllers
 
         [HttpPost]
         [Route("")]
-        public IHttpActionResult AddReportEntry([FromBody] ReportEntryModel request)
+        public IActionResult AddReportEntry([FromBody] ReportEntryModel request)
         {
             try
             {
@@ -142,6 +147,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "AddReportEntry failed. request={@request}", request);
                 return Ok(JObject.FromObject(new
                 {
                     data = new { success = false },
@@ -153,7 +159,7 @@ namespace MISReports_Api.Controllers
 
         [HttpPut]
         [Route("{repIdNo:int}/{catCode}")]
-        public IHttpActionResult EditReportEntry(int repIdNo, string catCode, [FromBody] ReportEntryModel request)
+        public IActionResult EditReportEntry(int repIdNo, string catCode, [FromBody] ReportEntryModel request)
         {
             try
             {
@@ -175,6 +181,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "EditReportEntry failed. repIdNo={repIdNo}, catCode={catCode}, request={@request}", repIdNo, catCode, request);
                 return Ok(JObject.FromObject(new
                 {
                     data = new { success = false },
@@ -186,7 +193,7 @@ namespace MISReports_Api.Controllers
 
         [HttpDelete]
         [Route("{repIdNo:int}/{catCode}")]
-        public IHttpActionResult DeleteReportEntry(int repIdNo, string catCode)
+        public IActionResult DeleteReportEntry(int repIdNo, string catCode)
         {
             try
             {
@@ -233,6 +240,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "DeleteReportEntry failed. repIdNo={repIdNo}, catCode={catCode}", repIdNo, catCode);
                 return Ok(JObject.FromObject(new
                 {
                     data = new { success = false },
@@ -244,11 +252,11 @@ namespace MISReports_Api.Controllers
 
         [HttpPost]
         [Route("upload")]
-        public async Task<IHttpActionResult> UploadSampleImage()
+        public async Task<IActionResult> UploadSampleImage()
         {
             try
             {
-                if (!HttpContext.Request.HasFormContentType)
+                if (!(Request.ContentType?.StartsWith("multipart/", StringComparison.OrdinalIgnoreCase) ?? false))
                 {
                     return Ok(JObject.FromObject(new
                     {
@@ -257,9 +265,9 @@ namespace MISReports_Api.Controllers
                     }));
                 }
 
-                var form = await HttpContext.Request.ReadFormAsync();
-                var file = form.Files.FirstOrDefault();
-                if (file == null || file.Length == 0)
+                var form = await Request.ReadFormAsync();
+                var fileContent = form.Files.FirstOrDefault(f => !string.IsNullOrEmpty(f.FileName));
+                if (fileContent == null)
                 {
                     return Ok(JObject.FromObject(new
                     {
@@ -268,7 +276,7 @@ namespace MISReports_Api.Controllers
                     }));
                 }
 
-                string rawFileName = file.FileName.Trim('\"');
+                string rawFileName = fileContent.FileName.Trim('\"');
                 string extension = Path.GetExtension(rawFileName)?.ToLowerInvariant();
 
                 if (string.IsNullOrEmpty(extension) || (extension != ".png" && extension != ".jpg" && extension != ".jpeg"))
@@ -280,11 +288,7 @@ namespace MISReports_Api.Controllers
                     }));
                 }
 
-                string repId = form["repId"].ToString();
-                if (string.IsNullOrWhiteSpace(repId))
-                {
-                    repId = HttpContext.Request.Query["repId"].ToString();
-                }
+                string repId = form["repId"].FirstOrDefault() ?? Request.Query["repId"].FirstOrDefault();
                 if (string.IsNullOrWhiteSpace(repId))
                 {
                     return Ok(JObject.FromObject(new
@@ -313,10 +317,13 @@ namespace MISReports_Api.Controllers
                 }
 
                 string destinationPath = Path.Combine(sampleReportsDir, newFileName);
-                using (var stream = new FileStream(destinationPath, FileMode.Create))
+                byte[] fileBytes;
+                using (var buffer = new MemoryStream())
                 {
-                    await file.CopyToAsync(stream);
+                    await fileContent.CopyToAsync(buffer);
+                    fileBytes = buffer.ToArray();
                 }
+                System.IO.File.WriteAllBytes(destinationPath, fileBytes);
 
                 string generatedPath = $"src/assets/SampleReports/{newFileName}";
 
@@ -333,6 +340,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "UploadSampleImage failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -369,6 +377,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ResolveSampleReportsDirectory failed");
                 System.Diagnostics.Debug.WriteLine($"Error resolving sample reports directory: {ex.Message}");
                 string fallback = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleReports");
                 if (!Directory.Exists(fallback))

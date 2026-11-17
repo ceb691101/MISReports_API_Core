@@ -1,14 +1,17 @@
-﻿using MISReports_Api.DAL.PhysicalVerification;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.PhysicalVerification;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/annual-verification-sheet")]
     public class AnnualVerificationSheetController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly AnnualVerificationSheetRepository _repository;
 
         public AnnualVerificationSheetController()
@@ -19,7 +22,7 @@ namespace MISReports_Api.Controllers
         // GET api/annual-verification-sheet?deptId=510.11&repYear=2025&repMonth=11
         [HttpGet]
         [Route("")]
-        public async Task<IHttpActionResult> GetAnnualVerificationSheet(
+        public async Task<IActionResult> GetAnnualVerificationSheet(
             [FromUri] string deptId,
             [FromUri] int repYear,
             [FromUri] int repMonth)
@@ -50,6 +53,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAnnualVerificationSheet failed. deptId={deptId}, repYear={repYear}, repMonth={repMonth}", deptId, repYear, repMonth);
                 return Ok(new
                 {
                     success = false,

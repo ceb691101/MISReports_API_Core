@@ -1,13 +1,16 @@
-﻿using MISReports_Api.Models.Shared;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.Shared;
 using MISReports_Api.DBAccess;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.Shared
 {
     public class ProvinceOrdinaryDao
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DBConnection _dbConnection = new DBConnection();
 
         public bool TestConnection(out string errorMessage)
@@ -45,7 +48,7 @@ namespace MISReports_Api.DAL.Shared
                         sql = "Select * from prov_servers where prov_code not in('0','Z')";
                     }
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         if (!string.IsNullOrWhiteSpace(regionCode))
                             cmd.Parameters.AddWithValue("?", regionCode);
@@ -65,8 +68,9 @@ namespace MISReports_Api.DAL.Shared
                         }
                     }
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
+                    logger.Error(ex, "GetProvince failed (exception rethrown). regionCode={regionCode}", regionCode);
                     throw new Exception("Error retrieving province data: " + ex.Message, ex);
                 }
             }

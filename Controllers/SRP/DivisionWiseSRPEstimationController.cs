@@ -1,22 +1,25 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/divisionwise-srp-estimation")]
     public class DivisionWiseSRPEstimationController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DivisionWiseSRPEstimationRepository _repository =
             new DivisionWiseSRPEstimationRepository();
 
         // GET api/divisionwise-srp-estimation/get?compId=NCP&fromDate=2025/01/01&toDate=2025/12/31
         [HttpGet]
         [Route("get")]
-        public async Task<IHttpActionResult> GetDivisionWiseSRP(
+        public async Task<IActionResult> GetDivisionWiseSRP(
             string compId,
             string fromDate,
             string toDate)
@@ -41,6 +44,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetDivisionWiseSRP failed. compId={compId}, fromDate={fromDate}, toDate={toDate}", compId, fromDate, toDate);
                 var errorResponse = new
                 {
                     data = (object)null,

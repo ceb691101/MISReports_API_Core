@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 
@@ -13,6 +14,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/bulkconnectiondetails")]
     public class BulkConnectionDetailsController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly BulkConnectionDetailsDAL _dal = new BulkConnectionDetailsDAL();
 
         private static readonly string[] DateFormats = { "yyyy/MM/dd", "yyyy-MM-dd" };
@@ -20,12 +23,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/bulkconnectiondetails/report?fromDate=2026/01/01&toDate=2026/01/31
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate)
+        public IActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate)
         {
             return ExecuteQuery(fromDate, toDate);
         }
 
-        private IHttpActionResult ExecuteQuery(string fromDate, string toDate)
+        private IActionResult ExecuteQuery(string fromDate, string toDate)
         {
             try
             {
@@ -74,6 +77,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. fromDate={fromDate}, toDate={toDate}", fromDate, toDate);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

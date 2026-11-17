@@ -1,12 +1,15 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DAL;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/ledgercard/current-account-reconciliation-own-other")]
     public class CurrAcctReconOwnOtherController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly CurrAcctReconOwnOtherRepository _repository;
 
         public CurrAcctReconOwnOtherController()
@@ -16,7 +19,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetReport(
+        public IActionResult GetReport(
             [FromUri(Name = "REGION")] string region,
             [FromUri(Name = "YEAR")] int year,
             [FromUri(Name = "MONTH")] int month,
@@ -34,6 +37,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReport failed. region={region}, year={year}, month={month}, subac={subac}", region, year, month, subac);
                 return InternalServerError(ex);
             }
         }

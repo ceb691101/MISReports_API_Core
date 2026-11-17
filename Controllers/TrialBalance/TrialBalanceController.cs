@@ -1,20 +1,23 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/trialbalance")]
     public class TrialBalanceController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly TrialBalanceRepository _repository = new TrialBalanceRepository();
    // one  company details 
         [HttpGet]
         [Route("{costctr}/{repyear}/{repmonth}")]
-        public IHttpActionResult GetTrialBalance(string costctr, string repyear, string repmonth)
+        public IActionResult GetTrialBalance(string costctr, string repyear, string repmonth)
         {
             try
             {
@@ -30,6 +33,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetTrialBalance failed. costctr={costctr}, repyear={repyear}, repmonth={repmonth}", costctr, repyear, repmonth);
                 var errorResponse = new
                 {
                     data = (object)null,
@@ -43,7 +47,7 @@ namespace MISReports_Api.Controllers
         //get department  reagion wise
         [HttpGet]
         [Route("departments/{region}")]
-        public IHttpActionResult GetDepartmentsByRegion(string region)
+        public IActionResult GetDepartmentsByRegion(string region)
         {
             try
             {
@@ -59,6 +63,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetDepartmentsByRegion failed. region={region}", region);
                 var errorResponse = new
                 {
                     data = (object)null,
@@ -73,7 +78,7 @@ namespace MISReports_Api.Controllers
         //get companys level vise
         [HttpGet]
         [Route("companies/level/{lvl_no}")]
-        public IHttpActionResult GetCompaniesByLevel(string lvl_no)
+        public IActionResult GetCompaniesByLevel(string lvl_no)
         {
             try
             {
@@ -89,6 +94,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCompaniesByLevel failed. lvl_no={lvl_no}", lvl_no);
                 var errorResponse = new
                 {
                     data = (object)null,

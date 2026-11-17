@@ -1,19 +1,22 @@
-﻿using MISReports_Api.DAL.PIV;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.PIV;
 using System;
 using System.Globalization;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/typewisepiv")]
     public class TypewisePIVController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly TypewisePIVRepository _repo = new TypewisePIVRepository();
 
         // GET: api/typewisepiv/get?costctr=00101&fromDate=20250401&toDate=20250430
         [HttpGet]
         [Route("get")]
-        public IHttpActionResult Get(string costctr, string fromDate, string toDate)
+        public IActionResult Get(string costctr, string fromDate, string toDate)
         {
             if (string.IsNullOrWhiteSpace(costctr))
                 return BadRequest("costctr is required.");
@@ -37,6 +40,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "Get failed. costctr={costctr}, fromDate={fromDate}, toDate={toDate}", costctr, fromDate, toDate);
                 return InternalServerError(new Exception("Error while fetching Typewise PIV report: " + ex.Message));
             }
         }

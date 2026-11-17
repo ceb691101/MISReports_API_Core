@@ -1,20 +1,23 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DAL;
 using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api")]
     public class Report71_8Controller : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly Report71_8Repository _repository = new Report71_8Repository();
 
         [HttpGet]
         [Route("ledgercard/report-71-8")]
         [Route("ledgercard/report718")]
         [Route("report718")]
-        public IHttpActionResult GetReport(
+        public IActionResult GetReport(
             [FromUri] string compId = null,
             [FromUri] int repyear = 0,
             [FromUri] int repmonth = 0)
@@ -65,6 +68,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReport failed. compId={compId}, repyear={repyear}, repmonth={repmonth}", compId, repyear, repmonth);
                 System.Diagnostics.Debug.WriteLine($"Error in Report71_8Controller: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Error fetching 71/8 Report data: {ex.Message}", ex));
             }

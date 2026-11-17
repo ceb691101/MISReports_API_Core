@@ -1,8 +1,9 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DAL.Dashboard;
 using MISReports_Api.Models.Dashboard;
 using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
@@ -13,6 +14,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/dashboard")]
     public class DashboardController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly BulkCustomersDao _bulkCustomersDao = new BulkCustomersDao();
         private readonly SalesAndCollectionRangeDao _salesAndCollectionRangeDao = new SalesAndCollectionRangeDao();
         private readonly OrdinaryCustomersDao _ordinaryCustomersDao = new OrdinaryCustomersDao();
@@ -22,7 +25,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/customers/active-count</summary>
         [HttpGet]
         [Route("customers/active-count")]
-        public IHttpActionResult GetActiveCustomerCount([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetActiveCustomerCount([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             try
             {
@@ -39,6 +42,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetActiveCustomerCount failed. region={region}, province={province}, area={area}", region, province, area);
                 return Ok(new { data = (object)null, errorMessage = "Cannot get active customer count.", errorDetails = ex.Message });
             }
         }
@@ -46,7 +50,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/ordinary-customers-summary?region={region}</summary>
         [HttpGet]
         [Route("ordinary-customers-summary")]
-        public IHttpActionResult GetOrdinaryCustomersSummary([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetOrdinaryCustomersSummary([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             try
             {
@@ -59,6 +63,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetOrdinaryCustomersSummary failed. region={region}, province={province}, area={area}", region, province, area);
                 return Ok(new { data = (object)null, errorMessage = "Error retrieving ordinary customers summary.", errorDetails = ex.Message });
             }
         }
@@ -66,7 +71,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/salesCollection/range/ordinary</summary>
         [HttpGet]
         [Route("salesCollection/range/ordinary")]
-        public IHttpActionResult GetOrdinarySalesAndCollection([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetOrdinarySalesAndCollection([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             try
             {
@@ -91,6 +96,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetOrdinarySalesAndCollection failed. region={region}, province={province}, area={area}", region, province, area);
                 return Ok(new { data = (object)null, errorMessage = "Cannot get ordinary sales and collection data.", errorDetails = ex.Message });
             }
         }
@@ -98,7 +104,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/salesCollection/range/bulk</summary>
         [HttpGet]
         [Route("salesCollection/range/bulk")]
-        public IHttpActionResult GetBulkSalesAndCollection([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetBulkSalesAndCollection([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             try
             {
@@ -123,6 +129,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetBulkSalesAndCollection failed. region={region}, province={province}, area={area}", region, province, area);
                 return Ok(new { data = (object)null, errorMessage = "Cannot get bulk sales and collection data.", errorDetails = ex.Message });
             }
         }
@@ -130,7 +137,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/kiosk-collection?userId=KIOS00</summary>
         [HttpGet]
         [Route("kiosk-collection")]
-        public IHttpActionResult GetKioskCollection([FromUri] string userId = null, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetKioskCollection([FromUri] string userId = null, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             try
             {
@@ -162,6 +169,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetKioskCollection failed. userId={userId}, region={region}, province={province}, area={area}", userId, region, province, area);
                 return Ok(new { data = (object)null, errorMessage = "Cannot get kiosk collection data.", errorDetails = ex.Message });
             }
         }
@@ -169,7 +177,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/top-customers/billcycle/max</summary>
         [HttpGet]
         [Route("top-customers/billcycle/max")]
-        public IHttpActionResult GetTopCustomersMaxBillCycle()
+        public IActionResult GetTopCustomersMaxBillCycle()
         {
             try
             {
@@ -186,6 +194,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetTopCustomersMaxBillCycle failed");
                 return Ok(new { data = (object)null, errorMessage = "Error retrieving max bill cycle.", errorDetails = ex.Message });
             }
         }
@@ -193,7 +202,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/top-customers/list (fetches latest bill cycle and top customers with optional region filter)</summary>
         [HttpGet]
         [Route("top-customers/list")]
-        public IHttpActionResult GetTopCustomers([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null, [FromUri] int take = 10)
+        public IActionResult GetTopCustomers([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null, [FromUri] int take = 10)
         {
             try
             {
@@ -211,6 +220,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetTopCustomers failed. region={region}, province={province}, area={area}, take={take}", region, province, area, take);
                 return Ok(new { data = (object)null, errorMessage = "Cannot get top customers data.", errorDetails = ex.Message });
             }
         }
@@ -269,12 +279,14 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/dashboard/solar-ordinary-customers")]
     public class SolarOrdinaryCustomersController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly SolarOrdinaryCustomersDao _solarOrdinaryCustomersDao = new SolarOrdinaryCustomersDao();
 
         /// <summary>GET api/dashboard/solar-ordinary-customers/billcycle/max</summary>
         [HttpGet]
         [Route("billcycle/max")]
-        public IHttpActionResult GetMaxBillCycle()
+        public IActionResult GetMaxBillCycle()
         {
             try
             {
@@ -291,6 +303,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaxBillCycle failed");
                 return Ok(new { data = (object)null, errorMessage = "Error retrieving max bill cycle.", errorDetails = ex.Message });
             }
         }
@@ -298,7 +311,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/solar-ordinary-customers/count</summary>
         [HttpGet]
         [Route("count")]
-        public IHttpActionResult GetTotalCustomersCount([FromUri] string billCycle = null, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetTotalCustomersCount([FromUri] string billCycle = null, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             return GetCustomersCountResponse(billCycle, region, province, area, _solarOrdinaryCustomersDao.GetTotalCustomersCount, "Error retrieving total customers count.");
         }
@@ -306,7 +319,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/solar-ordinary-customers/count/net-type-1</summary>
         [HttpGet]
         [Route("count/net-type-1")]
-        public IHttpActionResult GetNetType1CustomersCount([FromUri] string billCycle = null, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetNetType1CustomersCount([FromUri] string billCycle = null, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             return GetCustomersCountResponse(billCycle, region, province, area, _solarOrdinaryCustomersDao.GetNetMeteringCustomersCount, "Error retrieving net type 1 customers count.");
         }
@@ -314,7 +327,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/solar-ordinary-customers/count/net-type-2</summary>
         [HttpGet]
         [Route("count/net-type-2")]
-        public IHttpActionResult GetNetType2CustomersCount([FromUri] string billCycle = null, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetNetType2CustomersCount([FromUri] string billCycle = null, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             return GetCustomersCountResponse(billCycle, region, province, area, _solarOrdinaryCustomersDao.GetNetAccountingCustomersCount, "Error retrieving net type 2 customers count.");
         }
@@ -322,7 +335,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/solar-ordinary-customers/count/net-type-3</summary>
         [HttpGet]
         [Route("count/net-type-3")]
-        public IHttpActionResult GetNetType3CustomersCount([FromUri] string billCycle = null, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetNetType3CustomersCount([FromUri] string billCycle = null, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             return GetCustomersCountResponse(billCycle, region, province, area, _solarOrdinaryCustomersDao.GetNetPlusCustomersCount, "Error retrieving net type 3 customers count.");
         }
@@ -330,7 +343,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/solar-ordinary-customers/count/net-type-4</summary>
         [HttpGet]
         [Route("count/net-type-4")]
-        public IHttpActionResult GetNetType4CustomersCount([FromUri] string billCycle = null, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetNetType4CustomersCount([FromUri] string billCycle = null, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             return GetCustomersCountResponse(billCycle, region, province, area, _solarOrdinaryCustomersDao.GetNetPlusPlusCustomersCount, "Error retrieving net type 4 customers count.");
         }
@@ -338,7 +351,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/solar-ordinary-customers/generation-capacity?billCycle=401&cycles=12</summary>
         [HttpGet]
         [Route("generation-capacity")]
-        public IHttpActionResult GetGenerationCapacityGraph([FromUri] string billCycle = null, [FromUri] int cycles = 12, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetGenerationCapacityGraph([FromUri] string billCycle = null, [FromUri] int cycles = 12, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             try
             {
@@ -355,12 +368,13 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetGenerationCapacityGraph failed. billCycle={billCycle}, cycles={cycles}, region={region}, province={province}, area={area}", billCycle, cycles, region, province, area);
                 return Ok(new { data = (object)null, errorMessage = "Error retrieving solar ordinary generation capacity graph.", errorDetails = ex.Message });
             }
         }
 
         // ── Shared helper ─────────────────────────────────────────────────────
-        private IHttpActionResult GetCustomersCountResponse(
+        private IActionResult GetCustomersCountResponse(
             string billCycle,
             string region,
             string province,
@@ -383,6 +397,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCustomersCountResponse failed. billCycle={billCycle}, region={region}, province={province}, area={area}, fallbackErrorMessage={fallbackErrorMessage}", billCycle, region, province, area, fallbackErrorMessage);
                 return Ok(new { data = (object)null, errorMessage = fallbackErrorMessage, errorDetails = ex.Message });
             }
         }
@@ -438,12 +453,14 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/dashboard/solar-bulk-customers")]
     public class SolarBulkCustomersController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly SolarBulkCustomersDao _solarBulkCustomersDao = new SolarBulkCustomersDao();
 
         /// <summary>GET api/dashboard/solar-bulk-customers/summary</summary>
         [HttpGet]
         [Route("summary")]
-        public IHttpActionResult GetSummary([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetSummary([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             try
             {
@@ -460,6 +477,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetSummary failed. region={region}, province={province}, area={area}", region, province, area);
                 return Ok(new { data = (object)null, errorMessage = "Error retrieving solar bulk customers summary.", errorDetails = ex.Message });
             }
         }
@@ -467,7 +485,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/solar-bulk-customers/count</summary>
         [HttpGet]
         [Route("count")]
-        public IHttpActionResult GetTotalCustomersCount([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetTotalCustomersCount([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             return GetCountResponse(_solarBulkCustomersDao.GetTotalCustomersCount, "Error retrieving total solar bulk customers count.", region, province, area);
         }
@@ -475,7 +493,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/solar-bulk-customers/count/net-type-1</summary>
         [HttpGet]
         [Route("count/net-type-1")]
-        public IHttpActionResult GetNetType1CustomersCount([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetNetType1CustomersCount([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             return GetCountResponse(_solarBulkCustomersDao.GetNetType1CustomersCount, "Error retrieving net type 1 solar bulk customers count.", region, province, area);
         }
@@ -483,7 +501,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/solar-bulk-customers/count/net-type-2</summary>
         [HttpGet]
         [Route("count/net-type-2")]
-        public IHttpActionResult GetNetType2CustomersCount([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetNetType2CustomersCount([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             return GetCountResponse(_solarBulkCustomersDao.GetNetType2CustomersCount, "Error retrieving net type 2 solar bulk customers count.", region, province, area);
         }
@@ -491,7 +509,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/solar-bulk-customers/count/net-type-3</summary>
         [HttpGet]
         [Route("count/net-type-3")]
-        public IHttpActionResult GetNetType3CustomersCount([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetNetType3CustomersCount([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             return GetCountResponse(_solarBulkCustomersDao.GetNetType3CustomersCount, "Error retrieving net type 3 solar bulk customers count.", region, province, area);
         }
@@ -499,7 +517,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/solar-bulk-customers/count/net-type-4</summary>
         [HttpGet]
         [Route("count/net-type-4")]
-        public IHttpActionResult GetNetType4CustomersCount([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetNetType4CustomersCount([FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             return GetCountResponse(_solarBulkCustomersDao.GetNetType4CustomersCount, "Error retrieving net type 4 solar bulk customers count.", region, province, area);
         }
@@ -507,7 +525,7 @@ namespace MISReports_Api.Controllers
         /// <summary>GET api/dashboard/solar-bulk-customers/generation-capacity?billCycle=401&cycles=12</summary>
         [HttpGet]
         [Route("generation-capacity")]
-        public IHttpActionResult GetGenerationCapacityGraph([FromUri] string billCycle = null, [FromUri] int cycles = 12, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
+        public IActionResult GetGenerationCapacityGraph([FromUri] string billCycle = null, [FromUri] int cycles = 12, [FromUri] string region = null, [FromUri] string province = null, [FromUri] string area = null)
         {
             try
             {
@@ -524,12 +542,13 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetGenerationCapacityGraph failed. billCycle={billCycle}, cycles={cycles}, region={region}, province={province}, area={area}", billCycle, cycles, region, province, area);
                 return Ok(new { data = (object)null, errorMessage = "Error retrieving solar bulk generation capacity graph.", errorDetails = ex.Message });
             }
         }
 
         // ── Shared helper ─────────────────────────────────────────────────────
-        private IHttpActionResult GetCountResponse(
+        private IActionResult GetCountResponse(
             Func<string, string, string, SolarBulkCustomersCount> countGetter,
             string fallbackErrorMessage,
             string region,
@@ -551,6 +570,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCountResponse failed. fallbackErrorMessage={fallbackErrorMessage}, region={region}, province={province}, area={area}", fallbackErrorMessage, region, province, area);
                 return Ok(new { data = (object)null, errorMessage = fallbackErrorMessage, errorDetails = ex.Message });
             }
         }

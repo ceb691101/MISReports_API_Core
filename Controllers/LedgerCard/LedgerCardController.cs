@@ -1,12 +1,15 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/ledgercard")]
     public class LedgerCardController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly LedgerCardRepository _repository;
 
         public LedgerCardController()
@@ -17,7 +20,7 @@ namespace MISReports_Api.Controllers
         // MAIN ROUTE USED BY FRONTEND
         [HttpGet]
         [Route("report/{glcode}/{repyear:int}/{startmonth:int}/{endmonth:int}")]
-        public IHttpActionResult GetReport(string glcode, int repyear, int startmonth, int endmonth)
+        public IActionResult GetReport(string glcode, int repyear, int startmonth, int endmonth)
         {
             return GetLedgerCardData(glcode, repyear, startmonth, endmonth);
         }
@@ -25,7 +28,7 @@ namespace MISReports_Api.Controllers
         // LEGACY ROUTE (optional – for query string support)
         [HttpGet]
         [Route("")]
-        public IHttpActionResult Get(
+        public IActionResult Get(
             [FromUri] string glcode,
             [FromUri] int repyear,
             [FromUri] int startmonth,
@@ -34,7 +37,7 @@ namespace MISReports_Api.Controllers
             return GetLedgerCardData(glcode, repyear, startmonth, endmonth);
         }
 
-        private IHttpActionResult GetLedgerCardData(string glcode, int repyear, int startmonth, int endmonth)
+        private IActionResult GetLedgerCardData(string glcode, int repyear, int startmonth, int endmonth)
         {
             try
             {
@@ -91,6 +94,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetLedgerCardData failed. glcode={glcode}, repyear={repyear}, startmonth={startmonth}, endmonth={endmonth}", glcode, repyear, startmonth, endmonth);
                 System.Diagnostics.Debug.WriteLine($"Error in LedgerCardController.GetReport: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Error fetching ledger card data: {ex.Message}", ex));
             }

@@ -1,7 +1,7 @@
+﻿using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Configuration;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
@@ -11,6 +11,8 @@ namespace MISReports_Api.DAL
 {
     public class JobStatusDocInquiryDAL
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string _connectionString =
             ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
@@ -235,12 +237,14 @@ namespace MISReports_Api.DAL
                 }
                 catch (Exception ex) when (attempt < maxRetries)
                 {
+                    logger.Warn(ex, "GetApplicationSubTypes attempt failed; retrying / trying next option");
                     // Log and retry
                     System.Diagnostics.Debug.WriteLine($"Attempt {attempt + 1} failed: {ex.Message}");
                     System.Threading.Thread.Sleep(1000 * (attempt + 1));
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetApplicationSubTypes failed (exception rethrown)");
                     // Last attempt failed
                     System.Diagnostics.Debug.WriteLine($"Final attempt failed: {ex.Message}\n{ex.StackTrace}");
                     throw new Exception($"Failed to retrieve application sub types: {ex.Message}", ex);

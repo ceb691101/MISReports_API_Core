@@ -1,7 +1,8 @@
-﻿using MISReports_Api.DAL.PIV;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.PIV;
 using MISReports_Api.Models.PIV;
 using System.Collections.Generic;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers.PIV
 {
@@ -13,7 +14,7 @@ namespace MISReports_Api.Controllers.PIV
 
         [HttpGet]
         [Route("list")]
-        public IHttpActionResult GetReport(string compId, string fromDate, string toDate)
+        public IActionResult GetReport(string compId, string fromDate, string toDate)
         {
             List<AreaWiseSRPApplicationPIVPaidReportModel> data = repo.GetReport(compId, fromDate, toDate);
 

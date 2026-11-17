@@ -1,19 +1,22 @@
+﻿using MISReports_Api.Compat;
 using MISReports_Api.DAL;
 using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/cashbook")]
     public class CashBookReportController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly CashBookReportRepository _repo = new CashBookReportRepository();
 
         // MAIN: /api/cashbook/report/20220101/20251231/LTL
         [HttpGet]
         [Route("report/{fromDate:regex(^\\d{{8}}$)}/{toDate:regex(^\\d{{8}}$)}/{payee?}")]
-        public IHttpActionResult GetReport(string fromDate, string toDate, string payee = null)
+        public IActionResult GetReport(string fromDate, string toDate, string payee = null)
         {
             return GetData(fromDate, toDate, payee);
         }
@@ -21,7 +24,7 @@ namespace MISReports_Api.Controllers
         // LEGACY: ?fromDate=20220101&toDate=20251231&payee=LTL
         [HttpGet]
         [Route("")]
-        public IHttpActionResult Get(
+        public IActionResult Get(
             [FromUri] string fromDate,
             [FromUri] string toDate,
             [FromUri] string payee = null)
@@ -29,7 +32,21 @@ namespace MISReports_Api.Controllers
             return GetData(fromDate, toDate, payee);
         }
 
-        private IHttpActionResult GetData(string fromDate, string toDate, string payee)
+        [HttpGet]
+        [Route("ccreport")]
+        public IActionResult GetCostCenterReport(
+            [FromUri] string fromDate,
+            [FromUri] string toDate,
+            [FromUri] string costCtr,
+            [FromUri] string payee)
+        {
+            if (string.IsNullOrWhiteSpace(costCtr))
+                return BadRequest("costCtr is required.");
+
+            return GetData(fromDate, toDate, payee, costCtr.Trim());
+        }
+
+        private IActionResult GetData(string fromDate, string toDate, string payee, string costCtr = null)
         {
             try
             {
@@ -43,7 +60,7 @@ namespace MISReports_Api.Controllers
                 if (payee.Length < 3)
                     return BadRequest("Payee must be at least 3 characters for accurate search.");
 
-                var data = _repo.GetCashBookData(fromDate, toDate, payee);
+                var data = _repo.GetCashBookData(fromDate, toDate, payee, costCtr);
                 decimal totalAmt = data.Sum(x => x.ChqAmt ?? 0m);
 
                 const int MAX_RECORDS = 5000;
@@ -83,6 +100,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetData failed. fromDate={fromDate}, toDate={toDate}, payee={payee}, costCtr={costCtr}", fromDate, toDate, payee, costCtr);
                 System.Diagnostics.Debug.WriteLine($"Error in CashBookReportController: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Error fetching cash-book report: {ex.Message}", ex));
             }

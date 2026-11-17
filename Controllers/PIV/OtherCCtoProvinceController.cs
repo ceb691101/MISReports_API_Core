@@ -1,15 +1,18 @@
 ﻿//05.Branch wise PIV Collections by Other Cost Centers relevant to the Province
 
+using MISReports_Api.Compat;
 using MISReports_Api.Repositories;
 using System;
 using System.Globalization;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/othercctoprovince")]
     public class OtherCCtoProvinceController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly OtherCCtoProvinceRepository _repo = new OtherCCtoProvinceRepository();
 
         /// <summary>
@@ -18,7 +21,7 @@ namespace MISReports_Api.Controllers
         /// </summary>
         [HttpGet]
         [Route("get")]
-        public IHttpActionResult Get(string compId, string fromDate, string toDate)
+        public IActionResult Get(string compId, string fromDate, string toDate)
         {
             if (string.IsNullOrWhiteSpace(compId) ||
                 string.IsNullOrWhiteSpace(fromDate) ||
@@ -40,6 +43,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "Get failed. compId={compId}, fromDate={fromDate}, toDate={toDate}", compId, fromDate, toDate);
                 return InternalServerError(new Exception("Error while fetching Other CC to Province report: " + ex.Message));
             }
         }

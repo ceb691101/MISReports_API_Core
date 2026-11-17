@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -10,6 +10,8 @@ namespace MISReports_Api.DAL
 {
     public class ProjectCommitmentSummaryRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public async Task<List<ProjectCommitmentSummaryModel>> GetProjectCommitmentSummary(string deptId)
         {
             var resultList = new List<ProjectCommitmentSummaryModel>();
@@ -88,6 +90,7 @@ namespace MISReports_Api.DAL
                 }
                 catch (Exception ex)
                 {
+                    logger.Warn(ex, "GetProjectCommitmentSummary attempt failed; retrying / trying next option. deptId={deptId}", deptId);
                     lastException = ex;
                 }
             }

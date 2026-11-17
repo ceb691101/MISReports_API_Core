@@ -1,20 +1,23 @@
 ﻿// Controllers/BillCycleController.cs
+using MISReports_Api.Compat;
 using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/billcycle")]
     public class BillCycleController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly BillCycleRepository _repository = new BillCycleRepository();
 
         [HttpGet]
         [Route("max")]
-        public IHttpActionResult GetMaxBillCycle()
+        public IActionResult GetMaxBillCycle()
         {
             try
             {
@@ -28,6 +31,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaxBillCycle failed");
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -39,7 +43,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("customerType/{custType}")]
-        public IHttpActionResult GetCustomerTypeDescription(string custType)
+        public IActionResult GetCustomerTypeDescription(string custType)
         {
             try
             {
@@ -53,6 +57,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCustomerTypeDescription failed. custType={custType}", custType);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,

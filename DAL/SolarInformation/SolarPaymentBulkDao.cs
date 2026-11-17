@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.SolarInformation;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.SolarInformation
@@ -136,14 +137,14 @@ namespace MISReports_Api.DAL.SolarInformation
             }
         }
 
-        private List<BulkRawData> GetBulkData(OleDbConnection conn, SolarPaymentBulkRequest request)
+        private List<BulkRawData> GetBulkData(DbConnection conn, SolarPaymentBulkRequest request)
         {
             var results = new List<BulkRawData>();
             string sql = BuildBulkQuery(request);
 
             logger.Debug($"Main query SQL: {sql}");
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.CommandTimeout = 300; // 5 minutes
                 AddParameters(cmd, request);
@@ -178,7 +179,7 @@ namespace MISReports_Api.DAL.SolarInformation
             return results;
         }
 
-        private Dictionary<string, AreaInformation> GetAreaInformationBatch(OleDbConnection conn, List<string> areaCodes)
+        private Dictionary<string, AreaInformation> GetAreaInformationBatch(DbConnection conn, List<string> areaCodes)
         {
             var results = new Dictionary<string, AreaInformation>();
 
@@ -195,7 +196,7 @@ namespace MISReports_Api.DAL.SolarInformation
 
                 logger.Debug($"Area info query: {sql}");
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.CommandTimeout = 300;
                     foreach (var areaCode in areaCodes)
@@ -229,7 +230,7 @@ namespace MISReports_Api.DAL.SolarInformation
             return results;
         }
 
-        private Dictionary<string, string> GetCustomerNamesBatch(OleDbConnection conn, List<string> accountNumbers)
+        private Dictionary<string, string> GetCustomerNamesBatch(DbConnection conn, List<string> accountNumbers)
         {
             var results = new Dictionary<string, string>();
 
@@ -245,7 +246,7 @@ namespace MISReports_Api.DAL.SolarInformation
 
                 logger.Debug($"Customer names query for {accountNumbers.Count} accounts");
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.CommandTimeout = 300;
                     foreach (var accNbr in accountNumbers)
@@ -275,7 +276,7 @@ namespace MISReports_Api.DAL.SolarInformation
             return results;
         }
 
-        private Dictionary<string, ChargesInformation> GetChargesBatch(OleDbConnection conn, string billCycle, List<string> accountNumbers)
+        private Dictionary<string, ChargesInformation> GetChargesBatch(DbConnection conn, string billCycle, List<string> accountNumbers)
         {
             var results = new Dictionary<string, ChargesInformation>();
 
@@ -291,7 +292,7 @@ namespace MISReports_Api.DAL.SolarInformation
 
                 logger.Debug($"Charges query for {accountNumbers.Count} accounts");
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.CommandTimeout = 300;
                     cmd.Parameters.AddWithValue("@billCycle", billCycle);
@@ -331,7 +332,7 @@ namespace MISReports_Api.DAL.SolarInformation
             return results;
         }
 
-        private Dictionary<string, string> GetAgreementDatesBatch(OleDbConnection conn, List<string> accountNumbers)
+        private Dictionary<string, string> GetAgreementDatesBatch(DbConnection conn, List<string> accountNumbers)
         {
             var results = new Dictionary<string, string>();
 
@@ -347,7 +348,7 @@ namespace MISReports_Api.DAL.SolarInformation
 
                 logger.Debug($"Agreement dates query for {accountNumbers.Count} accounts");
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.CommandTimeout = 300;
                     foreach (var accNbr in accountNumbers)
@@ -436,7 +437,7 @@ namespace MISReports_Api.DAL.SolarInformation
             return baseQuery;
         }
 
-        private void AddParameters(OleDbCommand cmd, SolarPaymentBulkRequest request)
+        private void AddParameters(DbCommand cmd, SolarPaymentBulkRequest request)
         {
             switch (request.ReportType)
             {
@@ -464,7 +465,7 @@ namespace MISReports_Api.DAL.SolarInformation
         }
 
         // Helper methods
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -478,7 +479,7 @@ namespace MISReports_Api.DAL.SolarInformation
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, string columnName)
+        private int GetIntValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -497,7 +498,7 @@ namespace MISReports_Api.DAL.SolarInformation
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {

@@ -1,18 +1,21 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/inquirycashbookunpostedcancel")]
     public class InquiryCashBookUnpostedCancelController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly InquiryCashBookUnpostedCancelDAL _dal = new InquiryCashBookUnpostedCancelDAL();
 
         // PATH: /api/inquirycashbookunpostedcancel/report/2026-01-01/2026-01-31/100
         [HttpGet]
         [Route("report/{fromDate}/{toDate}/{costCtr}")]
-        public IHttpActionResult GetReport(string fromDate, string toDate, string costCtr)
+        public IActionResult GetReport(string fromDate, string toDate, string costCtr)
         {
             return ExecuteQuery(fromDate, toDate, costCtr);
         }
@@ -20,12 +23,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/inquirycashbookunpostedcancel/report?fromDate=2026-01-01&toDate=2026-01-31&costCtr=100
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string costCtr)
+        public IActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string costCtr)
         {
             return ExecuteQuery(fromDate, toDate, costCtr);
         }
 
-        private IHttpActionResult ExecuteQuery(string fromDate, string toDate, string costCtr)
+        private IActionResult ExecuteQuery(string fromDate, string toDate, string costCtr)
         {
             try
             {
@@ -75,6 +78,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. fromDate={fromDate}, toDate={toDate}, costCtr={costCtr}", fromDate, toDate, costCtr);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

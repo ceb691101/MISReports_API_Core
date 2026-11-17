@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -10,6 +10,8 @@ namespace MISReports_Api.DAL
 {
     public class JobSearchMainTableRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
         public async Task<List<JobSearchMainTable>> SearchAsync(
@@ -138,6 +140,7 @@ ORDER BY ar.application_id";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "SearchAsync failed (exception rethrown). applicationId={applicationId}, applicationNo={applicationNo}, projectNo={projectNo}, idNo={idNo}, accountNo={accountNo}, telephone={telephone}", applicationId, applicationNo, projectNo, idNo, accountNo, telephone);
                 Debug.WriteLine($"JobSearchMainTableRepository error: {ex.Message}\n{ex.StackTrace}");
                 throw;
             }

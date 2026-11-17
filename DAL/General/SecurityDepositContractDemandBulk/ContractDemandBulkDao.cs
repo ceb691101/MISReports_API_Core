@@ -1,10 +1,11 @@
+﻿using MISReports_Api.Compat;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Models.General;
 using MISReports_Api.Models.SolarInformation;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 
@@ -61,7 +62,7 @@ namespace MISReports_Api.DAL.General.SecurityDepositContractDemandBulk
         /// <summary>
         /// Gets data for Area report type
         /// </summary>
-        private List<SecDepositConDemandBulkModel> GetAreaReportData(OleDbConnection conn, SecDepositConDemandRequest request)
+        private List<SecDepositConDemandBulkModel> GetAreaReportData(DbConnection conn, SecDepositConDemandRequest request)
         {
             var results = new List<SecDepositConDemandBulkModel>();
 
@@ -79,7 +80,7 @@ namespace MISReports_Api.DAL.General.SecurityDepositContractDemandBulk
 
                 logger.Info($"Executing Area SQL with BillCycle={request.BillCycle}, AreaCode={request.AreaCode}");
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@bill_cycle", request.BillCycle);
                     cmd.Parameters.AddWithValue("@area_cd", request.AreaCode);
@@ -110,7 +111,7 @@ namespace MISReports_Api.DAL.General.SecurityDepositContractDemandBulk
         /// <summary>
         /// Gets data for Province report type with area and province information
         /// </summary>
-        private List<SecDepositConDemandBulkModel> GetProvinceReportData(OleDbConnection conn, SecDepositConDemandRequest request)
+        private List<SecDepositConDemandBulkModel> GetProvinceReportData(DbConnection conn, SecDepositConDemandRequest request)
         {
             var results = new List<SecDepositConDemandBulkModel>();
 
@@ -132,7 +133,7 @@ namespace MISReports_Api.DAL.General.SecurityDepositContractDemandBulk
 
                 logger.Info($"Executing Province SQL with BillCycle={request.BillCycle}, ProvCode={request.ProvCode}");
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@bill_cycle", request.BillCycle);
                     cmd.Parameters.AddWithValue("@prov_code", request.ProvCode);
@@ -169,7 +170,7 @@ namespace MISReports_Api.DAL.General.SecurityDepositContractDemandBulk
         /// Maps database reader to model using ordinal positions.
         /// Columns 0-5: string fields. Columns 6-12: numeric fields.
         /// </summary>
-        private SecDepositConDemandBulkModel MapReaderToModel(OleDbDataReader reader)
+        private SecDepositConDemandBulkModel MapReaderToModel(DbDataReader reader)
         {
             var model = new SecDepositConDemandBulkModel();
 
@@ -214,7 +215,7 @@ namespace MISReports_Api.DAL.General.SecurityDepositContractDemandBulk
             return model;
         }
 
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -230,7 +231,7 @@ namespace MISReports_Api.DAL.General.SecurityDepositContractDemandBulk
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {

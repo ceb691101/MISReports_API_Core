@@ -1,22 +1,25 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/costcenterworkinprogress")]
     public class CostCenterWorkInProgressController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly CostCenterWorkInProgressRepository _repository = new CostCenterWorkInProgressRepository();
 
         [HttpGet]
         [Route("{deptId}")]
-        public async Task<IHttpActionResult> GetCostCenterWorkInProgress(string deptId)
+        public async Task<IActionResult> GetCostCenterWorkInProgress(string deptId)
         {
             Debug.WriteLine($"API Request received for deptId: {deptId}");
 
@@ -35,6 +38,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCostCenterWorkInProgress failed. deptId={deptId}", deptId);
                 // More detailed error logging
                 Debug.WriteLine($"Error in API: {ex.ToString()}");
 

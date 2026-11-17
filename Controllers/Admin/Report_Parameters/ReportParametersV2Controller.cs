@@ -1,6 +1,7 @@
+using MISReports_Api.Compat;
 using System;
 using System.Net;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.Models.Admin.Report_Parameters;
 using MISReports_Api.Services.Admin.Report_Parameters;
 
@@ -9,7 +10,13 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
     [RoutePrefix("api")]
     public class ReportParametersV2Controller : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly IReportParameterService _service;
+
+        // Web API always used this constructor; tell ASP.NET Core to do the same.
+
+        [Microsoft.Extensions.DependencyInjection.ActivatorUtilitiesConstructor]
 
         public ReportParametersV2Controller() : this(new ReportParameterService())
         {
@@ -22,7 +29,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
 
         [HttpGet]
         [Route("parameters")]
-        public IHttpActionResult GetParameters()
+        public IActionResult GetParameters()
         {
             try
             {
@@ -31,6 +38,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetParameters failed");
                 return Content(HttpStatusCode.InternalServerError,
                     ApiResponse<object>.Fail("Failed to fetch parameters: " + ex.Message));
             }
@@ -38,7 +46,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
 
         [HttpPost]
         [Route("parameters")]
-        public IHttpActionResult SaveParameter([FromBody] ParameterRequestModel request)
+        public IActionResult SaveParameter([FromBody] ParameterRequestModel request)
         {
             if (request == null)
             {
@@ -52,10 +60,12 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
             }
             catch (ArgumentException ex)
             {
+                logger.Warn("SaveParameter rejected: {error}. request={@request}", ex.Message, request);
                 return Content(HttpStatusCode.BadRequest, ApiResponse<object>.Fail(ex.Message));
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "SaveParameter failed. request={@request}", request);
                 return Content(HttpStatusCode.InternalServerError,
                     ApiResponse<object>.Fail("Failed to save parameter: " + ex.Message));
             }
@@ -63,7 +73,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
 
         [HttpDelete]
         [Route("parameters/{name}")]
-        public IHttpActionResult DeleteParameter(string name)
+        public IActionResult DeleteParameter(string name)
         {
             try
             {
@@ -73,10 +83,12 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
             }
             catch (ArgumentException ex)
             {
+                logger.Warn("DeleteParameter rejected: {error}. name={name}", ex.Message, name);
                 return Content(HttpStatusCode.BadRequest, ApiResponse<object>.Fail(ex.Message));
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "DeleteParameter failed. name={name}", name);
                 return Content(HttpStatusCode.InternalServerError,
                     ApiResponse<object>.Fail("Failed to delete parameter: " + ex.Message));
             }
@@ -84,7 +96,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
 
         [HttpGet]
         [Route("reports")]
-        public IHttpActionResult GetReports()
+        public IActionResult GetReports()
         {
             try
             {
@@ -93,6 +105,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReports failed");
                 return Content(HttpStatusCode.InternalServerError,
                     ApiResponse<object>.Fail("Failed to fetch reports: " + ex.Message));
             }
@@ -100,7 +113,7 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
 
         [HttpPost]
         [Route("populate")]
-        public IHttpActionResult Populate()
+        public IActionResult Populate()
         {
             try
             {
@@ -110,10 +123,12 @@ namespace MISReports_Api.Controllers.Admin.Report_Parameters
             }
             catch (InvalidOperationException ex)
             {
+                logger.Warn("Populate rejected: {error}", ex.Message);
                 return Content(HttpStatusCode.BadRequest, ApiResponse<object>.Fail(ex.Message));
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "Populate failed");
                 return Content(HttpStatusCode.InternalServerError,
                     ApiResponse<object>.Fail("Populate failed: " + ex.Message));
             }

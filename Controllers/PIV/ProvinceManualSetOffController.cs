@@ -1,20 +1,23 @@
-﻿using MISReports_Api.DAL.PIV;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.PIV;
 using MISReports_Api.Models.PIV;
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/province-manual-setoff-report")]
     public class ProvinceManualSetOffController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ProvinceManualSetOffRepository _repo = new ProvinceManualSetOffRepository();
 
         // GET: api/province-manual-setoff-report/report?fromDate=2025/01/01&toDate=2025/12/31&compId=COMP001
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetReport(string fromDate, string toDate, string compId)
+        public IActionResult GetReport(string fromDate, string toDate, string compId)
         {
             if (string.IsNullOrWhiteSpace(fromDate) ||
                 string.IsNullOrWhiteSpace(toDate) ||
@@ -43,6 +46,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReport failed. fromDate={fromDate}, toDate={toDate}, compId={compId}", fromDate, toDate, compId);
                 return InternalServerError(new Exception("Error generating Province Manual Set-off Report: " + ex.Message));
             }
         }

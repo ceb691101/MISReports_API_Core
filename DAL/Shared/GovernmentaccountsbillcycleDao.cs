@@ -1,8 +1,9 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.General;
 using NLog;
 using System;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.Shared
 {
@@ -32,7 +33,7 @@ namespace MISReports_Api.DAL.Shared
 
                     string sql = "SELECT MAX(bill_cycle) FROM prn_dat_1 WHERE area_code = ?";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@area_code", areaCode);
                         object result = cmd.ExecuteScalar();
@@ -51,7 +52,7 @@ namespace MISReports_Api.DAL.Shared
                     }
                 }
             }
-            catch (OleDbException ex)
+            catch (DbException ex)
             {
                 logger.Error(ex, $"DB error in GovernmentAccountsBillCycleDao for area {areaCode}.");
                 model.ErrorMessage = "Error retrieving max bill cycle.";

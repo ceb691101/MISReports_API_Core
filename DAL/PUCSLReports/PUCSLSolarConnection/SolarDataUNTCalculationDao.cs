@@ -1,3 +1,4 @@
+﻿using MISReports_Api.Compat;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Helpers;
 using MISReports_Api.Models.PUCSLReports;
@@ -5,7 +6,7 @@ using MISReports_Api.Models.PUCSLReports.PUCSLSolarConnection;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
 {
@@ -290,7 +291,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     conn.Open();
                     string sql = "SELECT tariff_cat FROM tariff_category ORDER BY seq";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -334,7 +335,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                               "WHERE c.tariff_cat=t.tariff_cat AND t.tariff_cat=? AND c.cus_cat=?";
                     }
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         if (isNetPlusPlus)
                         {
@@ -420,7 +421,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 1) Execute Count Query
-                    using (var cmd = new OleDbCommand(countSql, conn))
+                    using (var cmd = Informix.CreateCommand(countSql, conn))
                     {
                         if (rt == SolarReportType.Province || rt == SolarReportType.Region)
                         {
@@ -444,7 +445,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 2) Execute Units Query
-                    using (var cmd = new OleDbCommand(unitsSql, conn))
+                    using (var cmd = Informix.CreateCommand(unitsSql, conn))
                     {
                         if (rt == SolarReportType.Province || rt == SolarReportType.Region)
                         {
@@ -491,8 +492,12 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
 
             try
             {
-                string bulkTypeCode = (rt == SolarReportType.Province)
+                /*string bulkTypeCode = (rt == SolarReportType.Province)
                     ? typeCode.PadLeft(2, '0')  // "3" → "03"
+                    : typeCode;*/ // -By Dinuli 2026 - 10 - 02
+
+                string bulkTypeCode = (rt == SolarReportType.Province && char.IsDigit(typeCode[0]))
+                    ? typeCode.PadLeft(2, '0')
                     : typeCode;
 
                 using (var conn = _dbConnection.GetConnection(true))
@@ -535,7 +540,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 1) Execute Count Query
-                    using (var cmd = new OleDbCommand(countSql, conn))
+                    using (var cmd = Informix.CreateCommand(countSql, conn))
                     {
                         if (rt == SolarReportType.Province)
                         {
@@ -565,7 +570,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 2) Execute Units Query
-                    using (var cmd = new OleDbCommand(unitsSql, conn))
+                    using (var cmd = Informix.CreateCommand(unitsSql, conn))
                     {
                         if (rt == SolarReportType.Province)
                         {
@@ -661,7 +666,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 1) Execute Count Query
-                    using (var cmd = new OleDbCommand(countSql, conn))
+                    using (var cmd = Informix.CreateCommand(countSql, conn))
                     {
                         if (rt == SolarReportType.Province || rt == SolarReportType.Region)
                         {
@@ -685,7 +690,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 2) Execute Units Query
-                    using (var cmd = new OleDbCommand(unitsSql, conn))
+                    using (var cmd = Informix.CreateCommand(unitsSql, conn))
                     {
                         if (rt == SolarReportType.Province || rt == SolarReportType.Region)
                         {
@@ -734,8 +739,12 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
 
             try
             {
-                string bulkTypeCode = (rt == SolarReportType.Province)
+                /*string bulkTypeCode = (rt == SolarReportType.Province)
                     ? typeCode.PadLeft(2, '0')  // "3" → "03"
+                    : typeCode;*/ // -By Dinuli 2026 - 10 - 02
+
+                string bulkTypeCode = (rt == SolarReportType.Province && char.IsDigit(typeCode[0]))
+                    ? typeCode.PadLeft(2, '0')
                     : typeCode;
 
                 using (var conn = _dbConnection.GetConnection(true))
@@ -775,7 +784,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 1) Execute Count Query
-                    using (var cmd = new OleDbCommand(countSql, conn))
+                    using (var cmd = Informix.CreateCommand(countSql, conn))
                     {
                         if (rt == SolarReportType.Province)
                         {
@@ -805,7 +814,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 2) Execute Units Query
-                    using (var cmd = new OleDbCommand(unitsSql, conn))
+                    using (var cmd = Informix.CreateCommand(unitsSql, conn))
                     {
                         if (rt == SolarReportType.Province)
                         {
@@ -900,7 +909,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 1) Execute Count/Import Query
-                    using (var cmd = new OleDbCommand(countSql, conn))
+                    using (var cmd = Informix.CreateCommand(countSql, conn))
                     {
                         if (rt == SolarReportType.Province || rt == SolarReportType.Region)
                         {
@@ -925,7 +934,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 2) Execute Units Query
-                    using (var cmd = new OleDbCommand(unitsSql, conn))
+                    using (var cmd = Informix.CreateCommand(unitsSql, conn))
                     {
                         if (rt == SolarReportType.Province || rt == SolarReportType.Region)
                         {
@@ -972,8 +981,12 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
 
             try
             {
-                string bulkTypeCode = (rt == SolarReportType.Province)
+                /* string bulkTypeCode = (rt == SolarReportType.Province)
                     ? typeCode.PadLeft(2, '0')  // "3" → "03"
+                    : typeCode;*/ // -By Dinuli 2026 - 10 - 02
+
+                string bulkTypeCode = (rt == SolarReportType.Province && char.IsDigit(typeCode[0]))
+                    ? typeCode.PadLeft(2, '0')
                     : typeCode;
 
                 using (var conn = _dbConnection.GetConnection(true))
@@ -1015,7 +1028,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 1) Execute Count/Import Query
-                    using (var cmd = new OleDbCommand(countSql, conn))
+                    using (var cmd = Informix.CreateCommand(countSql, conn))
                     {
                         if (rt == SolarReportType.Province)
                         {
@@ -1046,7 +1059,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 2) Execute Units Query
-                    using (var cmd = new OleDbCommand(unitsSql, conn))
+                    using (var cmd = Informix.CreateCommand(unitsSql, conn))
                     {
                         if (rt == SolarReportType.Province)
                         {
@@ -1140,7 +1153,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 1) Execute Count Query
-                    using (var cmd = new OleDbCommand(countSql, conn))
+                    using (var cmd = Informix.CreateCommand(countSql, conn))
                     {
                         if (rt == SolarReportType.Province || rt == SolarReportType.Region)
                         {
@@ -1164,7 +1177,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 2) Execute Units Query
-                    using (var cmd = new OleDbCommand(unitsSql, conn))
+                    using (var cmd = Informix.CreateCommand(unitsSql, conn))
                     {
                         if (rt == SolarReportType.Province || rt == SolarReportType.Region)
                         {
@@ -1211,8 +1224,12 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
 
             try
             {
-                string bulkTypeCode = (rt == SolarReportType.Province)
+                /* string bulkTypeCode = (rt == SolarReportType.Province)
                     ? typeCode.PadLeft(2, '0')  // "3" → "03"
+                    : typeCode;*/ // -By Dinuli 2026 - 10 - 02
+
+                string bulkTypeCode = (rt == SolarReportType.Province && char.IsDigit(typeCode[0]))
+                    ? typeCode.PadLeft(2, '0')
                     : typeCode;
 
                 using (var conn = _dbConnection.GetConnection(true))
@@ -1252,7 +1269,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 1) Execute Count Query
-                    using (var cmd = new OleDbCommand(countSql, conn))
+                    using (var cmd = Informix.CreateCommand(countSql, conn))
                     {
                         if (rt == SolarReportType.Province)
                         {
@@ -1282,7 +1299,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     }
 
                     // 2) Execute Units Query
-                    using (var cmd = new OleDbCommand(unitsSql, conn))
+                    using (var cmd = Informix.CreateCommand(unitsSql, conn))
                     {
                         if (rt == SolarReportType.Province)
                         {
@@ -1325,6 +1342,14 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
         // ================================================================
         //  UTILITY
         // ================================================================
+        private string GetBulkTypeCode(SolarReportType rt, string typeCode)
+        {
+            if (rt != SolarReportType.Province || string.IsNullOrEmpty(typeCode))
+                return typeCode;
+
+            return int.TryParse(typeCode, out _) ? typeCode.PadLeft(2, '0') : typeCode;
+        }
+
         private SolarReportType MapReportType(PUCSLReportCategory cat)
         {
             switch (cat)

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Globalization;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 
@@ -14,6 +12,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/chqdetailsexpregion")]
     public class ChqDetailsExpRegionController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ChequeDetailsExpRegionDAL _dal;
 
         public ChqDetailsExpRegionController()
@@ -25,7 +25,7 @@ namespace MISReports_Api.Controllers
         // glCode is optional
         [HttpGet]
         [Route("report/{fromDate}/{toDate}/{compId}")]
-        public IHttpActionResult GetReport(string fromDate, string toDate, string compId, [FromUri] string glCode = "")
+        public IActionResult GetReport(string fromDate, string toDate, string compId, [FromUri] string glCode = "")
         {
             return ExecuteQuery(fromDate, toDate, compId, glCode);
         }
@@ -33,12 +33,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/chqdetailsexpregion/report?fromDate=2026-01-01&toDate=2026-01-31&compId=DISCO1&glCode=
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string compId, [FromUri] string glCode = "")
+        public IActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string compId, [FromUri] string glCode = "")
         {
             return ExecuteQuery(fromDate, toDate, compId, glCode);
         }
 
-        private IHttpActionResult ExecuteQuery(string fromDate, string toDate, string compId, string glCode)
+        private IActionResult ExecuteQuery(string fromDate, string toDate, string compId, string glCode)
         {
             try
             {
@@ -92,6 +92,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. fromDate={fromDate}, toDate={toDate}, compId={compId}, glCode={glCode}", fromDate, toDate, compId, glCode);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

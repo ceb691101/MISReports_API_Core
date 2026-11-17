@@ -1,9 +1,9 @@
 ﻿// File: Repositories/ProvincePIVprovincialRepository.cs
+using MISReports_Api.Compat;
 using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace MISReports_Api.Repositories
 {

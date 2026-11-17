@@ -1,8 +1,9 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Helpers;
 using MISReports_Api.Models.General;
 using System;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.Shared
 {
@@ -17,6 +18,8 @@ namespace MISReports_Api.DAL.Shared
     /// </summary>
     public class ArrearsPositionBillCycleDao
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DBConnection _dbConnection = new DBConnection();
 
         public ArrearsPositionBillCycleModel GetMaxBillCycle(string areaCode)
@@ -32,7 +35,7 @@ namespace MISReports_Api.DAL.Shared
                 {
                     string sql = "SELECT MAX(bill_cycle) FROM areas WHERE area_code = ?";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@area_code", areaCode);
 
@@ -57,13 +60,15 @@ namespace MISReports_Api.DAL.Shared
                         }
                     }
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
-                    System.Diagnostics.Trace.WriteLine($"OleDbException in ArrearsPositionBillCycleDao: {ex.Message}");
+                    logger.Error(ex, "GetMaxBillCycle failed. areaCode={areaCode}", areaCode);
+                    System.Diagnostics.Trace.WriteLine($"DbException in ArrearsPositionBillCycleDao: {ex.Message}");
                     model.ErrorMessage = "Database error retrieving max bill cycle.";
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetMaxBillCycle failed. areaCode={areaCode}", areaCode);
                     System.Diagnostics.Trace.WriteLine($"Unexpected error in ArrearsPositionBillCycleDao: {ex.Message}");
                     model.ErrorMessage = "Unexpected error occurred.";
                 }

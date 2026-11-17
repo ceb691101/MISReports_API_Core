@@ -1,17 +1,21 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Globalization;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using ChqApp.DAL;
 using ChqApp.Models;
 
 namespace ChqApp.Controllers
 {
+    // Was reached through the Web API convention route "api/{controller}"; same URL kept.
+    [Route("api/CashSheetDateRangePayee")]
     public class CashSheetDateRangePayeeController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         [HttpGet]
-        public IHttpActionResult Get(string costCtr, string fromDate, string toDate, string payee)
+        public IActionResult Get(string costCtr, string fromDate, string toDate, string payee)
         {
             if (string.IsNullOrWhiteSpace(costCtr))
                 return BadRequest("costCtr is required.");
@@ -34,6 +38,7 @@ namespace ChqApp.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "Get failed. costCtr={costCtr}, fromDate={fromDate}, toDate={toDate}, payee={payee}", costCtr, fromDate, toDate, payee);
                 return InternalServerError(ex);
             }
         }

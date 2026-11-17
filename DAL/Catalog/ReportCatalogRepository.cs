@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models.Catalog;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.Catalog;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +17,8 @@ namespace MISReports_Api.DAL.Catalog
 
     public class ReportCatalogRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string _connectionString =
             ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
@@ -155,6 +157,7 @@ namespace MISReports_Api.DAL.Catalog
                     }
                     catch (Exception exParam)
                     {
+                        logger.Error(exParam, "GetAllCatalogReportsAsync failed. epfNo={epfNo}, roleId={roleId}", epfNo, roleId);
                         Debug.WriteLine("Warning: Failed to fetch param descriptions: " + exParam.Message);
                     }
 
@@ -257,6 +260,7 @@ namespace MISReports_Api.DAL.Catalog
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAllCatalogReportsAsync failed (exception rethrown). epfNo={epfNo}, roleId={roleId}", epfNo, roleId);
                 Debug.WriteLine("Error in GetAllCatalogReportsAsync: " + ex.Message);
                 throw;
             }

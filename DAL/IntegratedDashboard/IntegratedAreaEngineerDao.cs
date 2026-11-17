@@ -1,3 +1,4 @@
+using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace MISReports_Api.DAL.IntegratedDashboard
 {
     public class IntegratedAreaEngineerDao
     {
-        private static readonly string ConnectionString = System.Configuration.ConfigurationManager
+        private static readonly string ConnectionString = MISReports_Api.Compat.ConfigurationManager
             .ConnectionStrings["HQOracle"].ConnectionString;
 
         private static readonly AreaEngineerPivTotalDAL PivTotalDal = new AreaEngineerPivTotalDAL();

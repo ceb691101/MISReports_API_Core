@@ -1,21 +1,24 @@
-﻿using MISReports_Api.DAL.Catalog;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.Catalog;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers.Catalog
 {
     [RoutePrefix("api/reportcatalog")]
     public class ReportCatalogController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ReportCatalogRepository _repository = new ReportCatalogRepository();
 
         // GET api/reportcatalog/all?epfNo=12345&roleId=ROLE_ADMIN
         [HttpGet]
         [Route("all")]
-        public async Task<IHttpActionResult> GetAllReports(string epfNo = null, string roleId = null)
+        public async Task<IActionResult> GetAllReports(string epfNo = null, string roleId = null)
         {
             try
             {
@@ -31,6 +34,7 @@ namespace MISReports_Api.Controllers.Catalog
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAllReports failed. epfNo={epfNo}, roleId={roleId}", epfNo, roleId);
                 var errorResponse = new
                 {
                     data = (object)null,

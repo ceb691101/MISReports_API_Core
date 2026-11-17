@@ -1,3 +1,4 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DAL.Analysis;
 using MISReports_Api.DAL.Shared;
 using MISReports_Api.Models.Analysis;
@@ -5,19 +6,21 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
 	[RoutePrefix("api/analysis/solar-age")]
 	public class AnalysisController : ApiController
 	{
+		private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
 		private readonly AreasDao _areasDao = new AreasDao();
 		private readonly SolarAgeAnalysisDao _solarAgeAnalysisDao = new SolarAgeAnalysisDao();
 
 		[HttpGet]
 		[Route("areas")]
-		public IHttpActionResult GetAreas()
+		public IActionResult GetAreas()
 		{
 			try
 			{
@@ -31,6 +34,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "GetAreas failed");
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,
@@ -42,7 +46,7 @@ namespace MISReports_Api.Controllers
 
 		[HttpGet]
 		[Route("db-check")]
-		public IHttpActionResult CheckDatabase([FromUri] string areaCode)
+		public IActionResult CheckDatabase([FromUri] string areaCode)
 		{
 			if (string.IsNullOrWhiteSpace(areaCode))
 			{
@@ -69,6 +73,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "CheckDatabase failed. areaCode={areaCode}", areaCode);
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,
@@ -82,7 +87,7 @@ namespace MISReports_Api.Controllers
 		/*
 		[HttpGet]
 		[Route("bill-cycles")]
-		public IHttpActionResult GetBillCycles([FromUri] string areaCode, [FromUri] int take = 20)
+		public IActionResult GetBillCycles([FromUri] string areaCode, [FromUri] int take = 20)
 		{
 			// This endpoint was originally implemented here to return bill cycles
 			// for the solar-age analysis. The project now exposes a shared
@@ -123,7 +128,7 @@ namespace MISReports_Api.Controllers
 		// view details - Age Analysis of Solar Power Consumers
 		[HttpGet]
 		[Route("view")]
-		public IHttpActionResult GetAgeAnalysis(
+		public IActionResult GetAgeAnalysis(
 			[FromUri] string areaCode,
 			[FromUri] string billCycle,
 			[FromUri] string ageBand)
@@ -173,6 +178,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "GetAgeAnalysis failed. areaCode={areaCode}, billCycle={billCycle}, ageBand={ageBand}", areaCode, billCycle, ageBand);
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,
@@ -185,7 +191,7 @@ namespace MISReports_Api.Controllers
 		//full report - Age Analysis of Solar Power Consumers
 		[HttpGet]
 		[Route("full-report")]
-		public IHttpActionResult GetFullReport(
+		public IActionResult GetFullReport(
 			[FromUri] string areaCode,
 			[FromUri] string billCycle)
 		{
@@ -229,6 +235,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "GetFullReport failed. areaCode={areaCode}, billCycle={billCycle}", areaCode, billCycle);
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,

@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models.PhysicalVerification;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.PhysicalVerification;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Threading.Tasks;
 
 namespace MISReports_Api.DAL.PhysicalVerification

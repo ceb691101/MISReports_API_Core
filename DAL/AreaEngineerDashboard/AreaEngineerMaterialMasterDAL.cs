@@ -1,3 +1,4 @@
+using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace MISReports_Api.DAL.AreaEngineerDashboard
 {
     public class AreaEngineerMaterialMasterDAL
     {
-        private static readonly string ConnectionString = System.Configuration.ConfigurationManager
+        private static readonly string ConnectionString = MISReports_Api.Compat.ConfigurationManager
             .ConnectionStrings["HQOracle"].ConnectionString;
 
         public AreaEngineerMaterialMasterSummaryModel Fetch(string companyId)

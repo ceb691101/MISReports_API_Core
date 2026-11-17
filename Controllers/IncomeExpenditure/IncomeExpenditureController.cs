@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace MISReports_Api.Controllers
@@ -12,11 +13,13 @@ namespace MISReports_Api.Controllers
     public class IncomeExpenditureController : ApiController
 
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly IncomeExpenditureRepository _repository = new IncomeExpenditureRepository();
         // one  company details 
         [HttpGet]
         [Route("{costctr}/{repyear}/{repmonth}")]
-        public IHttpActionResult GetIncomeExpenditure(string costctr, string repyear, string repmonth)
+        public IActionResult GetIncomeExpenditure(string costctr, string repyear, string repmonth)
         {
             try
             {
@@ -32,6 +35,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetIncomeExpenditure failed. costctr={costctr}, repyear={repyear}, repmonth={repmonth}", costctr, repyear, repmonth);
                 var errorResponse = new
                 {
                     data = (object)null,
@@ -45,7 +49,7 @@ namespace MISReports_Api.Controllers
         //get department  User wise
         [HttpGet]
         [Route("departments/{epfno}")]
-        public IHttpActionResult GetDepartmentsByUser(string epfno)
+        public IActionResult GetDepartmentsByUser(string epfno)
         {
             try
             {
@@ -61,6 +65,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetDepartmentsByUser failed. epfno={epfno}", epfno);
                 var errorResponse = new
                 {
                     data = (object)null,
@@ -76,7 +81,7 @@ namespace MISReports_Api.Controllers
         [HttpGet]
         [Route("Usercompanies/{epfno}/{lvl_no}")]
 
-        public IHttpActionResult GetCompaniesByUserLevel(string epfno, string lvl_no)
+        public IActionResult GetCompaniesByUserLevel(string epfno, string lvl_no)
         {
             try
             {
@@ -92,6 +97,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCompaniesByUserLevel failed. epfno={epfno}, lvl_no={lvl_no}", epfno, lvl_no);
                 var errorResponse = new
                 {
                     data = (object)null,

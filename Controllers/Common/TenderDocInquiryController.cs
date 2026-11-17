@@ -1,19 +1,22 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/tenderdocinquiry")]
     public class TenderDocInquiryController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly TenderDocInquiryDAL _dal = new TenderDocInquiryDAL();
 
         // QUERY: /api/tenderdocinquiry/report?fromDate=2026-01-01&toDate=2026-01-31&costCtr=100&refNo=TND
         // (refNo may contain characters unsafe for a route segment, so query-string only)
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string costCtr, [FromUri] string refNo)
+        public IActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string costCtr, [FromUri] string refNo)
         {
             try
             {
@@ -66,6 +69,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetQuery failed. fromDate={fromDate}, toDate={toDate}, costCtr={costCtr}, refNo={refNo}", fromDate, toDate, costCtr, refNo);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

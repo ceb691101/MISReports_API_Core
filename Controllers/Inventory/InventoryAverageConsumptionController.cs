@@ -1,21 +1,24 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/inventoryaverageconsumption")]
     public class InventoryAverageConsumptionController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly InventoryAverageConsumptionRepository _repository = new InventoryAverageConsumptionRepository();
 
         // ---------------------- REPORT ENDPOINT ----------------------
         [HttpGet]
         [Route("report/{costCenter}/{warehouseCode}/{fromDate}/{toDate}")]
-        public IHttpActionResult GetAverageConsumption(string costCenter, string warehouseCode, string fromDate, string toDate)
+        public IActionResult GetAverageConsumption(string costCenter, string warehouseCode, string fromDate, string toDate)
         {
             try
             {
@@ -47,6 +50,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAverageConsumption failed. costCenter={costCenter}, warehouseCode={warehouseCode}, fromDate={fromDate}, toDate={toDate}", costCenter, warehouseCode, fromDate, toDate);
                 Debug.WriteLine($"Error in GetAverageConsumption: {ex}");
                 return Ok(new InventoryAverageConsumptionResponse
                 {
@@ -60,7 +64,7 @@ namespace MISReports_Api.Controllers
         // ---------------------- WAREHOUSE ENDPOINT ----------------------
         [HttpGet]
         [Route("warehouses/{epfNo}")]
-        public IHttpActionResult GetWarehousesByEpfNo(string epfNo, [FromUri] string costCenterId = null)
+        public IActionResult GetWarehousesByEpfNo(string epfNo, [FromUri] string costCenterId = null)
         {
             try
             {
@@ -80,6 +84,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetWarehousesByEpfNo failed. epfNo={epfNo}, costCenterId={costCenterId}", epfNo, costCenterId);
                 Debug.WriteLine($"Error in GetWarehousesByEpfNo: {ex}");
                 return Ok(new WarehouseResponse
                 {

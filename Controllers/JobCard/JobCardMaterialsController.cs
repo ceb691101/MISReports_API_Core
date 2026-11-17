@@ -1,19 +1,22 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/jobcardmaterials")]
     public class JobCardMaterialsController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly JobCardMaterialsRepository _repository = new JobCardMaterialsRepository();
 
         // GET api/jobcardmaterials?projectNo=XXX&costCtr=YYY
         [HttpGet]
         [Route("")]
-        public async Task<IHttpActionResult> GetMaterials([FromUri] string projectNo, [FromUri] string costCtr)
+        public async Task<IActionResult> GetMaterials([FromUri] string projectNo, [FromUri] string costCtr)
         {
             try
             {
@@ -36,6 +39,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaterials failed. projectNo={projectNo}, costCtr={costCtr}", projectNo, costCtr);
                 System.Diagnostics.Trace.WriteLine($"ERROR in JobCardMaterialsController: {ex}");
                 return Ok(new
                 {

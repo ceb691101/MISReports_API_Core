@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models.SRP;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.SRP;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace MISReports_Api.DAL.SRP
 {

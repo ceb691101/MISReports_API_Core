@@ -1,13 +1,15 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace MISReports_Api.DAL
 {
     public class LedgerCardRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
         public List<LedgerCardModel> GetLedgerCardData(string glCode, int repYear, int startMonth, int endMonth)
@@ -129,10 +131,12 @@ ORDER BY
                     }
                     catch (OracleException oex)
                     {
+                        logger.Error(oex, "GetLedgerCardData failed (exception rethrown). glCode={glCode}, repYear={repYear}, startMonth={startMonth}, endMonth={endMonth}", glCode, repYear, startMonth, endMonth);
                         throw new Exception($"Oracle database error occurred while fetching Ledger Card data for GL Code {glCode}. Error: {oex.Message} (Code: {oex.Number})", oex);
                     }
                     catch (Exception ex)
                     {
+                        logger.Error(ex, "GetLedgerCardData failed (exception rethrown). glCode={glCode}, repYear={repYear}, startMonth={startMonth}, endMonth={endMonth}", glCode, repYear, startMonth, endMonth);
                         throw new Exception($"Database error occurred while fetching Ledger Card data for GL Code {glCode}.", ex);
                     }
                 }

@@ -1,10 +1,11 @@
+using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Models.Dashboard;
 using NLog;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Text;
 
 namespace MISReports_Api.DAL.Dashboard
@@ -54,7 +55,7 @@ namespace MISReports_Api.DAL.Dashboard
                         sql = "SELECT COUNT(*) FROM customer WHERE cst_st='0'";
                     }
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         if (hasAreaFilter)
                         {
@@ -188,7 +189,7 @@ namespace MISReports_Api.DAL.Dashboard
                     var summary = new BulkCustomerSummaryModel();
                     string sql = BuildSummarySql(request.ReportType);
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         // Add parameters based on report type
                         if (!string.IsNullOrEmpty(request.CustomerStatus))
@@ -256,7 +257,7 @@ namespace MISReports_Api.DAL.Dashboard
         /// <summary>
         /// Gets customer data based on report type
         /// </summary>
-        private List<CustomerData> GetCustomerData(OleDbConnection conn, BulkCustomerRequest request)
+        private List<CustomerData> GetCustomerData(DbConnection conn, BulkCustomerRequest request)
         {
             var results = new List<CustomerData>();
 
@@ -264,7 +265,7 @@ namespace MISReports_Api.DAL.Dashboard
             {
                 string sql = BuildCustomerQuerySql(request.ReportType, request.IsPaginationEnabled);
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     // Add status parameter if specified
                     if (!string.IsNullOrEmpty(request.CustomerStatus))
@@ -455,7 +456,7 @@ namespace MISReports_Api.DAL.Dashboard
         /// <summary>
         /// Gets area information (province, region) for multiple areas in batch
         /// </summary>
-        private Dictionary<string, AreaInformation> GetAreaInformationBatch(OleDbConnection conn,
+        private Dictionary<string, AreaInformation> GetAreaInformationBatch(DbConnection conn,
             List<string> areaCodes)
         {
             var result = new Dictionary<string, AreaInformation>();
@@ -472,7 +473,7 @@ namespace MISReports_Api.DAL.Dashboard
                                WHERE a.prov_code = p.prov_code 
                                AND a.area_code IN ({parameters})";
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     foreach (var areaCode in areaCodes)
                     {
@@ -530,7 +531,7 @@ namespace MISReports_Api.DAL.Dashboard
         }
 
         // Helper methods
-        private string GetColumnValue(OleDbDataReader reader, string columnName)
+        private string GetColumnValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -544,7 +545,7 @@ namespace MISReports_Api.DAL.Dashboard
             }
         }
 
-        private int GetIntValue(OleDbDataReader reader, string columnName)
+        private int GetIntValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -558,7 +559,7 @@ namespace MISReports_Api.DAL.Dashboard
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {

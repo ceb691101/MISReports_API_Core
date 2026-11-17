@@ -1,19 +1,22 @@
-﻿using MISReports_Api.DAL.PIV;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.PIV;
 using System;
 using System.Globalization;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/pivdetails")]
     public class PIVDetailsController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly PIVDetailsRepository _repo = new PIVDetailsRepository();
 
         // GET: api/pivdetails/get?fromDate=20250401&toDate=20250430
         [HttpGet]
         [Route("get")]
-        public IHttpActionResult Get(string fromDate, string toDate)
+        public IActionResult Get(string fromDate, string toDate)
         {
             if (string.IsNullOrWhiteSpace(fromDate) || string.IsNullOrWhiteSpace(toDate))
             {
@@ -38,6 +41,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "Get failed. fromDate={fromDate}, toDate={toDate}", fromDate, toDate);
                 return InternalServerError(new Exception("Error while fetching PIV Details report: " + ex.Message));
             }
         }

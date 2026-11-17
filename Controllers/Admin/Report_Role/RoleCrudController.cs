@@ -1,21 +1,24 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
 	[RoutePrefix("api/role-report")]
 	public class RoleCrudController : ApiController
 	{
+		private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
 		private readonly RoleCrudRepository _repository = new RoleCrudRepository();
 
 		[HttpPost]
 		[Route("reports/by-category")]
-		public IHttpActionResult GetReportsByCategory([FromBody] ReportsByCategoryRequest request)
+		public IActionResult GetReportsByCategory([FromBody] ReportsByCategoryRequest request)
 		{
 			try
 			{
@@ -63,6 +66,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "GetReportsByCategory failed. request={@request}", request);
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,
@@ -74,7 +78,7 @@ namespace MISReports_Api.Controllers
 
 		[HttpPost]
 		[Route("save-userrolereps")]
-		public IHttpActionResult SaveUserRoleReports([FromBody] SaveUserRoleReportsRequest request)
+		public IActionResult SaveUserRoleReports([FromBody] SaveUserRoleReportsRequest request)
 		{
 			try
 			{
@@ -134,6 +138,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "SaveUserRoleReports failed");
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,
@@ -145,7 +150,7 @@ namespace MISReports_Api.Controllers
 
 		[HttpDelete]
 		[Route("user/{roleId}/reports")]
-		public IHttpActionResult DeleteAllReports(string roleId)
+		public IActionResult DeleteAllReports(string roleId)
 		{
 			try
 			{
@@ -167,6 +172,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "DeleteAllReports failed. roleId={roleId}", roleId);
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,
@@ -178,7 +184,7 @@ namespace MISReports_Api.Controllers
 
 		[HttpDelete]
 		[Route("user/{roleId}/reports/category/{catCode}")]
-		public IHttpActionResult DeleteReportsByCategory(string roleId, string catCode)
+		public IActionResult DeleteReportsByCategory(string roleId, string catCode)
 		{
 			try
 			{
@@ -200,6 +206,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "DeleteReportsByCategory failed. roleId={roleId}, catCode={catCode}", roleId, catCode);
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,
@@ -211,7 +218,7 @@ namespace MISReports_Api.Controllers
 
 		[HttpDelete]
 		[Route("user/{roleId}/reports/{repId}")]
-		public IHttpActionResult DeleteReportByName(string roleId, string repId)
+		public IActionResult DeleteReportByName(string roleId, string repId)
 		{
 			try
 			{
@@ -233,6 +240,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "DeleteReportByName failed. roleId={roleId}, repId={repId}", roleId, repId);
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,
@@ -244,7 +252,7 @@ namespace MISReports_Api.Controllers
 
 		[HttpGet]
 		[Route("reports/{repId}")]
-		public IHttpActionResult GetReportsByName(string repId)
+		public IActionResult GetReportsByName(string repId)
 		{
 			try
 			{
@@ -266,6 +274,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "GetReportsByName failed. repId={repId}", repId);
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,
@@ -277,7 +286,7 @@ namespace MISReports_Api.Controllers
 
 		[HttpGet]
 		[Route("categories")]
-		public IHttpActionResult GetAllCategories()
+		public IActionResult GetAllCategories()
 		{
 			try
 			{
@@ -290,6 +299,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "GetAllCategories failed");
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,
@@ -301,7 +311,7 @@ namespace MISReports_Api.Controllers
 
 		[HttpGet]
 		[Route("reports")]
-		public IHttpActionResult GetAllActiveReports()
+		public IActionResult GetAllActiveReports()
 		{
 			try
 			{
@@ -314,6 +324,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "GetAllActiveReports failed");
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,
@@ -325,7 +336,7 @@ namespace MISReports_Api.Controllers
 
 		[HttpGet]
 		[Route("user/{roleId}/reports")]
-		public IHttpActionResult GetUserAssignedReports(string roleId)
+		public IActionResult GetUserAssignedReports(string roleId)
 		{
 			try
 			{
@@ -347,6 +358,7 @@ namespace MISReports_Api.Controllers
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "GetUserAssignedReports failed. roleId={roleId}", roleId);
 				return Ok(JObject.FromObject(new
 				{
 					data = (object)null,

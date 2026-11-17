@@ -1,18 +1,21 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/provincematerialreqsummary")]
     public class ProvinceMaterialReqSummaryController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ProvinceMaterialReqSummaryDAL _dal = new ProvinceMaterialReqSummaryDAL();
 
         // PATH: /api/provincematerialreqsummary/report/2026-01-01/2026-01-31/100
         [HttpGet]
         [Route("report/{fromDate}/{toDate}/{compId}")]
-        public IHttpActionResult GetReport(string fromDate, string toDate, string compId)
+        public IActionResult GetReport(string fromDate, string toDate, string compId)
         {
             return ExecuteQuery(fromDate, toDate, compId);
         }
@@ -20,12 +23,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/provincematerialreqsummary/report?fromDate=2026-01-01&toDate=2026-01-31&compId=100
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string compId)
+        public IActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string compId)
         {
             return ExecuteQuery(fromDate, toDate, compId);
         }
 
-        private IHttpActionResult ExecuteQuery(string fromDate, string toDate, string compId)
+        private IActionResult ExecuteQuery(string fromDate, string toDate, string compId)
         {
             try
             {
@@ -75,6 +78,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. fromDate={fromDate}, toDate={toDate}, compId={compId}", fromDate, toDate, compId);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

@@ -1,21 +1,24 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/inventoryonhand")]
     public class InventoryOnHandController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly InventoryOnHandRepository _repository = new InventoryOnHandRepository();
 
         [HttpGet]
         [Route("{deptId}")]
-        public async Task<IHttpActionResult> GetInventoryOnHand(string deptId, string matCode = null)
+        public async Task<IActionResult> GetInventoryOnHand(string deptId, string matCode = null)
         {
             Debug.WriteLine($"API Request received for InventoryOnHand deptId: {deptId}, matCode: {matCode}");
 
@@ -33,6 +36,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetInventoryOnHand failed. deptId={deptId}, matCode={matCode}", deptId, matCode);
                 var errorResponse = new
                 {
                     data = (object)null,

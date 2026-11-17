@@ -1,23 +1,25 @@
 ﻿// DAL/BillCycleRepository.cs
+using MISReports_Api.Compat;
 using MISReports_Api.Models;
 using System;
 using MISReports_Api.Helpers;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL
 {
     public class BillCycleRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["InformixConnection"].ConnectionString;
 
         public BillCycleModel GetLast24BillCycles()
         {
             var model = new BillCycleModel();
 
-            using (OleDbConnection conn = new OleDbConnection(connectionString))
+            using (DbConnection conn = Informix.CreateConnection(connectionString))
             {
                 try
                 {
@@ -25,7 +27,7 @@ namespace MISReports_Api.DAL
 
                     // Get max bill cycle as integer
                     string sql = "SELECT max(bill_cycle) FROM ageacct";
-                    using (OleDbCommand cmd = new OleDbCommand(sql, conn))
+                    using (DbCommand cmd = Informix.CreateCommand(sql, conn))
                     {
                         object maxCycleObj = cmd.ExecuteScalar();
                         if (maxCycleObj != null && maxCycleObj != DBNull.Value)
@@ -39,14 +41,16 @@ namespace MISReports_Api.DAL
                         }
                     }
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
+                    logger.Error(ex, "GetLast24BillCycles failed");
                     // Log error appropriately for .NET 4.7.2
                     System.Diagnostics.Trace.WriteLine($"Error retrieving max bill cycle: {ex.Message}");
                     model.ErrorMessage = "Error retrieving max bill cycle";
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetLast24BillCycles failed");
                     System.Diagnostics.Trace.WriteLine($"Unexpected error: {ex.Message}");
                     model.ErrorMessage = "Unexpected error occurred";
                 }

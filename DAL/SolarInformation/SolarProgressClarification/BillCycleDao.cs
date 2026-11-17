@@ -1,15 +1,18 @@
-﻿using MISReports_Api.Models.Shared;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.Shared;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
 {
     public class BillCycleDao
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DBConnection _dbConnection = new DBConnection();
 
         public BillCycleModel GetLast24BillCycles()
@@ -24,7 +27,7 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
 
                     // Get max bill cycle as integer
                     string sql = "SELECT max(bill_cycle) FROM netmtchg ";
-                    using (OleDbCommand cmd = new OleDbCommand(sql, conn))
+                    using (DbCommand cmd = Informix.CreateCommand(sql, conn))
                     {
                         object maxCycleObj = cmd.ExecuteScalar();
                         if (maxCycleObj != null && maxCycleObj != DBNull.Value)
@@ -38,13 +41,15 @@ namespace MISReports_Api.DAL.SolarInformation.SolarProgressClarification
                         }
                     }
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
+                    logger.Error(ex, "GetLast24BillCycles failed");
                     System.Diagnostics.Trace.WriteLine($"Error retrieving max bill cycle: {ex.Message}");
                     model.ErrorMessage = "Error retrieving max bill cycle";
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetLast24BillCycles failed");
                     System.Diagnostics.Trace.WriteLine($"Unexpected error: {ex.Message}");
                     model.ErrorMessage = "Unexpected error occurred";
                 }

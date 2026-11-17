@@ -1,13 +1,15 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace MISReports_Api.DAL
 {
     public class LedgerCardTotalRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString =
             ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
@@ -84,12 +86,14 @@ ORDER BY T1.gl_cd, T1.sub_ac";
                 }
                 catch (OracleException oex)
                 {
+                    logger.Error(oex, "GetLedgerCardTotalData failed (exception rethrown). glCode={glCode}, repYear={repYear}, repMonth={repMonth}", glCode, repYear, repMonth);
                     throw new Exception(
                         $"Oracle error while fetching Ledger Card Total for GL {glCode}. Code: {oex.Number}",
                         oex);
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetLedgerCardTotalData failed (exception rethrown). glCode={glCode}, repYear={repYear}, repMonth={repMonth}", glCode, repYear, repMonth);
                     throw new Exception(
                         $"Error fetching Ledger Card Total for GL {glCode}.", ex);
                 }

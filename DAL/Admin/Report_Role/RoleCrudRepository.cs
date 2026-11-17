@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 
@@ -10,6 +10,8 @@ namespace MISReports_Api.DAL
 {
 	public class RoleCrudRepository
 	{
+		private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
 		private readonly string connectionString = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
 		private static string Normalize(string value)
@@ -87,6 +89,7 @@ AND ACTIVE = '1'";
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "GetReportsByCategory failed (exception rethrown). catCodes={@catCodes}", catCodes);
 				Debug.WriteLine("Error in GetReportsByCategory: " + ex.Message);
 				throw;
 			}

@@ -1,11 +1,12 @@
-﻿using MISReports_Api.DBAccess;
+using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Helpers;
 using MISReports_Api.Models.PUCSLReports.PUCSLSolarConnection;
 using MISReports_Api.Models.SolarInformation;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
 {
@@ -144,9 +145,17 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                 // ═══════════════════════════════════════════════════════════
 
                 string bulkTypeCode = request.TypeCode;
-                if (reportType == SolarReportType.Province && !string.IsNullOrEmpty(request.TypeCode) && request.TypeCode.Length == 1)
+                if (reportType == SolarReportType.Province && !string.IsNullOrEmpty(request.TypeCode) && int.TryParse(request.TypeCode, out _))
                 {
-                    bulkTypeCode = request.TypeCode.PadLeft(2, '0');
+                    //bulkTypeCode = request.TypeCode.PadLeft(2, '0'); - By Dinuli 2026-09-23
+                    if (char.IsDigit(request.TypeCode[0]))
+                    {
+                        bulkTypeCode = request.TypeCode.PadLeft(2, '0');
+                    }
+                    else
+                    {
+                        bulkTypeCode = request.TypeCode;
+                    }
                 }
 
                 var bulkTariffs = GetAllBulkTariffs(request.BillCycle);
@@ -244,7 +253,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                         "AND tariff_class NOT IN ('GV1UV','GV1SH') " +
                         "GROUP BY c.tariff_class ORDER BY c.tariff_class";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("?", calcCycle);
                         using (var reader = cmd.ExecuteReader())
@@ -288,7 +297,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                         : "n.net_type=?";
 
                     string sql;
-                    OleDbCommand cmd = new OleDbCommand { Connection = conn };
+                    DbCommand cmd = Informix.CreateCommand().With(__o => { __o.Connection = conn; });
 
                     switch (rt)
                     {
@@ -368,7 +377,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                         : "n.net_type=?";
 
                     string sql;
-                    OleDbCommand cmd = new OleDbCommand { Connection = conn };
+                    DbCommand cmd = Informix.CreateCommand().With(__o => { __o.Connection = conn; });
 
                     switch (rt)
                     {
@@ -446,7 +455,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                         "WHERE bill_cycle=? AND net_type IN ('1','2','3','4') " +
                         "GROUP BY tariff ORDER BY tariff ASC";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("?", billCycle);
                         using (var reader = cmd.ExecuteReader())
@@ -487,7 +496,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
 
                     string inClause = string.Join(",", tariffs.ConvertAll(t => "?"));
                     string sql;
-                    OleDbCommand cmd = new OleDbCommand { Connection = conn };
+                    DbCommand cmd = Informix.CreateCommand().With(__o => { __o.Connection = conn; });
 
                     // Net Metering (net_type='1') doesn't need netmeter join
                     if (netType == "1")

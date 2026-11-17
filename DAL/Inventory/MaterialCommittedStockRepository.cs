@@ -1,8 +1,9 @@
+using MISReports_Api.Compat;
 using MISReports_Api.Models;
+using MISReports_Api.DBAccess;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Threading.Tasks;
 
 namespace MISReports_Api.DAL
@@ -57,7 +58,7 @@ ORDER BY g.comp_id";
                 string safeCompId = compId.Replace("'", "").Trim();
                 string safeMatCode = (matCode ?? "").Replace("'", "").Trim();
 
-                string sql = $@"
+                const string sql = @"
 SELECT A.dept_id,
        A.wrh_cd AS WRH_CD,
        A.mat_cd AS MAT_CD,
@@ -72,18 +73,20 @@ INNER JOIN inmatm D ON A.mat_cd = D.mat_cd
 WHERE A.dept_id IN (
       SELECT dept_id
       FROM gldeptm
-      WHERE comp_id IN (
-          SELECT comp_id
+    WHERE TRIM(comp_id) IN (
+        SELECT TRIM(comp_id)
           FROM glcompm
-          WHERE comp_id = '{safeCompId}' OR parent_id = '{safeCompId}'
-      )
+        WHERE TRIM(comp_id) = :compid
+           OR TRIM(parent_id) = :compid
+           OR TRIM(grp_comp) = :compid
+    )
 )
-  AND A.mat_cd LIKE '%' || '{safeMatCode}' || '%'
+  AND A.mat_cd LIKE '%' || :matcode || '%'
   AND A.status = 2
 GROUP BY A.dept_id, A.wrh_cd, A.mat_cd, D.mat_nm, A.grade_cd, D.maj_uom, A.qty_on_hand, A.unit_price, A.mat_cost
 ORDER BY A.dept_id, A.wrh_cd, A.mat_cd";
 
-                using (var cmd = new OracleCommand(sql, conn))
+                using (var cmd = DbCommandHelper.CreateOracleCommand(sql, conn, ("compid", safeCompId), ("matcode", safeMatCode)))
                 using (var reader = await cmd.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())

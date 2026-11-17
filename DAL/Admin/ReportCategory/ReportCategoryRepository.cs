@@ -1,14 +1,16 @@
+using MISReports_Api.Compat;
 using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 
 namespace MISReports_Api.DAL
 {
     public class ReportCategoryRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
         private static string NormalizeCategoryCode(string catCode)
@@ -64,6 +66,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAllCategories failed (exception rethrown)");
                 Debug.WriteLine($"Error in GetAllCategories: {ex.Message}");
                 throw;
             }
@@ -119,6 +122,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCategoryByCode failed (exception rethrown). catCode={catCode}", catCode);
                 Debug.WriteLine($"Error in GetCategoryByCode: {ex.Message}");
                 throw;
             }
@@ -170,6 +174,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "AddOrUpdateCategory failed (exception rethrown). request={@request}", request);
                 Debug.WriteLine($"Error in AddOrUpdateCategory: {ex.Message}");
                 throw;
             }
@@ -214,6 +219,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "UpdateCategory failed (exception rethrown). request={@request}", request);
                 Debug.WriteLine($"Error in UpdateCategory: {ex.Message}");
                 throw;
             }
@@ -253,6 +259,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "DeleteCategory failed (exception rethrown). catCode={catCode}", catCode);
                 Debug.WriteLine($"Error in DeleteCategory: {ex.Message}");
                 throw;
             }

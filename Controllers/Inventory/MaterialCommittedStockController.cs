@@ -1,20 +1,23 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/materialcommittedstock")]
     public class MaterialCommittedStockController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly MaterialCommittedStockRepository _repository =
             new MaterialCommittedStockRepository();
 
         // GET api/materialcommittedstock/provinces
         [HttpGet]
         [Route("provinces")]
-        public async Task<IHttpActionResult> GetProvinces()
+        public async Task<IActionResult> GetProvinces()
         {
             try
             {
@@ -28,6 +31,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetProvinces failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -40,7 +44,7 @@ namespace MISReports_Api.Controllers
         // GET api/materialcommittedstock/get?compId=EP&matCode=A
         [HttpGet]
         [Route("get")]
-        public async Task<IHttpActionResult> GetMaterialCommittedStock(string compId, string matCode = null)
+        public async Task<IActionResult> GetMaterialCommittedStock(string compId, string matCode = null)
         {
             if (string.IsNullOrWhiteSpace(compId))
                 return BadRequest("compId is required.");
@@ -57,6 +61,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaterialCommittedStock failed. compId={compId}, matCode={matCode}", compId, matCode);
                 return Ok(new
                 {
                     data = (object)null,

@@ -1,10 +1,11 @@
+using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL.FinancialDashboard;
 using MISReports_Api.Models.FinancialDashboard;
 
@@ -12,6 +13,8 @@ namespace MISReports_Api.Controllers
 {
     public class FinancialDashboardController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private static readonly PivTotalDao PivTotalDao = new PivTotalDao();
         private static readonly PivDivisionDao PivDivisionDao = new PivDivisionDao();
         private static readonly StockTotalDao StockTotalDao = new StockTotalDao();
@@ -21,7 +24,7 @@ namespace MISReports_Api.Controllers
         private const double CacheMinutes = 5;
         private static readonly object RefreshLock = new object();
         private static bool IsRefreshing;
-        private static System.Timers.Timer WarmTimer;
+        private static Timer WarmTimer;
 
         private static void SetCache<T>(string key, T data)
         {
@@ -69,6 +72,7 @@ namespace MISReports_Api.Controllers
                     }
                     catch (Exception ex)
                     {
+                        logger.Error(ex, "GetOrReturnStaleAndRefreshWithMetadata failed");
                         Trace.TraceError($"{key}-refresh failed: {ex.Message}");
                     }
                 });
@@ -100,7 +104,7 @@ namespace MISReports_Api.Controllers
                     return;
                 }
 
-                WarmTimer = new System.Timers.Timer(TimeSpan.FromMinutes(CacheMinutes).TotalMilliseconds)
+                WarmTimer = new Timer(TimeSpan.FromMinutes(CacheMinutes).TotalMilliseconds)
                 {
                     AutoReset = true,
                 };
@@ -143,6 +147,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "RefreshAllAsync failed");
                 Trace.TraceError($"warm-refresh failed: {ex.Message}");
             }
             finally
@@ -161,7 +166,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("api/piv/piv-total")]
-        public IHttpActionResult GetPivTotal(bool refresh = false)
+        public IActionResult GetPivTotal(bool refresh = false)
         {
             if (refresh)
             {
@@ -175,7 +180,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("api/piv/piv-division")]
-        public IHttpActionResult GetPivDivision(bool refresh = false)
+        public IActionResult GetPivDivision(bool refresh = false)
         {
             if (refresh)
             {
@@ -189,7 +194,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("api/piv/stock-total")]
-        public IHttpActionResult GetStockTotal(bool refresh = false)
+        public IActionResult GetStockTotal(bool refresh = false)
         {
             if (refresh)
             {
@@ -203,7 +208,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("api/piv/stock-division")]
-        public IHttpActionResult GetStockDivision(bool refresh = false)
+        public IActionResult GetStockDivision(bool refresh = false)
         {
             if (refresh)
             {

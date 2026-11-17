@@ -1,29 +1,31 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL
 {
     public class OUMRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         //private readonly string connectionString = ConfigurationManager.ConnectionStrings["InformixCreditCard"].ConnectionString;
-        // private readonly string connectionString = "Provider=Ifxoledbc.2;Password=run10times;User ID=appadm1;Data Source=crdtcard@hqinfdb10";
-        string connectionstring = "Provider=Ifxoledbc.2;Password=run10times;User ID=appadm1;Data Source=crdtcard@hqinfdb10";
+        string connectionstring = ConfigurationManager.ConnectionStrings["InformixCreditCardOleDb"]?.ConnectionString
+            ?? throw new ConfigurationErrorsException("Connection string 'InformixCreditCardOleDb' is missing from connectionStrings.config.");
         public int InsertIntoAmex2(List<OUMEmployeeModel> data)
         {
 
 
             int count = 0;
-            using (OleDbConnection conn = new OleDbConnection(connectionstring))
+            using (DbConnection conn = Informix.CreateConnection(connectionstring))
             {
                 try
                 {
                     conn.Open();
                     // Clear existing data
-                    using (var cmd = new OleDbCommand("DELETE FROM test_amex2", conn))
+                    using (var cmd = Informix.CreateCommand("DELETE FROM test_amex2", conn))
                     {
                         cmd.ExecuteNonQuery();
                     }
@@ -31,7 +33,7 @@ namespace MISReports_Api.DAL
                     // Insert new data
                     foreach (var item in data)
                     {
-                        using (var cmd = new OleDbCommand())
+                        using (var cmd = Informix.CreateCommand())
                         {
                             cmd.Connection = conn;
                             cmd.CommandText = @"INSERT INTO test_amex2 (pdate, o_id, acct_no, cname, bill_amt, tax, tot_amt, authcode, cno) 
@@ -51,8 +53,9 @@ namespace MISReports_Api.DAL
                         }
                     }
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
+                    logger.Error(ex, "InsertIntoAmex2 failed (exception rethrown)");
                     Console.WriteLine($"Error inserting into Amex2: {ex.Message}");
                     throw;
                 }
@@ -62,14 +65,14 @@ namespace MISReports_Api.DAL
 
         public void RefreshCrdTemp()
         {
-            using (var conn = new OleDbConnection(connectionstring))
+            using (var conn = Informix.CreateConnection(connectionstring))
             {
                 try
                 {
                     conn.Open();
 
                     // Delete existing records from test_crdt_tmp
-                    using (var cmd = new OleDbCommand("DELETE FROM test_crdt_tmp", conn))
+                    using (var cmd = Informix.CreateCommand("DELETE FROM test_crdt_tmp", conn))
                     {
                         cmd.ExecuteNonQuery();
                     }
@@ -81,27 +84,28 @@ namespace MISReports_Api.DAL
                                               cno, 'Bil', acct_no, 'RSK', ''
                                        FROM test_amex2";
 
-                    using (var cmd = new OleDbCommand(insertSql, conn))
+                    using (var cmd = Informix.CreateCommand(insertSql, conn))
                     {
                         cmd.ExecuteNonQuery();
 
                     }
 
                     // Update null values for specific fields
-                    using (var cmd = new OleDbCommand(@"UPDATE test_crdt_tmp 
+                    using (var cmd = Informix.CreateCommand(@"UPDATE test_crdt_tmp 
                                                      SET updt_flag = NULL, post_flag = NULL, err_flag = NULL, sms_st = NULL", conn))
                     {
                         cmd.ExecuteNonQuery();
                     }
 
                     // Update payment_type where ref_number is longer than 10 characters  
-                    using (var cmd = new OleDbCommand(@"UPDATE test_crdt_tmp SET payment_type = 'PIV' WHERE LENGTH(ref_number) > 10", conn))
+                    using (var cmd = Informix.CreateCommand(@"UPDATE test_crdt_tmp SET payment_type = 'PIV' WHERE LENGTH(ref_number) > 10", conn))
                     {
                         cmd.ExecuteNonQuery();
                     }
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
+                    logger.Error(ex, "RefreshCrdTemp failed (exception rethrown)");
                     Console.WriteLine($"Error refreshing CrdTemp: {ex.Message}");
                     throw;
                 }
@@ -111,15 +115,15 @@ namespace MISReports_Api.DAL
         public List<OUMCrdTempModel> GetCrdTempRecords()
         {
             var records = new List<OUMCrdTempModel>();
-            using (var conn = new OleDbConnection(connectionstring))
+            using (var conn = Informix.CreateConnection(connectionstring))
             {
                 try
                 {
                     conn.Open();
                     string sql = "SELECT * FROM test_crdt_tmp ORDER BY auth_date";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
-                    using (OleDbDataReader reader = cmd.ExecuteReader())
+                    using (var cmd = Informix.CreateCommand(sql, conn))
+                    using (DbDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -158,8 +162,9 @@ namespace MISReports_Api.DAL
                         }
                     }
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
+                    logger.Error(ex, "GetCrdTempRecords failed (exception rethrown)");
                     Console.WriteLine($"Error retrieving CrdTemp records: {ex.Message}");
                     throw;
                 }
@@ -171,9 +176,9 @@ namespace MISReports_Api.DAL
         {
 
             bool success = false;
-            using (var conn = new OleDbConnection(connectionstring))
+            using (var conn = Informix.CreateConnection(connectionstring))
             {
-                OleDbTransaction transaction = null;
+                DbTransaction transaction = null;
                 try
                 {
                     conn.Open();
@@ -185,19 +190,19 @@ namespace MISReports_Api.DAL
 
 
                     // Insert into test_crdtcdslt
-                    using (var cmd = new OleDbCommand("INSERT INTO test_crdtcdslt SELECT * FROM test_crdt_tmp", conn, transaction))
+                    using (var cmd = Informix.CreateCommand("INSERT INTO test_crdtcdslt SELECT * FROM test_crdt_tmp", conn, transaction))
                     {
                         cmd.ExecuteNonQuery();
                     }
 
                     // Insert into backup table
-                    using (var cmd = new OleDbCommand("INSERT INTO crdt_tmp_backup SELECT * FROM test_crdt_tmp", conn, transaction))
+                    using (var cmd = Informix.CreateCommand("INSERT INTO crdt_tmp_backup SELECT * FROM test_crdt_tmp", conn, transaction))
                     {
                         cmd.ExecuteNonQuery();
                     }
 
                     // Delete from temp table
-                    using (var cmd = new OleDbCommand("DELETE FROM test_crdt_tmp", conn, transaction))
+                    using (var cmd = Informix.CreateCommand("DELETE FROM test_crdt_tmp", conn, transaction))
                     {
                         cmd.ExecuteNonQuery();
                     }
@@ -206,8 +211,9 @@ namespace MISReports_Api.DAL
                     success = true;
                     return success;
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
+                    logger.Error(ex, "ApproveRecords failed");
                     transaction?.Rollback();
                     return success;
 

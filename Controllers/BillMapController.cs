@@ -1,13 +1,16 @@
-﻿using MISReports_Api.DAL.BillMap;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.BillMap;
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/billmap")]
     public class BillMapController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly BillMapRepository _repository;
 
         public BillMapController()
@@ -17,7 +20,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("{epfNo}")]
-        public async Task<IHttpActionResult> GetBillMaps(string epfNo)
+        public async Task<IActionResult> GetBillMaps(string epfNo)
         {
             try
             {
@@ -30,6 +33,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetBillMaps failed. epfNo={epfNo}", epfNo);
                 return InternalServerError(ex);
             }
         }

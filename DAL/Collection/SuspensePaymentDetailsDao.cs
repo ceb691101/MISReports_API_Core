@@ -1,10 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.Collection;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.Collection
@@ -51,7 +51,7 @@ namespace MISReports_Api.DAL.Collection
                                      AND p.prov_code = a.prov_code
                                    ORDER BY p.prov_name, a.area_name, s.transac_date";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         AddDateParameter(cmd, request.FromDate);
                         AddDateParameter(cmd, request.ToDate);
@@ -202,7 +202,7 @@ namespace MISReports_Api.DAL.Collection
         /// <summary>
         /// Main bulk suspense rows, ordered per the given SQL (agent_code, cent_code, actl_pay_date).
         /// </summary>
-        private List<BulkSuspenseData> GetBulkSuspenseData(OleDbConnection conn, SuspensePaymentDetailsRequest request)
+        private List<BulkSuspenseData> GetBulkSuspenseData(DbConnection conn, SuspensePaymentDetailsRequest request)
         {
             var results = new List<BulkSuspenseData>();
 
@@ -212,7 +212,7 @@ namespace MISReports_Api.DAL.Collection
                            WHERE actl_pay_date >= ? AND actl_pay_date <= ?
                            ORDER BY agent_code, cent_code, actl_pay_date";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 AddDateParameter(cmd, request.FromDate);
                 AddDateParameter(cmd, request.ToDate);
@@ -243,7 +243,7 @@ namespace MISReports_Api.DAL.Collection
         /// <summary>
         /// Batch lookup of area_code/area_name/prov_code per account via offline_payments + areas.
         /// </summary>
-        private Dictionary<string, AccountAreaInfo> GetAccountAreaInfoBatch(OleDbConnection conn, List<string> accountNumbers)
+        private Dictionary<string, AccountAreaInfo> GetAccountAreaInfoBatch(DbConnection conn, List<string> accountNumbers)
         {
             var result = new Dictionary<string, AccountAreaInfo>();
 
@@ -261,7 +261,7 @@ namespace MISReports_Api.DAL.Collection
                                WHERE a.area_code = f.area_code
                                  AND f.acc_no IN ({placeholders})";
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     foreach (var acc in batch)
                         cmd.Parameters.AddWithValue("?", acc);
@@ -291,7 +291,7 @@ namespace MISReports_Api.DAL.Collection
         /// <summary>
         /// Batch lookup of prov_name per prov_code via prov_servers.
         /// </summary>
-        private Dictionary<string, string> GetProvinceNamesBatch(OleDbConnection conn, List<string> provCodes)
+        private Dictionary<string, string> GetProvinceNamesBatch(DbConnection conn, List<string> provCodes)
         {
             var result = new Dictionary<string, string>();
 
@@ -302,7 +302,7 @@ namespace MISReports_Api.DAL.Collection
 
             string sql = $@"SELECT TRIM(prov_code), TRIM(prov_name) FROM prov_servers WHERE prov_code IN ({placeholders})";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 foreach (var pc in provCodes)
                     cmd.Parameters.AddWithValue("?", pc?.Trim());
@@ -323,17 +323,17 @@ namespace MISReports_Api.DAL.Collection
             return result;
         }
 
-        private OleDbConnection GetPmntConsldConnection()
+        private DbConnection GetPmntConsldConnection()
         {
             var connectionString = ConfigurationManager.ConnectionStrings["InformixPmntConsld"]?.ConnectionString;
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new ConfigurationErrorsException("InformixPmntConsld connection string is missing from configuration");
 
-            return new OleDbConnection(connectionString);
+            return Informix.CreateConnection(connectionString);
         }
 
         // Helper methods - ordinal-based to stay safe with joined/duplicate column names
-        private string GetColumnValue(OleDbDataReader reader, int ordinal)
+        private string GetColumnValue(DbDataReader reader, int ordinal)
         {
             try
             {
@@ -347,7 +347,7 @@ namespace MISReports_Api.DAL.Collection
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, int ordinal)
+        private decimal GetDecimalValue(DbDataReader reader, int ordinal)
         {
             try
             {
@@ -377,7 +377,7 @@ namespace MISReports_Api.DAL.Collection
             return dateStr;
         }
 
-        private void AddDateParameter(OleDbCommand cmd, string dateStr)
+        private void AddDateParameter(DbCommand cmd, string dateStr)
         {
             if (DateTime.TryParse(dateStr, out var dt))
             {

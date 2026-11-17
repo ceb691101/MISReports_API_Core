@@ -1,11 +1,12 @@
-﻿using MISReports_Api.DBAccess;
+using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Helpers;
 using MISReports_Api.Models.PUCSLReports.PUCSLSolarConnection;
 using MISReports_Api.Models.SolarInformation;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
@@ -121,9 +122,17 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     {
                         // Bulk database uses padded province codes
                         string bulkTypeCode = request.TypeCode;
-                        if (reportType == SolarReportType.Province && request.TypeCode.Length == 1)
+                        if (reportType == SolarReportType.Province && !string.IsNullOrEmpty(request.TypeCode) && int.TryParse(request.TypeCode, out _))
                         {
-                            bulkTypeCode = request.TypeCode.PadLeft(2, '0');
+                            // bulkTypeCode = request.TypeCode.PadLeft(2, '0'); - By Dinuli 2026-09-23
+                            if (char.IsDigit(request.TypeCode[0]))
+                            {
+                                bulkTypeCode = request.TypeCode.PadLeft(2, '0');
+                            }
+                            else
+                            {
+                                bulkTypeCode = request.TypeCode;
+                            }
                         }
 
                         model.BulkNoOfCustomers = GetBulkAccountCount(
@@ -141,8 +150,14 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                         model.BulkKwhAt2318 = GetUnits(bulkRates, "23.18");
                         model.BulkKwhAt2706 = GetUnits(bulkRates, "27.06");
 
+                        var bulkOther = GetBulkOtherSales(
+                            reportType, bulkTypeCode, request.BillCycle,
+                            bulkCodes, bulkNetType1, bulkNetType2, bulkIsDouble);
+                        model.BulkKwhOthers = bulkOther.UnitSale;
+
                         decimal bulkPaid = 0;
                         foreach (var kv in bulkRates) bulkPaid += kv.Value.KwhSales;
+                        bulkPaid += bulkOther.KwhSales;
                         model.PaidAmount += bulkPaid;
                     }
 
@@ -154,7 +169,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     model.KwhAt37 = model.OrdinaryKwhAt37 + model.BulkKwhAt37;
                     model.KwhAt2318 = model.OrdinaryKwhAt2318 + model.BulkKwhAt2318;
                     model.KwhAt2706 = model.OrdinaryKwhAt2706 + model.BulkKwhAt2706;
-                    model.KwhOthers = model.OrdinaryKwhOthers;
+                    model.KwhOthers = model.OrdinaryKwhOthers + model.BulkKwhOthers;
                     model.ErrorMessage = string.Empty;
                     results.Add(model);
                 }
@@ -208,7 +223,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
             using (var conn = _dbConnection.GetConnection(false))
             {
                 conn.Open();
-                using (var cmd = new OleDbCommand("SELECT tariff_cat FROM tariff_category ORDER BY seq", conn))
+                using (var cmd = Informix.CreateCommand("SELECT tariff_cat FROM tariff_category ORDER BY seq", conn))
                 using (var r = cmd.ExecuteReader())
                     while (r.Read())
                     {
@@ -230,7 +245,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     const string sql =
                         "SELECT c.tariff_code FROM cat_tariff_table c, tariff_category t " +
                         "WHERE c.tariff_cat = t.tariff_cat AND t.tariff_cat = ? AND cus_cat = 'O'";
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("?", tariffCat);
                         using (var reader = cmd.ExecuteReader())
@@ -266,7 +281,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     const string sql =
                         "SELECT c.tariff_code FROM cat_tariff_table c, tariff_category t " +
                         "WHERE c.tariff_cat = t.tariff_cat AND t.tariff_cat = ? AND cus_cat = 'B'";
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("?", tariffCat);
                         using (var reader = cmd.ExecuteReader())
@@ -305,7 +320,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
 
                     string inClause = string.Join(",", tariffCodes.Select((_, i) => "?"));
                     string sql;
-                    OleDbCommand cmd = new OleDbCommand { Connection = conn };
+                    DbCommand cmd = Informix.CreateCommand().With(__o => { __o.Connection = conn; });
 
                     switch (rt)
                     {
@@ -366,7 +381,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
 
                     string inClause = string.Join(",", tariffCodes.Select((_, i) => "?"));
                     string sql;
-                    OleDbCommand cmd = new OleDbCommand { Connection = conn };
+                    DbCommand cmd = Informix.CreateCommand().With(__o => { __o.Connection = conn; });
 
                     switch (rt)
                     {
@@ -437,7 +452,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
 
                     string inClause = string.Join(",", tariffCodes.Select((_, i) => "?"));
                     string sql;
-                    OleDbCommand cmd = new OleDbCommand { Connection = conn };
+                    DbCommand cmd = Informix.CreateCommand().With(__o => { __o.Connection = conn; });
 
                     switch (rt)
                     {
@@ -506,7 +521,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     string inClause = string.Join(",", tariffCodes.Select((_, i) => "?"));
                     string netFrag = isDouble ? "(n.net_type=? OR n.net_type=?)" : "n.net_type=?";
                     string sql;
-                    OleDbCommand cmd = new OleDbCommand { Connection = conn };
+                    DbCommand cmd = Informix.CreateCommand().With(__o => { __o.Connection = conn; });
 
                     switch (rt)
                     {
@@ -570,7 +585,7 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
                     string inClause = string.Join(",", tariffCodes.Select((_, i) => "?"));
                     string netFrag = isDouble ? "(n.net_type=? OR n.net_type=?)" : "n.net_type=?";
                     string sql;
-                    OleDbCommand cmd = new OleDbCommand { Connection = conn };
+                    DbCommand cmd = Informix.CreateCommand().With(__o => { __o.Connection = conn; });
 
                     switch (rt)
                     {
@@ -637,10 +652,92 @@ namespace MISReports_Api.DAL.PUCSLReports.PUCSLSolarConnection
         }
 
         // ================================================================
+        //  BULK — Sales at "Other" Rates
+        // ================================================================
+        private RateSalesRow GetBulkOtherSales(
+            SolarReportType rt, string typeCode, string billCycle, List<string> tariffCodes,
+            string netType1, string netType2, bool isDouble)
+        {
+            var row = new RateSalesRow();
+            try
+            {
+                using (var conn = _dbConnection.GetConnection(true))
+                {
+                    conn.Open();
+
+                    string inClause = string.Join(",", tariffCodes.Select((_, i) => "?"));
+                    string netFrag = isDouble ? "(n.net_type=? OR n.net_type=?)" : "n.net_type=?";
+                    string sql;
+                    DbCommand cmd = Informix.CreateCommand().With(__o => { __o.Connection = conn; });
+
+                    switch (rt)
+                    {
+                        case SolarReportType.Province:
+                            sql = $"SELECT rate, COALESCE(SUM(kwh_sales),0), COALESCE(SUM(unitsale),0) " +
+                                  $"FROM netmtcons n, areas a, netmeter m " +
+                                  $"WHERE bill_cycle=? AND tariff IN ({inClause}) AND m.acc_nbr=n.acc_nbr " +
+                                  $"AND m.schm IN ('1','2') AND {netFrag} " +
+                                  $"AND rate NOT IN {RateIn} " +
+                                  $"AND a.area_code=n.area_cd AND a.prov_code=? GROUP BY 1 ORDER BY 1";
+                            cmd.CommandText = sql;
+                            cmd.Parameters.AddWithValue("?", billCycle);
+                            foreach (var code in tariffCodes) cmd.Parameters.AddWithValue("?", code);
+                            AddBulkNetParams(cmd, netType1, netType2, isDouble);
+                            cmd.Parameters.AddWithValue("?", typeCode);
+                            break;
+
+                        case SolarReportType.Region:
+                            sql = $"SELECT rate, COALESCE(SUM(kwh_sales),0), COALESCE(SUM(unitsale),0) " +
+                                  $"FROM netmtcons n, areas a, netmeter m " +
+                                  $"WHERE bill_cycle=? AND tariff IN ({inClause}) AND m.acc_nbr=n.acc_nbr " +
+                                  $"AND m.schm IN ('1','2') AND {netFrag} " +
+                                  $"AND rate NOT IN {RateIn} " +
+                                  $"AND a.area_code=n.area_cd AND a.region=? GROUP BY 1 ORDER BY 1";
+                            cmd.CommandText = sql;
+                            cmd.Parameters.AddWithValue("?", billCycle);
+                            foreach (var code in tariffCodes) cmd.Parameters.AddWithValue("?", code);
+                            AddBulkNetParams(cmd, netType1, netType2, isDouble);
+                            cmd.Parameters.AddWithValue("?", typeCode);
+                            break;
+
+                        default:
+                            sql = $"SELECT rate, COALESCE(SUM(kwh_sales),0), COALESCE(SUM(unitsale),0) " +
+                                  $"FROM netmtcons n, netmeter m " +
+                                  $"WHERE bill_cycle=? AND tariff IN ({inClause}) AND m.acc_nbr=n.acc_nbr " +
+                                  $"AND m.schm IN ('1','2') AND {netFrag} " +
+                                  $"AND rate NOT IN {RateIn} GROUP BY 1 ORDER BY 1";
+                            cmd.CommandText = sql;
+                            cmd.Parameters.AddWithValue("?", billCycle);
+                            foreach (var code in tariffCodes) cmd.Parameters.AddWithValue("?", code);
+                            AddBulkNetParams(cmd, netType1, netType2, isDouble);
+                            break;
+                    }
+
+                    using (cmd)
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            decimal kwh = reader[1] == DBNull.Value ? 0 : Convert.ToDecimal(reader[1]);
+                            decimal unit = reader[2] == DBNull.Value ? 0 : Convert.ToDecimal(reader[2]);
+                            row.KwhSales += kwh;
+                            row.UnitSale += unit;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "GetBulkOtherSales EXCEPTION");
+            }
+            return row;
+        }
+
+        // ================================================================
         //  UTILITY
         // ================================================================
 
-        private void AddBulkNetParams(OleDbCommand cmd, string nt1, string nt2, bool isDouble)
+        private void AddBulkNetParams(DbCommand cmd, string nt1, string nt2, bool isDouble)
         {
             cmd.Parameters.AddWithValue("?", nt1);
             if (isDouble) cmd.Parameters.AddWithValue("?", nt2);

@@ -1,12 +1,15 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DAL;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/ledgercard/curr-acct-recon-ext-period")]
     public class CurrAcctReconExtPeriodController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly CurrAcctReconExtPeriodRepository _repository;
 
         public CurrAcctReconExtPeriodController()
@@ -16,7 +19,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetReport(
+        public IActionResult GetReport(
             [FromUri] string compId, 
             [FromUri] int repyear, 
             [FromUri] int monthFrom, 
@@ -40,6 +43,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReport failed. compId={compId}, repyear={repyear}, monthFrom={monthFrom}, monthTo={monthTo}, subac={subac}", compId, repyear, monthFrom, monthTo, subac);
                 return InternalServerError(ex);
             }
         }

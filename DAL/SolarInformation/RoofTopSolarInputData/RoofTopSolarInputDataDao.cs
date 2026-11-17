@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.SolarInformation;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.SolarInformation.RoofTopSolarInputData
 {
@@ -22,7 +23,7 @@ namespace MISReports_Api.DAL.SolarInformation.RoofTopSolarInputData
         /// cycle_2 comes from the areas table for the chosen scope.
         /// If cycle_1 > cycle_2 the cycle is not yet completed.
         /// </summary>
-        private bool IsCycleCompleted(OleDbConnection conn, string calcCycle,
+        private bool IsCycleCompleted(DbConnection conn, string calcCycle,
                                        string reportType, string typeCode)
         {
             try
@@ -49,7 +50,7 @@ namespace MISReports_Api.DAL.SolarInformation.RoofTopSolarInputData
                         break;
                 }
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     if (reportType?.ToLower() != "entireceb" && !string.IsNullOrEmpty(typeCode))
                         cmd.Parameters.AddWithValue("?", typeCode);
@@ -305,12 +306,12 @@ namespace MISReports_Api.DAL.SolarInformation.RoofTopSolarInputData
         // Query helpers
         // -----------------------------------------------------------------------
 
-        private long? QuerySingleLong(OleDbConnection conn, string sql,
+        private long? QuerySingleLong(DbConnection conn, string sql,
                                       string calcCycle, string typeCode)
         {
             try
             {
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("?", calcCycle);
                     if (!string.IsNullOrEmpty(typeCode))
@@ -330,12 +331,12 @@ namespace MISReports_Api.DAL.SolarInformation.RoofTopSolarInputData
             }
         }
 
-        private Tuple<long?, long?> QueryTwoLongs(OleDbConnection conn, string sql,
+        private Tuple<long?, long?> QueryTwoLongs(DbConnection conn, string sql,
                                                    string calcCycle, string typeCode)
         {
             try
             {
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("?", calcCycle);
                     if (!string.IsNullOrEmpty(typeCode))

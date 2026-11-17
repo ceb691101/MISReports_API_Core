@@ -1,8 +1,9 @@
 ﻿// Controllers/GrnRaisedForPurchasingController.cs
+using MISReports_Api.Compat;
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 
 namespace MISReports_Api.Controllers
@@ -10,6 +11,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/grnraisedforpurchasing")]
     public class GrnRaisedForPurchasingController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly GrnRaisedForPurchasingDAL _dal = new GrnRaisedForPurchasingDAL();
 
         private const string DateFormat = "yyyy-MM-dd";
@@ -18,7 +21,7 @@ namespace MISReports_Api.Controllers
         // PATH: /api/grnraisedforpurchasing/report/2026-07-01/2026-07-14/AB
         [HttpGet]
         [Route("report/{fromDate}/{toDate}/{matCode?}")]
-        public IHttpActionResult GetReport(string fromDate, string toDate, string matCode = null)
+        public IActionResult GetReport(string fromDate, string toDate, string matCode = null)
         {
             return ExecuteQuery(fromDate, toDate, matCode);
         }
@@ -26,12 +29,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/grnraisedforpurchasing/report?fromDate=2026-07-01&toDate=2026-07-14&matCode=AB
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string matCode = null)
+        public IActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string matCode = null)
         {
             return ExecuteQuery(fromDate, toDate, matCode);
         }
 
-        private IHttpActionResult ExecuteQuery(string fromDate, string toDate, string matCode)
+        private IActionResult ExecuteQuery(string fromDate, string toDate, string matCode)
         {
             try
             {
@@ -92,6 +95,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. fromDate={fromDate}, toDate={toDate}, matCode={matCode}", fromDate, toDate, matCode);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

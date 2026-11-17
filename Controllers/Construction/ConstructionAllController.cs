@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 
@@ -12,12 +13,14 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/constructionall")]
     public class ConstructionAllController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly ConstructionAllDAL _dal = new ConstructionAllDAL();
 
         // PATH: /api/constructionall/report/430.20
         [HttpGet]
         [Route("report/{costCtr}")]
-        public IHttpActionResult GetReport(string costCtr)
+        public IActionResult GetReport(string costCtr)
         {
             return ExecuteQuery(costCtr);
         }
@@ -25,12 +28,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/constructionall/report?costCtr=430.20
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string costCtr)
+        public IActionResult GetQuery([FromUri] string costCtr)
         {
             return ExecuteQuery(costCtr);
         }
 
-        private IHttpActionResult ExecuteQuery(string costCtr)
+        private IActionResult ExecuteQuery(string costCtr)
         {
             try
             {
@@ -68,6 +71,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. costCtr={costCtr}", costCtr);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

@@ -1,10 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.Collection;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.Collection
 {
@@ -31,7 +31,7 @@ namespace MISReports_Api.DAL.Collection
 
                     if (string.IsNullOrEmpty(provCode))
                     {
-                        using (var cmd = new OleDbCommand("Select * from provinces where prov_code not in('0','Z') order by prov_name", conn))
+                        using (var cmd = Informix.CreateCommand("Select * from provinces where prov_code not in('0','Z') order by prov_name", conn))
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -44,7 +44,7 @@ namespace MISReports_Api.DAL.Collection
                             }
                         }
 
-                        using (var cmd = new OleDbCommand("Select * from yr_mnth where bill_cycle>=233 order by bill_cycle desc", conn))
+                        using (var cmd = Informix.CreateCommand("Select * from yr_mnth where bill_cycle>=233 order by bill_cycle desc", conn))
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -56,7 +56,7 @@ namespace MISReports_Api.DAL.Collection
                     }
                     else
                     {
-                        using (var cmd = new OleDbCommand("Select * from areas where prov_code=? order by area_name", conn))
+                        using (var cmd = Informix.CreateCommand("Select * from areas where prov_code=? order by area_name", conn))
                         {
                             cmd.Parameters.AddWithValue("?", provCode);
                             using (var reader = cmd.ExecuteReader())
@@ -102,7 +102,7 @@ namespace MISReports_Api.DAL.Collection
                 using (var conn = _dbConnection.GetConnection(false))
                 {
                     conn.Open();
-                    using (var cmd = new OleDbCommand("select * from prov_servers where prov_code=?", conn))
+                    using (var cmd = Informix.CreateCommand("select * from prov_servers where prov_code=?", conn))
                     {
                         cmd.Parameters.AddWithValue("?", request.ProvinceCode);
                         using (var reader = cmd.ExecuteReader())
@@ -145,35 +145,43 @@ namespace MISReports_Api.DAL.Collection
                 string connectionString = string.Format(template, ds);
 
                 string sql = "Select * From finalised where 1=1";
+                // Request values are bound to the ? placeholders in this order (never pasted into the SQL).
+                var sqlParameters = new List<object>();
 
                 bool isAllAreas = request.AreaCode == "**" || string.IsNullOrEmpty(request.AreaCode);
                 bool isAllBillCycles = request.BillCycle == "***" || request.BillCycle == "*** - All Months" || string.IsNullOrEmpty(request.BillCycle);
 
                 if (!isAllAreas)
                 {
-                    sql += $" and area_code='{request.AreaCode}'";
+                    sql += " and area_code=?";
+                    sqlParameters.Add(request.AreaCode);
                 }
 
                 if (!isAllBillCycles)
                 {
                     string bc = request.BillCycle.Length >= 3 ? request.BillCycle.Substring(0, 3) : request.BillCycle;
-                    sql += $" and bill_cycle='{bc}'";
+                    sql += " and bill_cycle=?";
+                    sqlParameters.Add(bc);
                 }
 
                 if (request.BalanceChecked && !string.IsNullOrEmpty(request.BalanceOperator) && !string.IsNullOrEmpty(request.BalanceValue))
                 {
-                    sql += $" and crnt_balance {request.BalanceOperator} {request.BalanceValue}";
+                    string balanceOperator = DbCommandHelper.RequireComparisonOperator(request.BalanceOperator, "BalanceOperator");
+                    sql += $" and crnt_balance {balanceOperator} ?";
+                    sqlParameters.Add(DbCommandHelper.RequireDecimal(request.BalanceValue, "BalanceValue"));
                 }
 
                 if (request.DaysChecked && !string.IsNullOrEmpty(request.DaysOperator) && !string.IsNullOrEmpty(request.DaysValue))
                 {
-                    sql += $" and today-fnl_date {request.DaysOperator} {request.DaysValue}";
+                    string daysOperator = DbCommandHelper.RequireComparisonOperator(request.DaysOperator, "DaysOperator");
+                    sql += $" and today-fnl_date {daysOperator} ?";
+                    sqlParameters.Add(DbCommandHelper.RequireDecimal(request.DaysValue, "DaysValue"));
                 }
 
-                using (var conn = new OleDbConnection(connectionString))
+                using (var conn = Informix.CreateConnection(connectionString))
                 {
                     conn.Open();
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = DbCommandHelper.CreateOleDbCommand(sql, conn, sqlParameters.ToArray()))
                     {
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -207,9 +215,9 @@ namespace MISReports_Api.DAL.Collection
             {
                 logger.Error(ex, "Error fetching finalized accounts report");
                 response.ErrorMessage = ex.Message;
-                if (ex is OleDbException oleEx)
+                if (ex is DbException oleEx)
                 {
-                    foreach (OleDbError err in oleEx.Errors)
+                    foreach (InformixError err in oleEx.ProviderErrors())
                     {
                         response.ErrorMessage += $" | {err.Message} (Native: {err.NativeError})";
                     }
@@ -219,7 +227,7 @@ namespace MISReports_Api.DAL.Collection
             return response;
         }
 
-        private string GetStringValue(OleDbDataReader reader, string columnName)
+        private string GetStringValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -229,7 +237,7 @@ namespace MISReports_Api.DAL.Collection
             catch { return string.Empty; }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string columnName)
+        private decimal GetDecimalValue(DbDataReader reader, string columnName)
         {
             try
             {
@@ -240,7 +248,7 @@ namespace MISReports_Api.DAL.Collection
             catch { return 0; }
         }
 
-        private string GetDateStringValue(OleDbDataReader reader, string columnName)
+        private string GetDateStringValue(DbDataReader reader, string columnName)
         {
             try
             {

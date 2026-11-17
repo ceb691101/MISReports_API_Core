@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -10,6 +10,8 @@ namespace MISReports_Api.DAL
 {
     public class CostCenterWorkInProgressRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public async Task<List<CostCenterWorkInProgressModel>> GetCostCenterWorkInProgress(string deptId)
         {
             var workInProgressList = new List<CostCenterWorkInProgressModel>();
@@ -200,6 +202,7 @@ namespace MISReports_Api.DAL
                 }
                 catch (Exception ex)
                 {
+                    logger.Warn(ex, "GetCostCenterWorkInProgress attempt failed; retrying / trying next option. deptId={deptId}", deptId);
                     lastException = ex;
                     Debug.WriteLine($"Failed to connect using {connectionStringName}: {ex.Message}");
                     // Continue to try next connection string
@@ -237,6 +240,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "TestSimpleQuery failed. deptId={deptId}", deptId);
                 Debug.WriteLine($"Simple query test failed: {ex.Message}");
                 return false;
             }

@@ -1,10 +1,10 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Models.Analysis;
 using NLog;
 using System;
-using System.Configuration;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -38,7 +38,7 @@ namespace MISReports_Api.DAL.Analysis
                 using (var conn = _dbConnection.GetConnection(false))
                 {
                     conn.Open();
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("?", areaCode.Trim());
 
@@ -128,7 +128,7 @@ namespace MISReports_Api.DAL.Analysis
                 string serverName = GetProvinceDatabaseServer(areaCode);
                 string billingConnectionString = BuildConnectionString(serverName);
 
-                using (var conn = new OleDbConnection(billingConnectionString))
+                using (var conn = Informix.CreateConnection(billingConnectionString))
                 {
                     conn.Open();
                     return true;
@@ -168,7 +168,7 @@ namespace MISReports_Api.DAL.Analysis
                     string areaCycleSql = "SELECT bill_cycle FROM areas WHERE area_code = ?";
                     string areaBillCycle;
 
-                    using (var cmd = new OleDbCommand(areaCycleSql, conn))
+                    using (var cmd = Informix.CreateCommand(areaCycleSql, conn))
                     {
                         cmd.Parameters.AddWithValue("?", areaCode.Trim());
 
@@ -189,7 +189,7 @@ namespace MISReports_Api.DAL.Analysis
 											WHERE bill_cycle <= ?
 											ORDER BY bill_cycle DESC";
 
-                    using (var cmd = new OleDbCommand(billCycleSql, conn))
+                    using (var cmd = Informix.CreateCommand(billCycleSql, conn))
                     {
                         cmd.Parameters.AddWithValue("?", areaBillCycle);
 
@@ -255,6 +255,9 @@ namespace MISReports_Api.DAL.Analysis
                 string billingConnectionString = BuildConnectionString(serverName);
 
                 string ageFilter = BuildAgeFilterClause(request.AgeBand);
+                // Table names cannot be SQL parameters, so the area code must be validated before use.
+                if (!DbCommandHelper.IsSafeIdentifierPart(request.AreaCode.Trim()))
+                    throw new ArgumentException("Area code may contain only letters, digits and underscores.");
                 string tableName = $"electric_{request.AreaCode.Trim()}";
                 string sql = $@"SELECT n.acct_number,
 									   n.net_type,
@@ -277,7 +280,7 @@ namespace MISReports_Api.DAL.Analysis
 								  AND {ageFilter}
 								ORDER BY m.agrmnt_date";
 
-                using (var conn = new OleDbConnection(billingConnectionString))
+                using (var conn = Informix.CreateConnection(billingConnectionString))
                 {
                     conn.Open();
 
@@ -312,7 +315,7 @@ namespace MISReports_Api.DAL.Analysis
                                              AND m.acct_number = e.acct_number
                                              AND c.acct_number = e.acct_number";
 
-                    using (var summaryCmd = new OleDbCommand(summarySql, conn))
+                    using (var summaryCmd = Informix.CreateCommand(summarySql, conn))
                     {
                         summaryCmd.CommandTimeout = 300;
                         summaryCmd.Parameters.AddWithValue("?", request.BillCycle.Trim());
@@ -353,7 +356,7 @@ namespace MISReports_Api.DAL.Analysis
                     // 2. Detail query: fetch full customer records filtered
                     //    by the requested age band.
                     // -------------------------------------------------------
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.CommandTimeout = 300;
                         cmd.Parameters.AddWithValue("?", request.BillCycle.Trim());
@@ -429,6 +432,9 @@ namespace MISReports_Api.DAL.Analysis
                 string serverName = GetProvinceDatabaseServer(request.AreaCode);
                 string billingConnectionString = BuildConnectionString(serverName);
 
+                // Table names cannot be SQL parameters, so the area code must be validated before use.
+                if (!DbCommandHelper.IsSafeIdentifierPart(request.AreaCode.Trim()))
+                    throw new ArgumentException("Area code may contain only letters, digits and underscores.");
                 string tableName = $"electric_{request.AreaCode.Trim()}";
                 string sql = $@"SELECT n.acct_number,
                                        n.net_type,
@@ -451,11 +457,11 @@ namespace MISReports_Api.DAL.Analysis
                                   AND c.acct_number = e.acct_number
                                 ORDER BY n.net_type, m.agrmnt_date";
 
-                using (var conn = new OleDbConnection(billingConnectionString))
+                using (var conn = Informix.CreateConnection(billingConnectionString))
                 {
                     conn.Open();
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.CommandTimeout = 300;
                         cmd.Parameters.AddWithValue("?", request.BillCycle.Trim());
@@ -594,7 +600,7 @@ namespace MISReports_Api.DAL.Analysis
             }
         }
 
-        private static string GetStringValue(OleDbDataReader reader, int ordinal)
+        private static string GetStringValue(DbDataReader reader, int ordinal)
         {
             try
             {

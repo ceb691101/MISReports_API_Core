@@ -1,7 +1,8 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Globalization;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 
 namespace MISReports_Api.Controllers
@@ -9,25 +10,27 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/issuesraisedforjobs")]
     public class IssuesRaisedForJobsController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly IssuesRaisedForJobsDAL _dal = new IssuesRaisedForJobsDAL();
 
         private const string DateFormat = "yyyy-MM-dd";
 
         [HttpGet]
         [Route("report/{fromDate}/{toDate}/{matCode?}")]
-        public IHttpActionResult GetReport(string fromDate, string toDate, string matCode = null)
+        public IActionResult GetReport(string fromDate, string toDate, string matCode = null)
         {
             return ExecuteQuery(fromDate, toDate, matCode);
         }
 
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string matCode = null)
+        public IActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string matCode = null)
         {
             return ExecuteQuery(fromDate, toDate, matCode);
         }
 
-        private IHttpActionResult ExecuteQuery(string fromDate, string toDate, string matCode)
+        private IActionResult ExecuteQuery(string fromDate, string toDate, string matCode)
         {
             try
             {
@@ -71,6 +74,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. fromDate={fromDate}, toDate={toDate}, matCode={matCode}", fromDate, toDate, matCode);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

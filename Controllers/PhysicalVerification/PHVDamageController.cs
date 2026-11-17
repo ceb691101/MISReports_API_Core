@@ -1,13 +1,16 @@
-﻿using MISReports_Api.DAL.PhysicalVerification;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL.PhysicalVerification;
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/phv-damage")]
     public class PHVDamageController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly PHVDamageRepository _repository;
 
         public PHVDamageController()
@@ -17,7 +20,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("list")]
-        public async Task<IHttpActionResult> GetDamage(
+        public async Task<IActionResult> GetDamage(
             string deptId,
             int repYear,
             int repMonth,
@@ -41,6 +44,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetDamage failed. deptId={deptId}, repYear={repYear}, repMonth={repMonth}, warehouseCode={warehouseCode}", deptId, repYear, repMonth, warehouseCode);
                 return InternalServerError(ex);
             }
         }

@@ -1,9 +1,10 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Models.Collection;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.Collection.SalesAndCollection
 {
@@ -73,7 +74,7 @@ namespace MISReports_Api.DAL.Collection.SalesAndCollection
                 using (var conn = _dbConnection.GetConnection(false)) // ordinary
                 {
                     conn.Open();
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         // Bind parameters in the order they appear
                         cmd.Parameters.AddWithValue("?", request.BillCycle);
@@ -141,7 +142,7 @@ namespace MISReports_Api.DAL.Collection.SalesAndCollection
                         logger.Info($"Bulk pass: querying area_code='{row.AreaCode}' area_name='{row.AreaName}'");
                         try
                         {
-                            using (var cmd = new OleDbCommand(bulkSql, conn))
+                            using (var cmd = Informix.CreateCommand(bulkSql, conn))
                             {
                                 cmd.Parameters.AddWithValue("?", billCycle);
                                 cmd.Parameters.AddWithValue("?", row.AreaCode);
@@ -242,19 +243,19 @@ namespace MISReports_Api.DAL.Collection.SalesAndCollection
         }
 
         // ── Reader helpers ────────────────────────────────────────────────────
-        private static decimal GetDecimal(OleDbDataReader reader, int ordinal)
+        private static decimal GetDecimal(DbDataReader reader, int ordinal)
         {
             try { return reader.IsDBNull(ordinal) ? 0 : Convert.ToDecimal(reader.GetValue(ordinal)); }
             catch { return 0; }
         }
 
-        private static string GetString(OleDbDataReader reader, int ordinal)
+        private static string GetString(DbDataReader reader, int ordinal)
         {
             try { return reader.IsDBNull(ordinal) ? "" : reader.GetString(ordinal).Trim(); }
             catch { return ""; }
         }
 
-        private static string GetStringByName(OleDbDataReader reader, string columnName)
+        private static string GetStringByName(DbDataReader reader, string columnName)
         {
             try
             {
@@ -264,7 +265,7 @@ namespace MISReports_Api.DAL.Collection.SalesAndCollection
             catch { return ""; }
         }
 
-        private static decimal GetDecimalByName(OleDbDataReader reader, string columnName)
+        private static decimal GetDecimalByName(DbDataReader reader, string columnName)
         {
             try
             {

@@ -1,14 +1,17 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using System;
 using System.Globalization;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/avg-consumption-selected")]
     public class AvgConsumptionSelectedController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly IAvgConsumptionSelectedDataRepository _repository;
 
         public AvgConsumptionSelectedController()
@@ -18,7 +21,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("{costCenter}/{warehouseCode}/{fromDate}/{toDate}/{matCode?}")]
-        public IHttpActionResult GetSelectedAverageConsumption(
+        public IActionResult GetSelectedAverageConsumption(
             string costCenter,
             string warehouseCode,
             string fromDate,
@@ -53,6 +56,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetSelectedAverageConsumption failed. costCenter={costCenter}, warehouseCode={warehouseCode}, fromDate={fromDate}, toDate={toDate}, matCode={matCode}", costCenter, warehouseCode, fromDate, toDate, matCode);
                 return Ok(new AvgConsumptionSelectedResponse
                 {
                     Data = null,

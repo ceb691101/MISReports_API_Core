@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -10,6 +10,8 @@ namespace MISReports_Api.DAL
 {
     public class InventoryOnHandRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public async Task<List<InventoryOnHandModel>> GetInventoryOnHand(string deptId, string matCode = null)
         {
             var resultList = new List<InventoryOnHandModel>();
@@ -90,6 +92,7 @@ ORDER BY
                 }
                 catch (Exception ex)
                 {
+                    logger.Warn(ex, "GetInventoryOnHand attempt failed; retrying / trying next option. deptId={deptId}, matCode={matCode}", deptId, matCode);
                     lastException = ex;
                     continue;
                 }

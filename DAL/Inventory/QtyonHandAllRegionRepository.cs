@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models.Inventory;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.Inventory;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -10,6 +10,8 @@ namespace MISReports_Api.DAL.Inventory
 {
     public class QtyonHandAllRegionRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString =
             ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
@@ -72,6 +74,7 @@ order by 1 asc, 2 asc, 3 asc, 4 asc";
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetQtyonHandAllRegionAsync failed (exception rethrown). compId={compId}, matcode={matcode}", compId, matcode);
                 Debug.WriteLine($"Error in GetQtyonHandAllRegionAsync: {ex.Message}");
                 throw;
             }

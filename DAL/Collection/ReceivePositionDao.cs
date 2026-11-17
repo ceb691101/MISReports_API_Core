@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.Collection;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.Collection.ReceivablePosition
 {
@@ -61,7 +62,7 @@ namespace MISReports_Api.DAL.Collection.ReceivablePosition
                                    WHERE TRIM(prov_code) = TRIM(?)
                                    ORDER BY area_code";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@prov_code", provinceCode);
 
@@ -107,7 +108,7 @@ namespace MISReports_Api.DAL.Collection.ReceivablePosition
                                    WHERE TRIM(region) = TRIM(?)
                                    ORDER BY area_code";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@region", regionCode);
 
@@ -149,7 +150,7 @@ namespace MISReports_Api.DAL.Collection.ReceivablePosition
 
                     string sql = "SELECT area_code, area_name FROM areas ORDER BY area_code";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -174,7 +175,7 @@ namespace MISReports_Api.DAL.Collection.ReceivablePosition
 
         // ── Private helpers ────────────────────────────────────────────────────
 
-        private ReceivablePositionModel GetAreaData(OleDbConnection conn, ReceivablePositionRequest request)
+        private ReceivablePositionModel GetAreaData(DbConnection conn, ReceivablePositionRequest request)
         {
             string sql = @"SELECT op_bal, mon_chg, debits, credits, 
                                   un_chg, ov_chg, payments, close_bal, 
@@ -184,7 +185,7 @@ namespace MISReports_Api.DAL.Collection.ReceivablePosition
                              AND bill_cycle = ?
                              AND bill_type  = ?";
 
-            using (var cmd = new OleDbCommand(sql, conn))
+            using (var cmd = Informix.CreateCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@area_code", request.AreaCode);
                 cmd.Parameters.AddWithValue("@bill_cycle", request.BillCycle);
@@ -204,7 +205,7 @@ namespace MISReports_Api.DAL.Collection.ReceivablePosition
             return null;
         }
 
-        private ReceivablePositionModel MapReaderToModel(OleDbDataReader reader, ReceivablePositionRequest request)
+        private ReceivablePositionModel MapReaderToModel(DbDataReader reader, ReceivablePositionRequest request)
         {
             var model = new ReceivablePositionModel();
 
@@ -251,7 +252,7 @@ namespace MISReports_Api.DAL.Collection.ReceivablePosition
             return model;
         }
 
-        private decimal GetDecimal(OleDbDataReader reader, int ordinal)
+        private decimal GetDecimal(DbDataReader reader, int ordinal)
         {
             try
             {

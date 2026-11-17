@@ -1,7 +1,7 @@
+﻿using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Configuration;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using MISReports_Api.Models.Accounts;
@@ -16,33 +16,31 @@ namespace MISReports_Api.DAL
         {
             var result = new List<BranchGrnNotGenModel>();
 
-            // Escape single quotes in compId to prevent SQL injection
-            string safeCompId = compId.Replace("'", "''");
-
-            string query = $@"
+            const string query = @"
         SELECT T2.doc_no, T2.trx_dt, T2.des_dept_id, T2.wrh_cd, T2.ref_1, T2.trxn_val,
-               (SELECT comp_nm FROM glcompm WHERE comp_id = '{safeCompId}') AS CCT_NAME
+               (SELECT comp_nm FROM glcompm WHERE TRIM(comp_id) = :compid) AS CCT_NAME
         FROM intrhmt T2
         WHERE T2.Issue_to = 2
           AND T2.dept_id IN (
               SELECT dept_id
               FROM gldeptm
               WHERE status = 2
-                AND comp_id IN (
-                    SELECT comp_id
+                AND TRIM(comp_id) IN (
+                    SELECT TRIM(comp_id)
                     FROM glcompm
-                    WHERE comp_id = '{safeCompId}'
-                       OR parent_id = '{safeCompId}'
-                       OR grp_comp = '{safeCompId}'
+                    WHERE TRIM(comp_id) = :compid
+                       OR TRIM(parent_id) = :compid
+                       OR TRIM(grp_comp) = :compid
                 )
           )
-          AND TO_DATE(:fromdate,'yyyy/mm/dd') <= T2.trx_dt
-          AND TO_DATE(:todate,'yyyy/mm/dd') >= T2.trx_dt
-          AND TRIM(T2.doc_no) NOT IN (
-              SELECT TRIM(ref_2)
-              FROM intrhmt
-              WHERE rc_from = 3
-                AND dept_id = T2.des_dept_id
+          AND T2.trx_dt >= TO_DATE(:fromdate,'yyyy/mm/dd')
+          AND T2.trx_dt < TO_DATE(:todate,'yyyy/mm/dd') + 1
+          AND NOT EXISTS (
+              SELECT 1
+              FROM intrhmt R
+              WHERE R.rc_from = 3
+                AND R.dept_id = T2.des_dept_id
+                AND TRIM(R.ref_2) = TRIM(T2.doc_no)
           )";
 
             using (var conn = new OracleConnection(_connectionString))
@@ -52,6 +50,7 @@ namespace MISReports_Api.DAL
                 cmd.BindByName = true;
                 cmd.Parameters.Add(new OracleParameter("fromdate", OracleDbType.Varchar2) { Value = fromDate });
                 cmd.Parameters.Add(new OracleParameter("todate", OracleDbType.Varchar2) { Value = toDate });
+                cmd.Parameters.Add(new OracleParameter("compid", OracleDbType.Varchar2) { Value = compId });
 
                 conn.Open();
                 using (var reader = cmd.ExecuteReader())

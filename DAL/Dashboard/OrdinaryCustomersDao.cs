@@ -1,8 +1,9 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Models.Dashboard;
 using NLog;
 using System;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.Dashboard
 {
@@ -31,7 +32,7 @@ namespace MISReports_Api.DAL.Dashboard
                     string maxBillCycleSql = "select max(bill_cycle) from areas";
                     int maxBillCycle;
 
-                    using (var maxCmd = new OleDbCommand(maxBillCycleSql, conn))
+                    using (var maxCmd = Informix.CreateCommand(maxBillCycleSql, conn))
                     {
                         var maxCycleValue = maxCmd.ExecuteScalar();
                         if (maxCycleValue == null || maxCycleValue == DBNull.Value)
@@ -78,7 +79,7 @@ namespace MISReports_Api.DAL.Dashboard
                         sql += " and a.region = ?";
                     }
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         if (hasArea)
                         {

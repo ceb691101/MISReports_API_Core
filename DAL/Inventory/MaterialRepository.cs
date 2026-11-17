@@ -1,8 +1,8 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace MISReports_Api.DAL
 {
@@ -105,6 +105,7 @@ namespace MISReports_Api.DAL
                  WHERE comp_id IN (SELECT comp_id FROM gldeptm WHERE dept_id = T1.dept_id)) AS province,
                 (T1.dept_id || ' - ' || (SELECT dept_nm FROM gldeptm WHERE dept_id = T1.dept_id)) AS dept_id,
                 T2.MAT_NM,
+                T1.GRADE_CD,
                 T2.unit_price,
                 SUM(T1.QTY_ON_HAND) AS QTY_ON_HAND,
                 T3.reord_qty AS reorder_qty,
@@ -125,11 +126,10 @@ namespace MISReports_Api.DAL
                     )
                 )
                 AND UPPER(TRIM(T1.mat_cd)) = :matCd
-                AND T1.GRADE_CD = 'NEW'
                 AND T1.status = 2
-                AND T1.QTY_ON_HAND > 0
-            GROUP BY T1.MAT_CD, T2.MAT_NM, T1.UOM_CD, T1.dept_id, T2.unit_price, T3.reord_qty
-            ORDER BY 1, 2, 3, 4";
+                AND T1.QTY_ON_HAND <> 0
+            GROUP BY T1.MAT_CD, T2.MAT_NM, T1.GRADE_CD, T1.UOM_CD, T1.dept_id, T2.unit_price, T3.reord_qty
+            ORDER BY 1, 2, 3, 4, T1.GRADE_CD";
 
                 using (var cmd = new OracleCommand(sql, conn))
                 {
@@ -146,6 +146,7 @@ namespace MISReports_Api.DAL
                                 Province = reader["province"]?.ToString().Trim(),
                                 DeptId = reader["dept_id"]?.ToString().Trim(),
                                 MatNm = reader["MAT_NM"]?.ToString().Trim(),
+                                GradeCd = reader["GRADE_CD"]?.ToString().Trim(),
                                 UnitPrice = reader["unit_price"] != DBNull.Value ? Convert.ToDecimal(reader["unit_price"]) : 0,
                                 QtyOnHand = reader["QTY_ON_HAND"] != DBNull.Value ? Convert.ToDecimal(reader["QTY_ON_HAND"]) : 0,
                                 ReorderQty = reader["reorder_qty"] != DBNull.Value ? Convert.ToDecimal(reader["reorder_qty"]) : 0,

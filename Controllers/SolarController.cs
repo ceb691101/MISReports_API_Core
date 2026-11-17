@@ -1,4 +1,5 @@
-﻿using MISReports_Api.DAL.SolarInformation.SolarProgressClarification;
+using MISReports_Api.Compat;
+using MISReports_Api.DAL.SolarInformation.SolarProgressClarification;
 using MISReports_Api.DAL.SolarInformation.SolarPVConnections;
 using MISReports_Api.DAL.SolarInformation.SolarPaymentRetail;
 using MISReports_Api.DAL.SolarInformation.SolarPVCapacity;
@@ -10,14 +11,18 @@ using MISReports_Api.Models.SolarInformation;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
+using System.Net.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("solarapi")]
     public class SolarController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         
         private readonly DetailedDao _detailedDao = new DetailedDao();
         private readonly SummaryDao _summaryDao = new SummaryDao();
@@ -32,17 +37,20 @@ namespace MISReports_Api.Controllers
         private readonly PVCapacityBulkDao _pvCapacityBulkDao = new PVCapacityBulkDao();
         private readonly PVCapacitySummaryDao _pvCapacitySummaryDao = new PVCapacitySummaryDao();
         private readonly SolarPaymentBulkDao _solarPaymentBulkDao = new SolarPaymentBulkDao();
+        private readonly SolarRooftopPaymentsandExportUnitsDao _solarRooftopPaymentsandExportUnitsDao = new SolarRooftopPaymentsandExportUnitsDao();
         private readonly SolarReadingRetailDetailedDao _solarReadingDetailedDao = new SolarReadingRetailDetailedDao();
         private readonly SolarReadingRetailSummaryDao _solarReadingSummaryDao = new SolarReadingRetailSummaryDao();
         private readonly SolarReadingUsageBulkDao _solarReadingUsageBulkDao = new SolarReadingUsageBulkDao();
         private readonly SolarCustomerInforOrdinaryDao _solarCustomerInforOrdinaryDao = new SolarCustomerInforOrdinaryDao();
         private readonly SolarCustomerInforBulkDao _solarCustomerInforBulkDao = new SolarCustomerInforBulkDao();
         private readonly RoofTopSolarInputDataDao _roofTopSolarInputDataDao = new RoofTopSolarInputDataDao();
+        private readonly SolarPaymentLissReconDao _solarPaymentLissReconDao = new SolarPaymentLissReconDao();
+        private readonly SolarJournalsBulkDao _solarJournalsBulkDao = new SolarJournalsBulkDao();
 
 
         [HttpGet]
         [Route("solar-progress/detailed")]
-        public IHttpActionResult GetDetailedReport(
+        public IActionResult GetDetailedReport(
             [FromUri] string billCycle,
             [FromUri] string reportType,
             [FromUri] string typeCode = null)
@@ -100,7 +108,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("solar-progress/summary")]
-        public IHttpActionResult GetSummaryReport(
+        public IActionResult GetSummaryReport(
             [FromUri] string billCycle,
             [FromUri] string reportType,
             [FromUri] string typeCode = null)
@@ -158,7 +166,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("solar-progress/ordinary/detailed")]
-        public IHttpActionResult GetOrdinaryDetailedReport(
+        public IActionResult GetOrdinaryDetailedReport(
             [FromUri] string billCycle,
             [FromUri] string reportType,
             [FromUri] string typeCode = null)
@@ -214,7 +222,7 @@ namespace MISReports_Api.Controllers
             return ProcessOrdinaryDetailedRequest(request);
         }
 
-        private IHttpActionResult ProcessOrdinaryDetailedRequest(SolarProgressRequest request)
+        private IActionResult ProcessOrdinaryDetailedRequest(SolarProgressRequest request)
         {
             try
             {
@@ -249,6 +257,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessOrdinaryDetailedRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -260,7 +269,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("solar-progress/ordinary/summary")]
-        public IHttpActionResult GetOrdinarySummaryReport(
+        public IActionResult GetOrdinarySummaryReport(
             [FromUri] string billCycle,
             [FromUri] string reportType,
             [FromUri] string typeCode = null)
@@ -316,7 +325,7 @@ namespace MISReports_Api.Controllers
             return ProcessOrdinarySummaryRequest(request);
         }
 
-        private IHttpActionResult ProcessOrdinarySummaryRequest(SolarProgressRequest request)
+        private IActionResult ProcessOrdinarySummaryRequest(SolarProgressRequest request)
         {
             try
             {
@@ -351,6 +360,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessOrdinarySummaryRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -360,7 +370,7 @@ namespace MISReports_Api.Controllers
             }
         }
 
-        private IHttpActionResult ProcessDetailedRequest(SolarProgressRequest request)
+        private IActionResult ProcessDetailedRequest(SolarProgressRequest request)
         {
             try
             {
@@ -395,6 +405,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessDetailedRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -404,7 +415,7 @@ namespace MISReports_Api.Controllers
             }
         }
 
-        private IHttpActionResult ProcessSummaryRequest(SolarProgressRequest request)
+        private IActionResult ProcessSummaryRequest(SolarProgressRequest request)
         {
             try
             {
@@ -439,6 +450,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessSummaryRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -492,7 +504,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("pv-connections")]
-        public IHttpActionResult GetPVConnections(
+        public IActionResult GetPVConnections(
             [FromUri] string billCycle = null,
             [FromUri] string calcCycle = null,
             [FromUri] string cycleType = "A", // A for bill_cycle, C for calc_cycle
@@ -558,7 +570,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("pv-bulkconnections")]
-        public IHttpActionResult GetPVBulkConnections(
+        public IActionResult GetPVBulkConnections(
             [FromUri] string billCycle = null,
             [FromUri] string calcCycle = null,
             [FromUri] string cycleType = "A", // A for bill_cycle, C for calc_cycle
@@ -622,7 +634,7 @@ namespace MISReports_Api.Controllers
             return ProcessPVBulkConnectionRequest(request);
         }
 
-        private IHttpActionResult ProcessPVBulkConnectionRequest(SolarPVBulkConnectionRequest request)
+        private IActionResult ProcessPVBulkConnectionRequest(SolarPVBulkConnectionRequest request)
         {
             try
             {
@@ -657,6 +669,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessPVBulkConnectionRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -678,7 +691,7 @@ namespace MISReports_Api.Controllers
 
 
 
-        private IHttpActionResult ProcessPVConnectionRequest(SolarPVConnectionRequest request)
+        private IActionResult ProcessPVConnectionRequest(SolarPVConnectionRequest request)
         {
             try
             {
@@ -713,6 +726,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessPVConnectionRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -734,7 +748,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("retail/detailed")]
-        public IHttpActionResult GetRetailDetailedReport(
+        public IActionResult GetRetailDetailedReport(
             [FromUri] string billCycle = null,
             [FromUri] string calcCycle = null,
             [FromUri] string cycleType = "A", // A for bill_cycle, C for calc_cycle
@@ -806,7 +820,7 @@ namespace MISReports_Api.Controllers
             return ProcessRetailDetailedRequest(request);
         }
 
-        private IHttpActionResult ProcessRetailDetailedRequest(RetailDetailedRequest request)
+        private IActionResult ProcessRetailDetailedRequest(RetailDetailedRequest request)
         {
             try
             {
@@ -841,6 +855,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessRetailDetailedRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -862,7 +877,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("retail/summary")]
-        public IHttpActionResult GetRetailSummaryReport(
+        public IActionResult GetRetailSummaryReport(
             [FromUri] string billCycle = null,
             [FromUri] string calcCycle = null,
             [FromUri] string cycleType = "A") // A for bill_cycle, C for calc_cycle
@@ -898,7 +913,7 @@ namespace MISReports_Api.Controllers
             return ProcessRetailSummaryRequest(request);
         }
 
-        private IHttpActionResult ProcessRetailSummaryRequest(RetailSummaryRequest request)
+        private IActionResult ProcessRetailSummaryRequest(RetailSummaryRequest request)
         {
             try
             {
@@ -922,6 +937,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessRetailSummaryRequest failed. request={@request}", request);
                 return Ok(new
                 {
                     data = (object)null,
@@ -933,7 +949,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("retail/summary-bulk")]
-        public IHttpActionResult GetRetailBulkSummaryReport([FromUri] string billCycle)
+        public IActionResult GetRetailBulkSummaryReport([FromUri] string billCycle)
         {
             var validationErrors = new List<string>();
 
@@ -959,7 +975,7 @@ namespace MISReports_Api.Controllers
             return ProcessRetailBulkSummaryRequest(request);
         }
 
-        private IHttpActionResult ProcessRetailBulkSummaryRequest(RetailSummaryRequest request)
+        private IActionResult ProcessRetailBulkSummaryRequest(RetailSummaryRequest request)
         {
             try
             {
@@ -983,6 +999,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessRetailBulkSummaryRequest failed. request={@request}", request);
                 return Ok(new
                 {
                     data = (object)null,
@@ -995,7 +1012,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("solarPVCapacity/ordinary")]
-        public IHttpActionResult GetPVCapacityOrdinaryReport(
+        public IActionResult GetPVCapacityOrdinaryReport(
             [FromUri] string billCycle,
             [FromUri] string reportType,
             [FromUri] string typeCode = null)
@@ -1051,7 +1068,7 @@ namespace MISReports_Api.Controllers
             return ProcessPVCapacityOrdinaryRequest(request);
         }
 
-        private IHttpActionResult ProcessPVCapacityOrdinaryRequest(SolarProgressRequest request)
+        private IActionResult ProcessPVCapacityOrdinaryRequest(SolarProgressRequest request)
         {
             try
             {
@@ -1086,6 +1103,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessPVCapacityOrdinaryRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -1097,7 +1115,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("solarPVCapacity/bulk")]
-        public IHttpActionResult GetPVCapacityBulkReport(
+        public IActionResult GetPVCapacityBulkReport(
             [FromUri] string billCycle,
             [FromUri] string reportType,
             [FromUri] string typeCode = null)
@@ -1153,7 +1171,7 @@ namespace MISReports_Api.Controllers
             return ProcessPVCapacityBulkRequest(request);
         }
 
-        private IHttpActionResult ProcessPVCapacityBulkRequest(SolarProgressRequest request)
+        private IActionResult ProcessPVCapacityBulkRequest(SolarProgressRequest request)
         {
             try
             {
@@ -1199,6 +1217,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessPVCapacityBulkRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -1210,7 +1229,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("solarPVCapacity/summary")]
-        public IHttpActionResult GetPVCapacitySummaryReport(
+        public IActionResult GetPVCapacitySummaryReport(
             [FromUri] string billCycle,
             [FromUri] string reportType,
             [FromUri] string typeCode = null)
@@ -1266,7 +1285,7 @@ namespace MISReports_Api.Controllers
             return ProcessPVCapacitySummaryRequest(request);
         }
 
-        private IHttpActionResult ProcessPVCapacitySummaryRequest(SolarProgressRequest request)
+        private IActionResult ProcessPVCapacitySummaryRequest(SolarProgressRequest request)
         {
             try
             {
@@ -1312,6 +1331,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessPVCapacitySummaryRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -1322,7 +1342,7 @@ namespace MISReports_Api.Controllers
         }
         [HttpGet]
         [Route("solarPayment/bulk")]
-        public IHttpActionResult GetSolarPaymentBulkReport(
+        public IActionResult GetSolarPaymentBulkReport(
             [FromUri] string billCycle,
             [FromUri] string netType = "1",   // Net type filter (1, 2, 3, 4, 5)
             [FromUri] string reportType = "entireceb",
@@ -1384,7 +1404,7 @@ namespace MISReports_Api.Controllers
             return ProcessSolarPaymentBulkRequest(request);
         }
 
-        private IHttpActionResult ProcessSolarPaymentBulkRequest(SolarPaymentBulkRequest request)
+        private IActionResult ProcessSolarPaymentBulkRequest(SolarPaymentBulkRequest request)
         {
             try
             {
@@ -1419,6 +1439,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessSolarPaymentBulkRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -1438,10 +1459,114 @@ namespace MISReports_Api.Controllers
             );
         }
 
+        [HttpGet]
+        [Route("solar-rooftop-payments-export-units")]
+        public IActionResult GetSolarRooftopPaymentsAndExportUnitsReport(
+            [FromUri] string customerType,
+            [FromUri] string type,
+            [FromUri] string divisionOrProvince = null,
+            [FromUri] string billCycle = null,
+            [FromUri] string reportType = "payments")
+        {
+            // Accept requests from frontend versions using the original parameter name.
+            // An optional scope parameter lets Web API reach this action for either name.
+            if (string.IsNullOrWhiteSpace(divisionOrProvince))
+                divisionOrProvince = Request.GetQueryNameValuePairs()
+                    .FirstOrDefault(parameter => string.Equals(parameter.Key, "division", StringComparison.OrdinalIgnoreCase))
+                    .Value;
+
+            var validationErrors = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(customerType))
+                validationErrors.Add("Customer type is required.");
+            else if (!new[] { "ordinary", "bulk" }.Contains(customerType.Trim(), StringComparer.OrdinalIgnoreCase))
+                validationErrors.Add("Customer type must be Ordinary or Bulk.");
+
+            if (string.IsNullOrWhiteSpace(billCycle))
+                validationErrors.Add("Bill cycle is required.");
+
+            if (string.IsNullOrWhiteSpace(type))
+                validationErrors.Add("Type is required.");
+            else if (!new[] { "Province", "Division" }.Contains(type.Trim(), StringComparer.OrdinalIgnoreCase))
+                validationErrors.Add("Type must be Province or Division.");
+
+            if (string.IsNullOrWhiteSpace(divisionOrProvince))
+                validationErrors.Add("Province or division is required.");
+
+            if (string.IsNullOrWhiteSpace(reportType))
+                validationErrors.Add("Report type is required.");
+            else if (!new[] { "payments", "exportunits", "export units" }.Contains(reportType.Trim(), StringComparer.OrdinalIgnoreCase))
+                validationErrors.Add("Report type must be payments or exportUnits.");
+
+            if (validationErrors.Count > 0)
+            {
+                return Ok(new
+                {
+                    data = (object)null,
+                    errorMessage = string.Join("; ", validationErrors)
+                });
+            }
+
+            bool isProvince = type.Trim().Equals("Province", StringComparison.OrdinalIgnoreCase);
+            string locationCode = divisionOrProvince.Trim();
+            // The province dropdown displays "code - name" but filters by code only.
+            // Accept that display text from manual Swagger requests as well.
+            if (isProvince)
+            {
+                int separator = locationCode.IndexOf('-');
+                if (separator > 0)
+                    locationCode = locationCode.Substring(0, separator).Trim();
+            }
+
+            var request = new SolarRooftopPaymentsandExportUnitsRequest
+            {
+                CustomerType = customerType.Trim(),
+                BillCycle = billCycle.Trim(),
+                Province = isProvince ? locationCode : null,
+                Area = null,
+                Region = isProvince ? null : locationCode,
+                ReportType = reportType.Trim().Equals("exportunits", StringComparison.OrdinalIgnoreCase) ||
+                    reportType.Trim().Equals("export units", StringComparison.OrdinalIgnoreCase)
+                    ? SolarRooftopReportType.ExportUnits
+                    : SolarRooftopReportType.Payments
+            };
+
+            try
+            {
+                if (!_solarRooftopPaymentsandExportUnitsDao.TestConnection(out string connError, request.CustomerType))
+                {
+                    return Ok(new
+                    {
+                        data = (object)null,
+                        errorMessage = "Database connection failed.",
+                        errorDetails = connError
+                    });
+                }
+
+                var data = _solarRooftopPaymentsandExportUnitsDao.GetReport(request);
+
+                return Ok(new
+                {
+                    data = data,
+                    errorMessage = (string)null
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "GetSolarRooftopPaymentsAndExportUnitsReport failed. customerType={customerType}, type={type}, divisionOrProvince={divisionOrProvince}, billCycle={billCycle}, reportType={reportType}", customerType, type, divisionOrProvince, billCycle, reportType);
+                return Ok(new
+                {
+                    data = (object)null,
+                    errorMessage = "Cannot get solar rooftop payments and export units report data.",
+                    errorDetails = ex.Message
+                });
+            }
+        }
+
 
         [HttpGet]
         [Route("solarConnectionDetails/retail/detailed")]
-        public IHttpActionResult GetSolarConnectionDetailsRetailDetailedReport(
+        public IActionResult GetSolarConnectionDetailsRetailDetailedReport(
             [FromUri] string cycleType = "A",     // A = BillCycle, B = CalcCycle
             [FromUri] string billCycle = null,
             [FromUri] string calcCycle = null,
@@ -1509,7 +1634,7 @@ namespace MISReports_Api.Controllers
             return ProcessSolarReadingDetailedRequest(request);
         }
 
-        private IHttpActionResult ProcessSolarReadingDetailedRequest(RetailDetailedRequest request)
+        private IActionResult ProcessSolarReadingDetailedRequest(RetailDetailedRequest request)
         {
             try
             {
@@ -1533,6 +1658,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessSolarReadingDetailedRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -1544,7 +1670,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("solarConnectionDetails/retail/summary")]
-        public IHttpActionResult GetSolarConnectionDetailsRetailSummaryReport(
+        public IActionResult GetSolarConnectionDetailsRetailSummaryReport(
             [FromUri] string cycleType = "A",     // A = BillCycle, B = CalcCycle
             [FromUri] string billCycle = null,
             [FromUri] string calcCycle = null,
@@ -1612,7 +1738,7 @@ namespace MISReports_Api.Controllers
             return ProcessSolarReadingSummaryRequest(request);
         }
 
-        private IHttpActionResult ProcessSolarReadingSummaryRequest(RetailDetailedRequest request)
+        private IActionResult ProcessSolarReadingSummaryRequest(RetailDetailedRequest request)
         {
             try
             {
@@ -1636,6 +1762,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessSolarReadingSummaryRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -1647,7 +1774,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("solarConnectionDetails/bulk")]
-        public IHttpActionResult GetSolarConnectionDetailsBulkReport(
+        public IActionResult GetSolarConnectionDetailsBulkReport(
             [FromUri] string addedBillCycle = null,
             [FromUri] string billCycle = null,
             [FromUri] string netType = "1",
@@ -1740,7 +1867,7 @@ namespace MISReports_Api.Controllers
 
         // 3. Add this helper method:
 
-        private IHttpActionResult ProcessSolarReadingUsageBulkRequest(BulkUsageRequest request)
+        private IActionResult ProcessSolarReadingUsageBulkRequest(BulkUsageRequest request)
         {
             try
             {
@@ -1764,6 +1891,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessSolarReadingUsageBulkRequest failed");
                 return Ok(new
                 {
                     data = (object)null,
@@ -1774,7 +1902,7 @@ namespace MISReports_Api.Controllers
         }
         [HttpGet]
         [Route("solarCustomerInformation/{accountNumber}")]
-        public IHttpActionResult GetSolarCustomerInformation(string accountNumber)
+        public IActionResult GetSolarCustomerInformation(string accountNumber)
         {
             try
             {
@@ -1860,6 +1988,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetSolarCustomerInformation failed. accountNumber={accountNumber}", accountNumber);
                 System.Diagnostics.Trace.WriteLine($"ERROR in GetCustomerInformation: {ex.Message}");
                 System.Diagnostics.Trace.WriteLine($"Stack Trace: {ex.StackTrace}");
 
@@ -1882,7 +2011,7 @@ namespace MISReports_Api.Controllers
         // -----------------------------------------------------------------------
         [HttpGet]
         [Route("rooftop-solar-input/report")]
-        public IHttpActionResult GetRoofTopSolarInputReport(
+        public IActionResult GetRoofTopSolarInputReport(
             [FromUri] string calcCycle,
             [FromUri] string reportType,
             [FromUri] string typeCode = null)
@@ -1921,6 +2050,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetRoofTopSolarInputReport failed. calcCycle={calcCycle}, reportType={reportType}, typeCode={typeCode}", calcCycle, reportType, typeCode);
                 System.Diagnostics.Trace.WriteLine($"ERROR GetRoofTopSolarInputReport: {ex.Message}");
                 System.Diagnostics.Trace.WriteLine($"Stack Trace: {ex.StackTrace}");
                 return Ok(new
@@ -1932,5 +2062,99 @@ namespace MISReports_Api.Controllers
             }
         }
 
+        //Solor Liss recon
+
+        [HttpGet]
+        [Route("payment-liss-recon")]
+        public IActionResult GetPaymentLissReconReport(
+            [FromUri] string billCycle,
+            [FromUri] string reportCategory,
+            [FromUri] string typeCode)
+        {
+            var validationErrors = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(billCycle))
+                validationErrors.Add("Bill cycle is required.");
+
+            if (string.IsNullOrWhiteSpace(reportCategory))
+                validationErrors.Add("Report category (Province or Division) is required.");
+
+            if (string.IsNullOrWhiteSpace(typeCode))
+                validationErrors.Add("Province/Division code is required.");
+
+            if (validationErrors.Count > 0)
+            {
+                return Ok(new
+                {
+                    data = (object)null,
+                    errorMessage = string.Join("; ", validationErrors)
+                });
+            }
+
+            try
+            {
+                var request = new SolarPaymentLissReconRequest
+                {
+                    BillCycle = billCycle.Trim(),
+                    ReportCategory = reportCategory.Trim(),
+                    TypeCode = typeCode.Trim()
+                };
+
+                var result = _solarPaymentLissReconDao.GetReconciliationReport(request);
+                return Ok(new
+                {
+                    data = result,
+                    errorMessage = (string)null
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "GetPaymentLissReconReport failed. billCycle={billCycle}, reportCategory={reportCategory}, typeCode={typeCode}", billCycle, reportCategory, typeCode);
+                System.Diagnostics.Trace.WriteLine($"ERROR GetPaymentLissReconReport: {ex.Message}");
+                return Ok(new
+                {
+                    data = (object)null,
+                    errorMessage = "Error generating Solar Payment & LISS Reconciliation report.",
+                    errorDetails = ex.Message
+                });
+            }
+        }
+
+
+        //SolarJournalsBulkDao//
+        [HttpGet]
+        [Route("solar-journals/bulk")]
+        public IActionResult GetSolarJournalsBulk(
+    [FromUri] string billCycle,
+    [FromUri] string reportCategory,
+    [FromUri] string typeCode = null)
+        {
+            if (string.IsNullOrWhiteSpace(billCycle))
+                return Ok(new { data = (object)null, errorMessage = "Bill cycle is required." });
+
+            if (string.IsNullOrWhiteSpace(reportCategory))
+                return Ok(new { data = (object)null, errorMessage = "Report category is required." });
+
+            try
+            {
+                var request = new SolarJournalsBulkRequest
+                {
+                    BillCycle = billCycle.Trim(),
+                    ReportCategory = reportCategory.Trim(),
+                    TypeCode = typeCode?.Trim()
+                };
+
+                var result = _solarJournalsBulkDao.GetSolarJournals(request);
+                return Ok(new { data = result, errorMessage = (string)null });
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "GetSolarJournalsBulk failed. billCycle={billCycle}, reportCategory={reportCategory}, typeCode={typeCode}", billCycle, reportCategory, typeCode);
+                return Ok(new { data = (object)null, errorMessage = ex.Message });
+            }
+        }
+
     }
 }
+
+

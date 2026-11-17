@@ -1,19 +1,22 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/regionwisetrial")]
     public class RegionwiseTrialController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly RegionwiseTrialRepository _repository = new RegionwiseTrialRepository();
 
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetRegionwiseTrial([FromUri] string companyId, [FromUri] string month, [FromUri] string year)
+        public IActionResult GetRegionwiseTrial([FromUri] string companyId, [FromUri] string month, [FromUri] string year)
         {
             try
             {
@@ -47,6 +50,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetRegionwiseTrial failed. companyId={companyId}, month={month}, year={year}", companyId, month, year);
                 // Log error details
                 System.Diagnostics.Trace.WriteLine($"ERROR: {ex.ToString()}");
 

@@ -1,13 +1,15 @@
-﻿using MISReports_Api.Models;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace MISReports_Api.DAL
 {
     public class IncomeExpenditureRegionRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
         public List<IncomeExpenditureRegionModel> GetIncomeExpenditureRegion(string companyId, int repYear, int repMonth)
@@ -107,12 +109,14 @@ namespace MISReports_Api.DAL
                 }
                 catch (OracleException oex)
                 {
+                    logger.Error(oex, "GetIncomeExpenditureRegion failed (exception rethrown). companyId={companyId}, repYear={repYear}, repMonth={repMonth}", companyId, repYear, repMonth);
                     throw new Exception(
                         $"Oracle error fetching Income/Expenditure for Company {companyId}, Year {repYear}, Month {repMonth}. " +
                         $"Error Code: {oex.Number}, Message: {oex.Message}", oex);
                 }
                 catch (Exception ex)
                 {
+                    logger.Error(ex, "GetIncomeExpenditureRegion failed (exception rethrown). companyId={companyId}, repYear={repYear}, repMonth={repMonth}", companyId, repYear, repMonth);
                     throw new Exception(
                         $"Error fetching Income/Expenditure Region data for Company {companyId}.", ex);
                 }

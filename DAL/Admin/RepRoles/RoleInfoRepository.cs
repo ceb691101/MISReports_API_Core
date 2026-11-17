@@ -1,14 +1,16 @@
+using MISReports_Api.Compat;
 using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 
 namespace MISReports_Api.DAL
 {
     public class RoleInfoRepository
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["HQOracle"].ConnectionString;
 
         private List<string> NormalizeCostCentres(CreateRoleRequest request)
@@ -81,6 +83,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCostCentreLvlNo failed. costCentreId={costCentreId}", costCentreId);
                 Debug.WriteLine($"Error in GetCostCentreLvlNo: {ex.Message}");
             }
 
@@ -232,6 +235,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetRolesByUserType failed (exception rethrown). userTypePattern={userTypePattern}", userTypePattern);
                 Debug.WriteLine($"Error in GetRolesByUserType: {ex.Message}");
                 throw;
             }
@@ -375,6 +379,7 @@ namespace MISReports_Api.DAL
                     }
                     catch (Exception ex)
                     {
+                        logger.Error(ex, "CreateRole failed (exception rethrown). request={@request}", request);
                         transaction.Rollback();
                         Debug.WriteLine($"Error in CreateRole: {ex.Message}");
                         throw;
@@ -581,6 +586,7 @@ namespace MISReports_Api.DAL
                     }
                     catch (Exception ex)
                     {
+                        logger.Error(ex, "UpdateRole failed (exception rethrown). request={@request}", request);
                         transaction.Rollback();
                         Debug.WriteLine($"Error in UpdateRole: {ex.Message}");
                         throw;
@@ -696,6 +702,7 @@ namespace MISReports_Api.DAL
                     }
                     catch (Exception ex)
                     {
+                        logger.Error(ex, "DeleteRole failed (exception rethrown). epfNo={epfNo}, userType={userType}", epfNo, userType);
                         transaction.Rollback();
                         Debug.WriteLine($"Error in DeleteRole: {ex.Message}");
                         throw;
@@ -815,6 +822,7 @@ namespace MISReports_Api.DAL
                     }
                     catch (Exception ex)
                     {
+                        logger.Error(ex, "AddCostCentresToRole failed (exception rethrown). epfNo={epfNo}, userType={userType}, requestedCostCentres={@requestedCostCentres}", epfNo, userType, requestedCostCentres);
                         transaction.Rollback();
                         Debug.WriteLine($"Error in AddCostCentresToRole: {ex.Message}");
                         throw;
@@ -860,6 +868,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMotherCompanies failed (exception rethrown)");
                 Debug.WriteLine($"Error in GetMotherCompanies: {ex.Message}");
                 throw;
             }
@@ -923,6 +932,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCostCentresByCompany failed (exception rethrown). companyId={companyId}", companyId);
                 Debug.WriteLine($"Error in GetCostCentresByCompany: {ex.Message}");
                 throw;
             }
@@ -967,6 +977,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetDepartmentsByCompany failed (exception rethrown). companyId={companyId}", companyId);
                 Debug.WriteLine($"Error in GetDepartmentsByCompany: {ex.Message}");
                 throw;
             }
@@ -1007,6 +1018,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetUserGroups failed (exception rethrown)");
                 Debug.WriteLine($"Error in GetUserGroups: {ex.Message}");
                 throw;
             }
@@ -1055,6 +1067,7 @@ namespace MISReports_Api.DAL
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetCostCentresByDepartment failed (exception rethrown). departmentId={departmentId}", departmentId);
                 Debug.WriteLine($"Error in GetCostCentresByDepartment: {ex.Message}");
                 throw;
             }

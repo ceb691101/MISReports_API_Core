@@ -1,18 +1,21 @@
-﻿using MISReports_Api.Models.Shared;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.Models.Shared;
 using MISReports_Api.DBAccess;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 
 namespace MISReports_Api.DAL.Shared
 {
     public class RegionOrdinaryDao
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DBConnection _dbConnection = new DBConnection();
 
         public bool TestConnection(out string errorMessage)
         {
-            return _dbConnection.TestConnection(out errorMessage);
+            return _dbConnection.TestConnection(out errorMessage, false);
         }
 
         public List<RegionModel> GetRegion()
@@ -27,7 +30,7 @@ namespace MISReports_Api.DAL.Shared
 
                     string sql = "SELECT distinct region FROM areas WHERE region NOT IN ('L','T1')";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -41,8 +44,9 @@ namespace MISReports_Api.DAL.Shared
                         }
                     }
                 }
-                catch (OleDbException ex)
+                catch (DbException ex)
                 {
+                    logger.Error(ex, "GetRegion failed (exception rethrown)");
                     throw new Exception("Error retrieving region data: " + ex.Message, ex);
                 }
             }

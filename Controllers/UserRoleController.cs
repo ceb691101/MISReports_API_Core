@@ -1,19 +1,22 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/userrole")]
     public class UserRoleController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly UserRoleRepository _repository = new UserRoleRepository();
 
         [HttpGet]
         [Route("{epfNo}")]
-        public IHttpActionResult GetUserRole(string epfNo)
+        public IActionResult GetUserRole(string epfNo)
         {
             try
             {
@@ -29,6 +32,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetUserRole failed. epfNo={epfNo}", epfNo);
                 var errorResponse = new
                 {
                     data = (object)null,

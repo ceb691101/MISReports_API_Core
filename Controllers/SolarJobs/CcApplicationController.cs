@@ -1,19 +1,22 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DAL.SolarJobs;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers.SolarJobs
 {
     [RoutePrefix("api/solarjobs/ccapplication")]
     public class CcApplicationController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly CcApplicationRepository _repository = new CcApplicationRepository();
 
         [HttpGet]
         [Route("list")]
-        public async Task<IHttpActionResult> GetList([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string costctr)
+        public async Task<IActionResult> GetList([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string costctr)
         {
             if (string.IsNullOrWhiteSpace(fromDate) || string.IsNullOrWhiteSpace(toDate) || string.IsNullOrWhiteSpace(costctr))
             {
@@ -55,6 +58,7 @@ namespace MISReports_Api.Controllers.SolarJobs
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetList failed. fromDate={fromDate}, toDate={toDate}, costctr={costctr}", fromDate, toDate, costctr);
                 return Ok(new
                 {
                     data = (object)null,

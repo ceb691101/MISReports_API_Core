@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 
@@ -12,17 +13,19 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/joballocatedestimatesdetails")]
     public class JobAllocatedEstimatesDetailsController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly JobAllocatedEstimatesDetailsDAL _dal = new JobAllocatedEstimatesDetailsDAL();
 
         // QUERY: /api/joballocatedestimatesdetails/report?costCtr=511.20&matCode=
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string costCtr, [FromUri] string matCode = "")
+        public IActionResult GetQuery([FromUri] string costCtr, [FromUri] string matCode = "")
         {
             return ExecuteQuery(costCtr, matCode);
         }
 
-        private IHttpActionResult ExecuteQuery(string costCtr, string matCode)
+        private IActionResult ExecuteQuery(string costCtr, string matCode)
         {
             try
             {
@@ -60,6 +63,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. costCtr={costCtr}, matCode={matCode}", costCtr, matCode);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }

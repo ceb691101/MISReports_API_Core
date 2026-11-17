@@ -1,10 +1,10 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Models.Dashboard;
 using NLog;
 using System;
-using System.Configuration;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Globalization;
 using System.Linq;
 
@@ -142,7 +142,7 @@ namespace MISReports_Api.DAL.Dashboard
             {
                 logger.Info($"=== START GetSalesAndCollectionByDateRange billType={billType}: {fromDate:dd-MM-yy} to {toDate:dd-MM-yy} ===");
 
-                using (var posConn = new OleDbConnection(_posPaymentConnectionString))
+                using (var posConn = Informix.CreateConnection(_posPaymentConnectionString))
                 {
                     posConn.Open();
                     AddDateAmountRowsFromOleDb(
@@ -155,7 +155,7 @@ namespace MISReports_Api.DAL.Dashboard
                         filterValue: filterValue);
                 }
 
-                using (var bankConn = new OleDbConnection(_bankPaymentConnectionString))
+                using (var bankConn = Informix.CreateConnection(_bankPaymentConnectionString))
                 {
                     bankConn.Open();
 
@@ -202,7 +202,7 @@ namespace MISReports_Api.DAL.Dashboard
         }
 
         private void AddDateAmountRowsFromOleDb(
-            OleDbConnection conn,
+            DbConnection conn,
             string sql,
             Dictionary<DateTime, decimal> destination,
             string billType,
@@ -212,7 +212,7 @@ namespace MISReports_Api.DAL.Dashboard
         {
             try
             {
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     if (sql.Contains("trans_type"))
                     {
@@ -246,7 +246,7 @@ namespace MISReports_Api.DAL.Dashboard
                     }
                 }
             }
-            catch (OleDbException ex) when (IsNoRecordFound(ex.Message))
+            catch (DbException ex) when (IsNoRecordFound(ex.Message))
             {
                 logger.Warn($"No records found for query/date range. Source skipped. Details: {ex.Message}");
             }
@@ -274,7 +274,7 @@ namespace MISReports_Api.DAL.Dashboard
         // Reader helpers (mirrors the pattern used across the codebase)
         // ------------------------------------------------------------------ //
 
-        private int GetIntValue(OleDbDataReader reader, string column)
+        private int GetIntValue(DbDataReader reader, string column)
         {
             try
             {
@@ -293,7 +293,7 @@ namespace MISReports_Api.DAL.Dashboard
             }
         }
 
-        private decimal GetDecimalValue(OleDbDataReader reader, string column)
+        private decimal GetDecimalValue(DbDataReader reader, string column)
         {
             try
             {

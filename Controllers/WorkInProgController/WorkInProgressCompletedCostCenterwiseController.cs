@@ -1,13 +1,16 @@
-﻿using MISReports_Api.DAL;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DAL;
 using System;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
     [RoutePrefix("api/workinprogresscompletedcostcenterwise")]
     public class WorkInProgressCompletedCostCenterwiseController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly WorkInProgressCompletedCostCenterwiseRepository _repo;
 
         public WorkInProgressCompletedCostCenterwiseController()
@@ -22,7 +25,7 @@ namespace MISReports_Api.Controllers
         /// </summary>
         [HttpGet]
         [Route("{costctr}/{fromDate}/{toDate}")]
-        public async Task<IHttpActionResult> GetWorkInProgressCompletedCostCenterwise(string costctr, string fromDate, string toDate)
+        public async Task<IActionResult> GetWorkInProgressCompletedCostCenterwise(string costctr, string fromDate, string toDate)
         {
             try
             {
@@ -37,6 +40,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetWorkInProgressCompletedCostCenterwise failed. costctr={costctr}, fromDate={fromDate}, toDate={toDate}", costctr, fromDate, toDate);
                 return Ok(new
                 {
                     data = (object)null,

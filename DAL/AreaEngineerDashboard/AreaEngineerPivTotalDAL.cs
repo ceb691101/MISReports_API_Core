@@ -1,3 +1,4 @@
+using MISReports_Api.Compat;
 using System;
 using System.Collections.Generic;
 using Oracle.ManagedDataAccess.Client;
@@ -7,7 +8,7 @@ namespace MISReports_Api.DAL.AreaEngineerDashboard
 {
     public class AreaEngineerPivTotalDAL
     {
-        private static readonly string ConnectionString = System.Configuration.ConfigurationManager
+        private static readonly string ConnectionString = MISReports_Api.Compat.ConfigurationManager
             .ConnectionStrings["HQOracle"].ConnectionString;
 
         public List<DgmPivTotalModel> Fetch(string companyId, string startDate = null, string endDate = null)

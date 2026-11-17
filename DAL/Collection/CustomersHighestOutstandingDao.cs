@@ -1,10 +1,10 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DBAccess;
 using MISReports_Api.Models.Collection;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.Collection
@@ -69,7 +69,7 @@ namespace MISReports_Api.DAL.Collection
                     }
 
                     // 3. Query all area electric tables in this province database
-                    using (var conn = new OleDbConnection(billingConnectionString))
+                    using (var conn = Informix.CreateConnection(billingConnectionString))
                     {
                         try
                         {
@@ -101,7 +101,7 @@ namespace MISReports_Api.DAL.Collection
                                       AND a.crnt_balance > ?
                                     ORDER BY a.crnt_balance DESC";
 
-                                using (var cmd = new OleDbCommand(sql, conn))
+                                using (var cmd = Informix.CreateCommand(sql, conn))
                                 {
                                     cmd.CommandTimeout = 180; // Allow sufficient time for large queries
                                     cmd.Parameters.AddWithValue("?", (double)request.MonthsInArrears);
@@ -164,7 +164,7 @@ namespace MISReports_Api.DAL.Collection
                                             }
                                         }
                                     }
-                                    catch (OleDbException oleEx)
+                                    catch (DbException oleEx)
                                     {
                                         logger.Warn(oleEx, $"Table {tableName} query failed or table is missing. Skipping this area.");
                                     }
@@ -207,7 +207,7 @@ namespace MISReports_Api.DAL.Collection
                             LEFT JOIN prov_servers p ON TRIM(a.prov_code) = TRIM(p.prov_code) 
                             WHERE a.prov_code = ? 
                             ORDER BY a.area_name";
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("?", request.ProvinceCode.Trim());
                         using (var reader = cmd.ExecuteReader())
@@ -232,7 +232,7 @@ namespace MISReports_Api.DAL.Collection
                             LEFT JOIN prov_servers p ON TRIM(a.prov_code) = TRIM(p.prov_code) 
                             WHERE a.region = ? 
                             ORDER BY a.area_name";
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("?", request.RegionCode.Trim());
                         using (var reader = cmd.ExecuteReader())
@@ -262,7 +262,7 @@ namespace MISReports_Api.DAL.Collection
             using (var conn = _dbConnection.GetConnection(false))
             {
                 conn.Open();
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("?", provCode.Trim());
                     object result = cmd.ExecuteScalar();

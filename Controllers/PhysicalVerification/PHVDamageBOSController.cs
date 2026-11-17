@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-using System.Web.Http;
+﻿using MISReports_Api.Compat;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL.PhysicalVerification;
 
 namespace MISReports_Api.Controllers.PhysicalVerification
@@ -12,7 +13,7 @@ namespace MISReports_Api.Controllers.PhysicalVerification
 
         [HttpGet]
         [Route("list")]
-        public async Task<IHttpActionResult> GetDamageOBS(
+        public async Task<IActionResult> GetDamageOBS(
             string deptId,
             string warehouseCode,
             int repYear,

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models;
 using Oracle.ManagedDataAccess.Client;
@@ -13,6 +13,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/jobsearch")]
     public class JobSearchController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly JobSearchRepository _repository = new JobSearchRepository();
 
         // ────────────────────────────────────────────────
@@ -24,7 +26,7 @@ namespace MISReports_Api.Controllers
         /// </summary>
         [HttpGet]
         [Route("")]
-        public async Task<IHttpActionResult> Search(
+        public async Task<IActionResult> Search(
      [FromUri] string applicationId = null,
      [FromUri] string applicationNo = null,
      [FromUri] string projectNo = null,
@@ -58,7 +60,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("application-status")]
-        public async Task<IHttpActionResult> GetApplicationStatus(
+        public async Task<IActionResult> GetApplicationStatus(
             [FromUri] string application_id)
         {
             if (string.IsNullOrWhiteSpace(application_id))
@@ -73,6 +75,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetApplicationStatus failed. application_id={application_id}", application_id);
                 return Ok(new { success = false, message = "Failed to fetch application status", error = ex.Message });
             }
         }
@@ -82,7 +85,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("application-info")]
-        public async Task<IHttpActionResult> GetApplicationInfo(
+        public async Task<IActionResult> GetApplicationInfo(
             [FromUri] string application_id)
         {
             if (string.IsNullOrWhiteSpace(application_id))
@@ -95,6 +98,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetApplicationInfo failed. application_id={application_id}", application_id);
                 return Ok(new { success = false, message = "Failed to fetch application info", error = ex.Message });
             }
         }
@@ -104,7 +108,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("contractor-info")]
-        public async Task<IHttpActionResult> GetContractorInfo(
+        public async Task<IActionResult> GetContractorInfo(
             [FromUri] string project_no)
         {
             if (string.IsNullOrWhiteSpace(project_no))
@@ -117,6 +121,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetContractorInfo failed. project_no={project_no}", project_no);
                 return Ok(new { success = false, message = "Failed to fetch contractor info", error = ex.Message });
             }
         }
@@ -126,7 +131,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("labour-details")]
-        public async Task<IHttpActionResult> GetLabourDetails(
+        public async Task<IActionResult> GetLabourDetails(
             [FromUri] string estimate_no)
         {
             if (string.IsNullOrWhiteSpace(estimate_no))
@@ -139,6 +144,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetLabourDetails failed. estimate_no={estimate_no}", estimate_no);
                 return Ok(new { success = false, message = "Failed to fetch labour details", error = ex.Message });
             }
         }
@@ -148,7 +154,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("energizing-basic")]
-        public async Task<IHttpActionResult> GetEnergizingBasic(
+        public async Task<IActionResult> GetEnergizingBasic(
             [FromUri] string project_no)
         {
             if (string.IsNullOrWhiteSpace(project_no))
@@ -161,6 +167,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetEnergizingBasic failed. project_no={project_no}", project_no);
                 return Ok(new { success = false, message = "Failed to fetch energizing basic info", error = ex.Message });
             }
         }
@@ -170,7 +177,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("estimate-info")]
-        public async Task<IHttpActionResult> GeStandardEstimate(
+        public async Task<IActionResult> GeStandardEstimate(
             [FromUri] string estimate_no)
         {
             if (string.IsNullOrWhiteSpace(estimate_no))
@@ -183,6 +190,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GeStandardEstimate failed. estimate_no={estimate_no}", estimate_no);
                 return Ok(new { success = false, message = "Failed to fetch revised estimate", error = ex.Message });
             }
         }
@@ -192,7 +200,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("estimate-cost-summary")]
-        public async Task<IHttpActionResult> GetEstimateCostSummary(
+        public async Task<IActionResult> GetEstimateCostSummary(
             [FromUri] string estimateNo)
         {
             if (string.IsNullOrWhiteSpace(estimateNo))
@@ -210,6 +218,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetEstimateCostSummary failed. estimateNo={estimateNo}", estimateNo);
                 return Ok(new
                 {
                     success = false,
@@ -224,7 +233,7 @@ namespace MISReports_Api.Controllers
         //_______________________________________________
         [HttpGet]
         [Route("material-transactions")]
-        public async Task<IHttpActionResult> GetMaterialTransactions([FromUri] string estimateNo)
+        public async Task<IActionResult> GetMaterialTransactions([FromUri] string estimateNo)
         {
             if (string.IsNullOrWhiteSpace(estimateNo))
                 return BadRequest("estimateNo is required");
@@ -236,6 +245,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaterialTransactions failed. estimateNo={estimateNo}", estimateNo);
                 return Ok(new
                 {
                     success = false,
@@ -250,7 +260,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("job-status-history")]
-        public async Task<IHttpActionResult> GetJobStatusHistory(
+        public async Task<IActionResult> GetJobStatusHistory(
             [FromUri] string project_no)
         {
             if (string.IsNullOrWhiteSpace(project_no))
@@ -263,6 +273,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetJobStatusHistory failed. project_no={project_no}", project_no);
                 return Ok(new { success = false, message = "Failed to fetch job status history", error = ex.Message });
             }
         }
@@ -272,7 +283,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("energized-info")]
-        public async Task<IHttpActionResult> GetEnergizedInfo(
+        public async Task<IActionResult> GetEnergizedInfo(
             [FromUri] string project_no)
         {
             if (string.IsNullOrWhiteSpace(project_no))
@@ -285,6 +296,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetEnergizedInfo failed. project_no={project_no}", project_no);
                 return Ok(new { success = false, message = "Failed to fetch energized info", error = ex.Message });
             }
         }
@@ -294,7 +306,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("estimate-approvals")]
-        public async Task<IHttpActionResult> GetEstimateApprovals(
+        public async Task<IActionResult> GetEstimateApprovals(
             [FromUri] string estimate_no)
         {
             if (string.IsNullOrWhiteSpace(estimate_no))
@@ -307,6 +319,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetEstimateApprovals failed. estimate_no={estimate_no}", estimate_no);
                 return Ok(new
                 {
                     success = false,
@@ -321,7 +334,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("revised-estimate-approvals")]
-        public async Task<IHttpActionResult> GetRevisedEstimateApprovals(
+        public async Task<IActionResult> GetRevisedEstimateApprovals(
             [FromUri] string projectNO)
         {
             if (string.IsNullOrWhiteSpace(projectNO))
@@ -334,6 +347,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetRevisedEstimateApprovals failed. projectNO={projectNO}", projectNO);
                 return Ok(new
                 {
                     success = false,
@@ -348,7 +362,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("job-finalized-info")]
-        public async Task<IHttpActionResult> GetJobFinalizedInfo(
+        public async Task<IActionResult> GetJobFinalizedInfo(
             [FromUri] string project_no)
         {
             if (string.IsNullOrWhiteSpace(project_no))
@@ -366,6 +380,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetJobFinalizedInfo failed. project_no={project_no}", project_no);
                 return Ok(new
                 {
                     success = false,
@@ -380,7 +395,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("contractor-bills")]
-        public async Task<IHttpActionResult> GetContractorBills(
+        public async Task<IActionResult> GetContractorBills(
             [FromUri] string project_no)
         {
             if (string.IsNullOrWhiteSpace(project_no))
@@ -398,6 +413,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetContractorBills failed. project_no={project_no}", project_no);
                 return Ok(new
                 {
                     success = false,
@@ -412,7 +428,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("piv-details")]
-        public async Task<IHttpActionResult> GetPivDetails(
+        public async Task<IActionResult> GetPivDetails(
             [FromUri] string referenceNo)
         {
             if (string.IsNullOrWhiteSpace(referenceNo))
@@ -430,6 +446,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetPivDetails failed. referenceNo={referenceNo}", referenceNo);
                 return Ok(new
                 {
                     success = false,
@@ -441,7 +458,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("appointment-info")]
-        public async Task<IHttpActionResult> GetAppointmentInfo([FromUri] string reference_no)
+        public async Task<IActionResult> GetAppointmentInfo([FromUri] string reference_no)
         {
             if (string.IsNullOrWhiteSpace(reference_no))
                 return BadRequest("reference_no is required");
@@ -458,6 +475,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetAppointmentInfo failed. reference_no={reference_no}", reference_no);
                 return Ok(new
                 {
                     success = false,
@@ -472,7 +490,7 @@ namespace MISReports_Api.Controllers
         // ────────────────────────────────────────────────
         [HttpGet]
         [Route("estimate-cost-job")]
-        public async Task<IHttpActionResult> GetEstimateSummary(
+        public async Task<IActionResult> GetEstimateSummary(
             [FromUri] string estimateNo)
         {
             if (string.IsNullOrWhiteSpace(estimateNo))
@@ -490,6 +508,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetEstimateSummary failed. estimateNo={estimateNo}", estimateNo);
                 return Ok(new
                 {
                     success = false,
@@ -504,7 +523,7 @@ namespace MISReports_Api.Controllers
         //_______________________________________________
         [HttpGet]
         [Route("material-transactions-for-job")]
-        public async Task<IHttpActionResult> GetMaterialsforjobsAsync([FromUri] string estimateNo)
+        public async Task<IActionResult> GetMaterialsforjobsAsync([FromUri] string estimateNo)
         {
             if (string.IsNullOrWhiteSpace(estimateNo))
                 return BadRequest("estimateNo is required");
@@ -516,6 +535,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetMaterialsforjobsAsync failed. estimateNo={estimateNo}", estimateNo);
                 return Ok(new
                 {
                     success = false,

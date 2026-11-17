@@ -1,9 +1,10 @@
-﻿using MISReports_Api.DBAccess;
+﻿using MISReports_Api.Compat;
+using MISReports_Api.DBAccess;
 using MISReports_Api.Models.General;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Common;
 using System.Linq;
 
 namespace MISReports_Api.DAL.General.ListOfGovernmentAccounts
@@ -36,7 +37,7 @@ namespace MISReports_Api.DAL.General.ListOfGovernmentAccounts
                     // Informix substring: dep_code[3,4] means chars starting at position 3, length 4
                     string sql = "Select dep_code,department from department where dep_code[3,4]!='99' order by dep_code";
 
-                    using (var cmd = new OleDbCommand(sql, conn))
+                    using (var cmd = Informix.CreateCommand(sql, conn))
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -108,7 +109,7 @@ namespace MISReports_Api.DAL.General.ListOfGovernmentAccounts
         /// Returns all government accounts for the given area and bill cycle.
         /// SQL: JOIN prn_dat_1 with govt_acct on acct_number, filtered by area_code and bill_cycle.
         /// </summary>
-        private List<GovernmentAccountsModel> GetAreaReportData(OleDbConnection conn, GovernmentAccountsRequest request)
+        private List<GovernmentAccountsModel> GetAreaReportData(DbConnection conn, GovernmentAccountsRequest request)
         {
             var results = new List<GovernmentAccountsModel>();
 
@@ -131,7 +132,7 @@ namespace MISReports_Api.DAL.General.ListOfGovernmentAccounts
 
                 logger.Info($"Executing Area SQL: AreaCode={request.AreaCode}, BillCycle={request.BillCycle}");
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     // Use LIKE with wildcard so a 2-digit area prefix (e.g. "54")
                     // correctly matches all sub-area codes (e.g. 5400, 5401, 5402 …)
@@ -166,7 +167,7 @@ namespace MISReports_Api.DAL.General.ListOfGovernmentAccounts
         /// Returns government accounts for the given area, bill cycle, and department.
         /// SQL: same JOIN as area report with the addition of b.dept = ?.
         /// </summary>
-        private List<GovernmentAccountsModel> GetDepartmentReportData(OleDbConnection conn, GovernmentAccountsRequest request)
+        private List<GovernmentAccountsModel> GetDepartmentReportData(DbConnection conn, GovernmentAccountsRequest request)
         {
             var results = new List<GovernmentAccountsModel>();
 
@@ -191,7 +192,7 @@ namespace MISReports_Api.DAL.General.ListOfGovernmentAccounts
                 logger.Info($"Executing Department SQL: AreaCode={request.AreaCode}, " +
                             $"BillCycle={request.BillCycle}, DepartmentCode={request.DepartmentCode}");
 
-                using (var cmd = new OleDbCommand(sql, conn))
+                using (var cmd = Informix.CreateCommand(sql, conn))
                 {
                     // Use LIKE with wildcard so a 2-digit area prefix (e.g. "54")
                     // correctly matches all sub-area codes (e.g. 5400, 5401, 5402 …)
@@ -237,7 +238,7 @@ namespace MISReports_Api.DAL.General.ListOfGovernmentAccounts
         ///   7  kwh_charge
         ///   8  avg_cons
         /// </summary>
-        private GovernmentAccountsModel MapReaderToModel(OleDbDataReader reader)
+        private GovernmentAccountsModel MapReaderToModel(DbDataReader reader)
         {
             var model = new GovernmentAccountsModel();
 

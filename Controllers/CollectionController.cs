@@ -1,3 +1,4 @@
+using MISReports_Api.Compat;
 using MISReports_Api.DAL.Collection.ReceivablePosition;
 using MISReports_Api.DAL.Collection.SalesAndCollection;
 using MISReports_Api.DAL.Shared;
@@ -8,7 +9,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MISReports_Api.Controllers
 {
@@ -24,6 +25,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api")]
     public class CollectionController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         // ── DAO fields ────────────────────────────────────────────────────────
         private readonly ReceivablePositionDao _receivablePositionDao = new ReceivablePositionDao();
         private readonly SalesAndCollectionDao _salesAndCollectionDao = new SalesAndCollectionDao();
@@ -40,7 +43,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("receivable-position/report")]
-        public IHttpActionResult GetReceivablePositionReport(
+        public IActionResult GetReceivablePositionReport(
             [FromUri] string billCycle = null,
             [FromUri] string areaCode = null,
             [FromUri] string billType = null)
@@ -92,6 +95,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReceivablePositionReport failed. billCycle={billCycle}, areaCode={areaCode}, billType={billType}", billCycle, areaCode, billType);
                 System.Diagnostics.Trace.WriteLine(
                     $"ERROR GetReceivablePositionReport: {ex.Message}\n{ex.StackTrace}");
 
@@ -106,7 +110,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("receivable-position/areas-by-province")]
-        public IHttpActionResult GetReceivablePositionAreasByProvince(
+        public IActionResult GetReceivablePositionAreasByProvince(
             [FromUri] string provinceCode = null,
             [FromUri] string billType = null)
         {
@@ -134,6 +138,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReceivablePositionAreasByProvince failed. provinceCode={provinceCode}, billType={billType}", provinceCode, billType);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -145,7 +150,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("receivable-position/areas-by-region")]
-        public IHttpActionResult GetReceivablePositionAreasByRegion(
+        public IActionResult GetReceivablePositionAreasByRegion(
             [FromUri] string regionCode = null,
             [FromUri] string billType = null)
         {
@@ -173,6 +178,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetReceivablePositionAreasByRegion failed. regionCode={regionCode}, billType={billType}", regionCode, billType);
                 return Ok(JObject.FromObject(new
                 {
                     data = (object)null,
@@ -195,7 +201,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("sales-collection/report")]
-        public IHttpActionResult GetSalesCollectionReport(
+        public IActionResult GetSalesCollectionReport(
     [FromUri] string billCycle = null,
     [FromUri] string reportType = "EntireCEB",
     [FromUri] string provinceCode = null,
@@ -251,6 +257,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetSalesCollectionReport failed. billCycle={billCycle}, reportType={reportType}, provinceCode={provinceCode}, regionCode={regionCode}", billCycle, reportType, provinceCode, regionCode);
                 System.Diagnostics.Trace.WriteLine(
                     $"ERROR GetSalesCollectionReport: {ex.Message}\n{ex.StackTrace}");
                 return Ok(JObject.FromObject(new
@@ -268,7 +275,7 @@ namespace MISReports_Api.Controllers
 
         [HttpPost]
         [Route("collection/headofficepos")]
-        public IHttpActionResult GetHeadOfficePOSReport([FromBody] HeadOfficePOSCollectionRequest request)
+        public IActionResult GetHeadOfficePOSReport([FromBody] HeadOfficePOSCollectionRequest request)
         {
             try
             {
@@ -287,6 +294,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetHeadOfficePOSReport failed. request={@request}", request);
                 return Ok(new { data = (object)null, errorMessage = "Failed to fetch report data.", errorDetails = ex.Message });
             }
         }
@@ -297,7 +305,7 @@ namespace MISReports_Api.Controllers
 
         [HttpPost]
         [Route("collection/highest-outstanding")]
-        public IHttpActionResult GetHighestOutstandingReport([FromBody] CustomersHighestOutstandingRequest request)
+        public IActionResult GetHighestOutstandingReport([FromBody] CustomersHighestOutstandingRequest request)
         {
             try
             {
@@ -340,6 +348,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetHighestOutstandingReport failed. request={@request}", request);
                 System.Diagnostics.Trace.WriteLine($"ERROR CustomersHighestOutstanding GetReport: {ex.Message}\n{ex.StackTrace}");
                 return Ok(new
                 {
@@ -352,7 +361,7 @@ namespace MISReports_Api.Controllers
 
         [HttpGet]
         [Route("suspense-payment-details")]
-        public IHttpActionResult GetSuspensePaymentDetails(
+        public IActionResult GetSuspensePaymentDetails(
     [FromUri] string fromDate,
     [FromUri] string toDate,
     [FromUri] bool isBulk = true)   // true = Bulk, false = Ordinary (matches the UI's default "Bulk" radio)
@@ -384,7 +393,7 @@ namespace MISReports_Api.Controllers
             return ProcessSuspensePaymentDetailsRequest(request);
         }
 
-        private IHttpActionResult ProcessSuspensePaymentDetailsRequest(SuspensePaymentDetailsRequest request)
+        private IActionResult ProcessSuspensePaymentDetailsRequest(SuspensePaymentDetailsRequest request)
         {
             try
             {
@@ -410,6 +419,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ProcessSuspensePaymentDetailsRequest failed. request={@request}", request);
                 return Ok(new
                 {
                     data = (object)null,

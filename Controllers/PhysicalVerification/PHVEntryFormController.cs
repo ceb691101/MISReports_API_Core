@@ -1,7 +1,8 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL.PhysicalVerification;
 
 namespace MISReports_Api.Controllers
@@ -9,6 +10,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/physical-verification")]
     public class PHVEntryFormController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly PhysicalVerificationRepository _repository;
 
         public PHVEntryFormController()
@@ -19,7 +22,7 @@ namespace MISReports_Api.Controllers
         // GET api/physical-verification?deptId=520.11&docNo=520.11/PHV/22/0001
         [HttpGet]
         [Route("")]
-        public async Task<IHttpActionResult> GetPhysicalVerification(
+        public async Task<IActionResult> GetPhysicalVerification(
             [FromUri] string deptId,
             [FromUri] string docNo)
         {
@@ -62,6 +65,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "GetPhysicalVerification failed. deptId={deptId}, docNo={docNo}", deptId, docNo);
                 // Error logging
                 System.Diagnostics.Trace.WriteLine(
                     $"ERROR in PHVEntryFormController: {ex}"

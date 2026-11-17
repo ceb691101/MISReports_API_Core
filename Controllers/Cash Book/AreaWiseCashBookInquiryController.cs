@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MISReports_Api.Compat;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MISReports_Api.DAL;
 using MISReports_Api.Models.Accounts;
 
@@ -13,6 +14,8 @@ namespace MISReports_Api.Controllers
     [RoutePrefix("api/areawisecashbookinquiry")]
     public class AreaWiseCashBookInquiryController : ApiController
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly AreaWiseCashBookInquiryDAL _dal = new AreaWiseCashBookInquiryDAL();
 
         private const string DateFormat = "yyyy-MM-dd"; // e.g. 2026-01-08 (dashes so it's URL/route safe)
@@ -20,7 +23,7 @@ namespace MISReports_Api.Controllers
         // PATH: /api/areawisecashbookinquiry/report/2026-01-08/2026-08-09/100
         [HttpGet]
         [Route("report/{fromDate}/{toDate}/{area}")]
-        public IHttpActionResult GetReport(string fromDate, string toDate, string area)
+        public IActionResult GetReport(string fromDate, string toDate, string area)
         {
             return ExecuteQuery(fromDate, toDate, area);
         }
@@ -28,12 +31,12 @@ namespace MISReports_Api.Controllers
         // QUERY: /api/areawisecashbookinquiry/report?fromDate=2026-01-08&toDate=2026-08-09&area=100
         [HttpGet]
         [Route("report")]
-        public IHttpActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string area)
+        public IActionResult GetQuery([FromUri] string fromDate, [FromUri] string toDate, [FromUri] string area)
         {
             return ExecuteQuery(fromDate, toDate, area);
         }
 
-        private IHttpActionResult ExecuteQuery(string fromDate, string toDate, string area)
+        private IActionResult ExecuteQuery(string fromDate, string toDate, string area)
         {
             try
             {
@@ -86,6 +89,7 @@ namespace MISReports_Api.Controllers
             }
             catch (Exception ex)
             {
+                logger.Error(ex, "ExecuteQuery failed. fromDate={fromDate}, toDate={toDate}, area={area}", fromDate, toDate, area);
                 System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
                 return InternalServerError(new Exception($"Database error: {ex.Message}", ex));
             }
