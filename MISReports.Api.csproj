@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-  <!-- MIS Reports API on .NET 10 (migrated from ASP.NET Web API 2). See docs/MIGRATION.md. -->
+  <!-- MIS Reports API on .NET 9 (migrated from ASP.NET Web API 2). See docs/MIGRATION.md. -->
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>MISReports_Api</RootNamespace>
     <AssemblyName>MISReports.Api</AssemblyName>
     <!-- The migrated code was written without nullable annotations or implicit usings. -->
@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.23" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NLog" Version="6.0.3" />
     <PackageReference Include="NLog.Extensions.Logging" Version="6.0.3" />
@@ -41,8 +41,8 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(InformixDriver)' == 'Db2'">
-    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="10.0.0.100" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
-    <PackageReference Include="Net.IBM.Data.Db2" Version="10.0.0.100" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+    <PackageReference Include="Net.IBM.Data.Db2-lnx" Version="9.0.0.400" Condition="$([MSBuild]::IsOSPlatform('Linux'))" />
+    <PackageReference Include="Net.IBM.Data.Db2" Version="9.0.0.400" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
   </ItemGroup>
   <ItemGroup Condition="'$(InformixDriver)' == 'OleDb'">
     <PackageReference Include="System.Data.OleDb" Version="10.0.0" />
