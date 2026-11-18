@@ -1,12 +1,12 @@
-# MIS Reports API (.NET 10) on Linux.
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+# MIS Reports API (.NET 9) on Linux.
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 COPY MISReports.Api.csproj .
 RUN dotnet restore -p:InformixDriver=Db2
 COPY . .
 RUN dotnet publish -c Release -o /app --no-restore -p:InformixDriver=Db2
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
 # Java runtime for the Jasper report tools; libxml2 for IBM's Informix/Db2 client library.
 RUN apt-get update \
  && apt-get install -y --no-install-recommends openjdk-21-jre-headless libxml2 \
