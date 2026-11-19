@@ -3,6 +3,7 @@
 [Oo]bj/
 artifacts/
 publish/
+publish-linux/
 
 # Visual Studio user-specific files
 .vs/
